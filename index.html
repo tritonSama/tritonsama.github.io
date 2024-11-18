@@ -8,8 +8,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #000000; /* Black background */
+            color: #00FFFF; /* Cyan text */
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,26 +17,27 @@
             align-items: center;
             height: 100vh;
             text-align: center;
+            overflow: hidden;
         }
 
         .container {
-            background-color: #fff;
+            background-color: #111111; /* Slightly dark container for contrast */
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3); /* Light cyan shadow */
             max-width: 600px;
             width: 100%;
+            border: 2px solid #00FFFF; /* Cyan border */
         }
 
         h1 {
-            color: #f44336;
             font-size: 48px;
             margin-bottom: 20px;
         }
 
         p {
-            font-size: 18px;
-            color: #555;
+            font-size: 20px;
+            margin-bottom: 20px;
         }
 
         .image {
@@ -46,14 +47,28 @@
         .image img {
             max-width: 100%;
             height: auto;
-            border: 3px solid #f44336;
+            border: 3px solid #00FFFF; /* Cyan border around image */
             border-radius: 8px;
         }
 
         .footer {
             margin-top: 40px;
             font-size: 14px;
-            color: #777;
+            color: #00FFFF; /* Cyan footer text */
+        }
+
+        /* Add a simple glowing text effect */
+        h1 {
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
+            }
+            100% {
+                text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
+            }
         }
     </style>
 </head>
@@ -61,13 +76,17 @@
 
 <div class="container">
     <h1>Under Construction</h1>
-    <p>We are currently working hard to bring you something amazing!</p>
-    <p>Check back soon for updates.</p>
+    <p>We're building something great for you!</p>
+    <p>Stay tuned, and check back soon for updates.</p>
 
     <div class="image">
         <img src="https://via.placeholder.com/600x300.png?text=Under+Construction" alt="Under Construction">
     </div>
 
     <div class="footer">
-        <p>&copy; 2024 GuardiansCreed. A
+        <p>&copy; 2024 GuardiansCreed. All rights reserved.</p>
+    </div>
+</div>
 
+</body>
+</html>
