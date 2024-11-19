@@ -79,8 +79,212 @@
     <p>We're building something great for you!</p>
     <p>Stay tuned, and check back soon for updates.</p>
 
-    <div class="image">
-        <img src="https://via.placeholder.com/600x300.png?text=Under+Construction" alt="Under Construction">
+    <div>
+        <p>
+
+### **1. Project Overview**
+
+#### **Goal**:
+Develop a decentralized **guild-based platform** where users (mages) can:
+- Join guilds, take on tasks, and earn rewards (cryptocurrency or tokens) via **Solana**.
+- Integrate Solana blockchain for fast, low-cost payments, creating a **task marketplace** where jobs are posted and completed.
+- Implement a **token economy** (Solana-based tokens) for rewarding users and managing transactions.
+
+---
+
+### **2. Key Features**
+- **User Management (Mage Class)**: Registration, login, profile management, and roles (mage, guild leader, admin).
+- **Guild System**: Users can join and create guilds, with guild leaders posting tasks and jobs for mages to complete.
+- **Task Marketplace**: A marketplace where guilds post tasks/jobs and mages can apply for them.
+- **Solana Token Economy**: Earn rewards in Solana-based tokens for completing tasks.
+- **Transaction System**: Users will be able to view their earnings, track their transaction history, and make withdrawals.
+- **Admin Dashboard**: Admins can manage users, guilds, tasks, and oversee the flow of tokens.
+- **Notifications**: Real-time notifications for job assignments, task updates, and guild events.
+- **Security**: User authentication, blockchain-based wallets, and secure transaction handling.
+
+---
+
+### **3. Architecture Overview**
+
+#### **Frontend**:
+- **Technology Stack**: React.js, Next.js, or Vue.js (Single-page application framework), Tailwind CSS (for responsive design)
+- **UI Components**:
+  - Registration/Login Forms
+  - Dashboard (user dashboard for earnings and tasks, admin dashboard)
+  - Job Marketplace (task listing, job details, applications)
+  - Wallet Integration (for Solana transactions)
+  - Notifications (for task assignments, job completions, new tasks)
+
+#### **Backend**:
+- **Technology Stack**: Node.js / Express.js (or your preferred backend tech), with Solana Web3.js for blockchain interactions
+- **Database**: PostgreSQL, MongoDB, or Firebase for user data, guilds, tasks, and transaction history
+- **Authentication**: Solana wallet integration for user authentication (Sollet, Phantom, Solflare wallets)
+- **Blockchain Integration**: Solana for payments, reward distribution, and wallet management
+
+#### **Blockchain (Solana)**:
+- **Solana Token**: Integrate a custom Solana-based token for payments (similar to how ERC20 tokens are used on Ethereum).
+  - **Tools**: Solana Web3.js SDK for interacting with Solana blockchain, creating tokens, and processing transactions.
+- **Wallet Integration**: Users will interact with the app via Solana-compatible wallets (Phantom, Sollet, Solflare).
+- **Solana Smart Contracts**: Use Solana's **Rust** or **Anchor framework** for smart contract development (if needed for tasks, payments, and rewards).
+
+---
+
+### **4. Development Phases**
+
+#### **Phase 1: Planning & Requirements Gathering**
+
+1. **Define Functional Requirements**:
+   - Define key features: guild creation, task posting, user roles (mage, guild leader, admin), job completion, token reward system, etc.
+   - Design how Solana tokens will be used for payments (e.g., mages will earn tokens upon completing tasks).
+   - Decide how transaction fees will be managed using Solana's low-cost structure.
+
+2. **Technology Stack**:
+   - Confirm the frontend (React.js or Vue.js) and backend stack (Node.js, Express).
+   - Choose Solana-compatible wallet libraries like **Sollet**, **Phantom**, or **Solflare** for Solana wallet integration.
+   - Design database schemas for users, guilds, tasks, payments, and transactions.
+
+3. **System Architecture**:
+   - Design system architecture: how the frontend will communicate with the backend, and how the backend will interact with Solana for transactions.
+   - Design data flow diagrams: guild creation, task assignment, task completion, payment distribution, and wallet interaction.
+
+4. **Wireframes and UI Design**:
+   - Create wireframes or mockups for the core pages (login, dashboard, job marketplace, guild management).
+   - Focus on clean UI design, user flows, and Solana wallet integration for transactions.
+
+---
+
+#### **Phase 2: Frontend Development**
+
+1. **UI/UX Design**:
+   - Create the homepage (to replace the temporary under-construction page).
+   - Implement the user dashboard where users can see tasks, jobs, earnings, and transaction history.
+   - Build the job marketplace where guild leaders can post tasks and mages can browse and apply for them.
+   - Implement wallet integration, allowing users to connect their **Solana wallet** (e.g., Phantom) for earning and withdrawing tokens.
+
+2. **State Management**:
+   - Use a state management library (e.g., Redux, Context API) to manage state across the app: user authentication, tasks, guilds, earnings, and wallet transactions.
+   - Handle Solana token transactions within the app’s state.
+
+3. **Task Marketplace**:
+   - Implement the task marketplace where guilds can post jobs with reward details in Solana tokens.
+   - Enable mages to apply for tasks and view task progress.
+
+4. **Solana Wallet Integration**:
+   - Implement integration for Solana wallets (Phantom, Sollet, etc.) using **Solana Web3.js**.
+   - Implement features to allow users to view wallet balance, send/receive tokens, and complete transactions.
+
+5. **Responsive Design**:
+   - Ensure the platform works across different devices, ensuring responsive layouts using **Tailwind CSS**.
+
+---
+
+#### **Phase 3: Backend Development**
+
+1. **Backend API Setup**:
+   - Set up the backend (Node.js with Express or another framework).
+   - Define and implement API routes:
+     - User registration/login (with wallet integration)
+     - Guild management (creating, joining, leaving)
+     - Task management (posting tasks, applying for jobs)
+     - Transaction management (handling Solana token transactions)
+
+2. **Solana Blockchain Integration**:
+   - Use **Solana Web3.js** to interact with the blockchain. For example:
+     - Create and manage Solana-based tokens.
+     - Issue token rewards to mages upon task completion.
+     - Handle user wallet connections, transaction submissions, and transaction confirmations.
+
+3. **Database Setup**:
+   - Design database schema for:
+     - **Users**: Include user wallet addresses, profile info, and earnings.
+     - **Guilds**: Guild names, descriptions, members, leader roles.
+     - **Tasks**: Task name, description, reward (in Solana tokens), assigned mage.
+     - **Transactions**: Amount, task ID, transaction time, status (completed/pending).
+   - Implement CRUD operations for managing users, guilds, and tasks.
+
+4. **Solana Token Rewards System**:
+   - Integrate Solana token rewards for mages: Once a task is completed, the backend will send tokens to the mage's wallet.
+   - Implement a **smart contract** (using Solana’s **Rust** or **Anchor** framework) to automate token distribution based on task completion.
+
+---
+
+#### **Phase 4: Payment & Reward System**
+
+1. **Solana Token Integration**:
+   - Use Solana’s low-cost transaction features to send and receive tokens for task completions.
+   - Allow users to view their wallet balances in their dashboard.
+   - Set up automatic payments to mages when they complete a job/task.
+
+2. **Transaction Management**:
+   - Implement transaction history so users can track incoming and outgoing payments.
+   - Handle **Solana transaction fees** to ensure smooth payments (if any).
+
+---
+
+#### **Phase 5: Admin Dashboard & Guild Management**
+
+1. **Admin Panel**:
+   - Build an admin dashboard for monitoring users, guilds, tasks, and token transactions.
+   - Enable admin control over guilds (creating, deleting, and managing guilds) and tasks (approving or rejecting tasks).
+
+2. **Guild Leader Dashboard**:
+   - Guild leaders can manage tasks, assign jobs, track progress, and distribute tokens to members.
+   - Ensure that guild leaders can easily post tasks and set rewards in Solana tokens.
+
+---
+
+#### **Phase 6: Testing & QA**
+
+1. **Frontend Testing**:
+   - Ensure that UI components are responsive and that users can connect their Solana wallet, browse tasks, and view earnings.
+   - Test interactions with the wallet, ensuring smooth token transactions and confirmations.
+
+2. **Backend Testing**:
+   - Test API endpoints for creating, joining guilds, posting tasks, and earning rewards.
+   - Ensure correct token distribution to users via Solana’s network.
+
+3. **Solana Blockchain Testing**:
+   - Conduct test transactions on Solana's devnet or testnet to simulate task completion and token transfers.
+
+4. **Security Testing**:
+   - Ensure that wallet integration is secure and that users can’t manipulate wallet balances or tasks.
+
+---
+
+#### **Phase 7: Deployment**
+
+1. **Deployment of Backend**:
+   - Deploy backend on cloud services like **AWS**, **DigitalOcean**, or **Heroku**.
+   - Set up **Solana wallet** integration with the backend to ensure seamless wallet-to-backend communication.
+
+2. **Frontend Deployment**:
+   - Deploy frontend on platforms like **Vercel**, **Netlify**, or **GitHub Pages**.
+
+3. **Smart Contract Deployment (if applicable)**:
+   - Deploy
+
+ any necessary Solana smart contracts for task rewards and token distribution to the **Solana mainnet**.
+
+4. **Monitoring & Maintenance**:
+   - Use monitoring tools like **Sentry**, **New Relic**, or **Datadog** to track errors and performance.
+   - Ensure blockchain transactions are properly tracked and that wallets are functioning correctly.
+
+---
+
+### **5. Timeline**
+
+- **Phase 1: Planning & Requirements Gathering** – 1–2 weeks
+- **Phase 2: Frontend Development** – 4–6 weeks
+- **Phase 3: Backend Development** – 4–6 weeks
+- **Phase 4: Payment & Reward System** – 2–4 weeks
+- **Phase 5: Admin & Guild Management** – 2–4 weeks
+- **Phase 6: Testing & QA** – 2–3 weeks
+- **Phase 7: Deployment & Launch** – 1–2 weeks
+
+---
+
+### **6. Conclusion**
+This development plan integrates **Solana blockchain** for efficient and cost-effective token transactions, creating a decentralized guild-based platform where users can earn and manage cryptocurrency by completing tasks. The use of Solana ensures that transactions are fast and inexpensive, allowing users to easily earn and withdraw tokens.</p>
     </div>
 
     <div class="footer">
