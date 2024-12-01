@@ -1,5 +1,6 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,30 +30,30 @@
             max-width: 800px;
             width: 100%;
             border: 2px solid #00FFFF; /* Cyan border */
-            font-size: 14px; /* Reduce default text size */
+            font-size: 14px;
             max-height: 90vh; /* Restrict container height to 90% of viewport */
             overflow-y: auto; /* Scroll vertically if content exceeds max-height */
         }
 
         h1 {
-            font-size: 32px; /* Smaller font size */
+            font-size: 32px;
             margin-bottom: 15px;
             animation: glow 1.5s ease-in-out infinite alternate;
         }
 
         p {
-            font-size: 14px; /* Reduced font size */
+            font-size: 14px;
             margin-bottom: 15px;
         }
 
         h2 {
-            font-size: 18px; /* Smaller headings */
+            font-size: 18px;
             margin-top: 20px;
             margin-bottom: 10px;
         }
 
         h3 {
-            font-size: 16px; /* Smaller subheadings */
+            font-size: 16px;
             margin-top: 10px;
         }
 
@@ -63,7 +64,7 @@
         }
 
         li {
-            font-size: 14px; /* Smaller text for list items */
+            font-size: 14px;
             line-height: 1.4;
             margin-bottom: 5px;
         }
@@ -73,6 +74,7 @@
             0% {
                 text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
             }
+
             100% {
                 text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
             }
@@ -80,9 +82,65 @@
 
         .footer {
             margin-top: 20px;
-            font-size: 12px; /* Even smaller footer text */
+            font-size: 12px;
             color: #00FFFF;
             opacity: 0.7;
+        }
+
+        /* Form Styles */
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 8px;
+            border: 2px solid #00FFFF;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 90%;
+            border: 2px solid #00FFFF;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #00CCFF;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #00FFFF;
+            border: none;
+            cursor: pointer;
+            color: #000;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #00CCFF;
+        }
+
+        /* Members List Styling */
+        #membersList {
+            margin-top: 20px;
+            padding: 0;
+            text-align: left;
+        }
+
+        #membersList li {
+            background-color: #333;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
         }
 
         /* Responsive typography */
@@ -99,8 +157,15 @@
                 font-size: 14px;
             }
 
-            p, li {
+            p,
+            li {
                 font-size: 12px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            button {
+                width: 100%;
             }
         }
 
@@ -117,160 +182,58 @@
                 font-size: 12px;
             }
 
-            p, li {
+            p,
+            li {
                 font-size: 10px;
             }
         }
     </style>
 </head>
 
-</html>
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Under Construction | GuardiansCreed</title>
-    <style>
-        /* Your existing styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000; 
-            color: #00FFFF; 
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            overflow: auto;
-        }
-        .container {
-            background-color: #111;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
-            max-width: 800px;
-            width: 100%;
-            border: 2px solid #00FFFF;
-            font-size: 14px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            animation: glow 1.5s ease-in-out infinite alternate;
-        }
-        p {
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        h2 {
-            font-size: 18px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        h3 {
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #00FFFF;
-            opacity: 0.7;
-        }
-        /* Glowing text effect */
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
-            }
-            100% {
-                text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
-            }
-        }
-        .form-container {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #222;
-            border-radius: 8px;
-        }
-        input[type="text"], input[type="email"] {
-            padding: 8px;
-            margin: 5px;
-            width: 80%;
-            border: 1px solid #00FFFF;
-            background-color: #333;
-            color: #fff;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #00FFFF;
-            border: none;
-            cursor: pointer;
-            color: #000;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #00CCFF;
-        }
-    </style>
-</head>
 <body>
-        <div class="container">
-            <h1>Under Construction</h1>
-            <p>We're building something great for you!</p>
-            <p>Stay tuned, and check back soon for updates.</p>
-    
-            <div class="content">
-                <h2>Project Overview</h2>
-                <p><strong>Goal:</strong> Develop a decentralized <strong>guild-based platform</strong> where users (mages) can:</p>
-                <ul>
-                    <li>Join guilds, take on tasks, and earn rewards (cryptocurrency or tokens) via <strong>Solana</strong>.</li>
-                    <li>Integrate Solana blockchain for fast, low-cost payments, creating a <strong>task marketplace</strong> where jobs are posted and completed.</li>
-                    <li>Implement a <strong>token economy</strong> (Solana-based tokens) for rewarding users and managing transactions.</li>
-                </ul>
-    
-                <h2>Key Features</h2>
-                <ul>
-                    <li><strong>User Management (Mage Class)</strong>: Registration, login, profile management, and roles (mage, guild leader, admin).</li>
-                    <li><strong>Guild System</strong>: Users can join and create guilds, with guild leaders posting tasks and jobs for mages to complete.</li>
-                    <li><strong>Task Marketplace</strong>: A marketplace where guilds post tasks/jobs and mages can apply for them.</li>
-                    <li><strong>Solana Token Economy</strong>: Earn rewards in Solana-based tokens for completing tasks.</li>
-                    <li><strong>Transaction System</strong>: Users will be able to view their earnings, track their transaction history, and make withdrawals.</li>
-                    <li><strong>Admin Dashboard</strong>: Admins can manage users, guilds, tasks, and oversee the flow of tokens.</li>
-                    <li><strong>Notifications</strong>: Real-time notifications for job assignments, task updates, and guild events.</li>
-                    <li><strong>Security</strong>: User authentication, blockchain-based wallets, and secure transaction handling.</li>
-                </ul>
-            </div>
-    
-            <div class="footer">
-                <p>&copy; 2024 GuardiansCreed. All rights reserved.</p>
-            </div>
+    <div class="container">
+        <h1>Under Construction</h1>
+        <p>We're building something great for you!</p>
+        <p>Stay tuned, and check back soon for updates.</p>
+
+        <div class="content">
+            <h2>Project Overview</h2>
+            <p><strong>Goal:</strong> Develop a decentralized <strong>guild-based platform</strong> where users (mages) can:</p>
+            <ul>
+                <li>Join guilds, take on tasks, and earn rewards (cryptocurrency or tokens) via <strong>Solana</strong>.</li>
+                <li>Integrate Solana blockchain for fast, low-cost payments, creating a <strong>task marketplace</strong> where jobs are posted and completed.</li>
+                <li>Implement a <strong>token economy</strong> (Solana-based tokens) for rewarding users and managing transactions.</li>
+            </ul>
+
+            <h2>Key Features</h2>
+            <ul>
+                <li><strong>User Management (Mage Class)</strong>: Registration, login, profile management, and roles (mage, guild leader, admin).</li>
+                <li><strong>Guild System</strong>: Users can join and create guilds, with guild leaders posting tasks and jobs for mages to complete.</li>
+                <li><strong>Task Marketplace</strong>: A marketplace where guilds post tasks/jobs and mages can apply for them.</li>
+                <li><strong>Solana Token Economy</strong>: Earn rewards in Solana-based tokens for completing tasks.</li>
+                <li><strong>Transaction System</strong>: Users will be able to view their earnings, track their transaction history, and make withdrawals.</li>
+                <li><strong>Admin Dashboard</strong>: Admins can manage users, guilds, tasks, and oversee the flow of tokens.</li>
+                <li><strong>Notifications</strong>: Real-time notifications for job assignments, task updates, and guild events.</li>
+                <li><strong>Security</strong>: User authentication, blockchain-based wallets, and secure transaction handling.</li>
+            </ul>
+        </div>
+
+        <!-- Form to add new members -->
         <h2>Add New Member</h2>
         <div class="form-container">
             <form id="addMemberForm">
-                    <label for="name">Member Name:</label><br>
-                    <input type="text" id="name" name="name" required><br>
-                    <label for="email">Email:</label><br>
-                    <input type="email" id="email" name="email" required><br>
-                    <button type="submit">Add Member</button>
+                <label for="name">Member Name:</label><br>
+                <input type="text" id="name" name="name" required placeholder="Enter member name"><br>
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required placeholder="Enter member email"><br>
+                <button type="submit">Add Member</button>
             </form>
-            <h2>Members List</h2>
-            <ul id="membersList"></ul>
         </div>
+
+        <!-- Members List -->
+        <h2>Members List</h2>
+        <ul id="membersList"></ul>
+
         <div class="footer">
             <p>&copy; 2024 GuardiansCreed. All rights reserved.</p>
         </div>
@@ -286,35 +249,7 @@
         // Function to update the members list
         function updateMembersList() {
             const membersList = document.getElementById('membersList');
-            membersList.innerHTML = '';  // Clear the list
+            membersList.innerHTML = ''; // Clear the list
 
             members.forEach(member => {
-                const li = document.createElement('li');
-                li.textContent = `${member.name} - ${member.email}`;
-                membersList.appendChild(li);
-            });
-        }
-
-        // Handle form submission
-        document.getElementById('addMemberForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-
-            // Add the new member to the members array
-            members.push({ name, email });
-
-            // Clear form fields
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-
-            // Update the members list on the page
-            updateMembersList();
-        });
-
-        // Initialize the page with existing members
-        updateMembersList();
-    </script>
-</body>
-</html>
+                const li = document.create
