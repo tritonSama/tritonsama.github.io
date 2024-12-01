@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@
             align-items: center;
             height: 100vh;
             text-align: center;
-            overflow: hidden;
+            overflow: auto; /* Allow scrolling */
         }
 
         .container {
@@ -30,6 +30,8 @@
             width: 100%;
             border: 2px solid #00FFFF; /* Cyan border */
             font-size: 14px; /* Reduce default text size */
+            max-height: 90vh; /* Restrict container height to 90% of viewport */
+            overflow-y: auto; /* Scroll vertically if content exceeds max-height */
         }
 
         h1 {
@@ -148,8 +150,6 @@
                 <li><strong>Notifications</strong>: Real-time notifications for job assignments, task updates, and guild events.</li>
                 <li><strong>Security</strong>: User authentication, blockchain-based wallets, and secure transaction handling.</li>
             </ul>
-
-           
         </div>
 
         <div class="footer">
