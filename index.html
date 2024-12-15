@@ -238,6 +238,7 @@
             <p>&copy; 2024 GuardiansCreed. All rights reserved.</p>
         </div>
     </div>
+</body>
 
     <script>
         // Sample initial data
@@ -246,10 +247,36 @@
             { "name": "Bob", "email": "bob@example.com" }
         ];
 
-        // Function to update the members list
         function updateMembersList() {
-            const membersList = document.getElementById('membersList');
-            membersList.innerHTML = ''; // Clear the list
+        const membersList = document.getElementById('membersList');
+        membersList.innerHTML = ''; // Clear the list
 
-            members.forEach(member => {
-                const li = document.create
+        members.forEach(member => {
+            const li = document.createElement('li');
+            li.textContent = `${member.name} - ${member.email}`;
+            membersList.appendChild(li);
+        });
+        }
+
+        // Initial update of the list
+        updateMembersList();
+
+        // Handle form submission to add a new member
+        const addMemberForm = document.getElementById('addMemberForm');
+        addMemberForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from reloading the page
+
+        // Get the values from the form fields
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+
+        // Add new member to the list
+        members.push({ name, email });
+
+        // Clear the form
+        addMemberForm.reset();
+
+        // Update the members list to reflect the new addition
+        updateMembersList();
+        });
+    </script>
