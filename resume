@@ -1,1 +1,139 @@
-Resume here
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Josh Henry – Software Systems Engineer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #e0f7fa;
+    }
+    header {
+      background-color: #00bcd4;
+      padding: 2rem;
+      text-align: center;
+      color: #000;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #111;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav a {
+      color: #00bcd4;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #ffffff;
+    }
+    section {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      color: #00bcd4;
+      border-bottom: 2px solid #00bcd4;
+      padding-bottom: 0.5rem;
+    }
+    .job {
+      margin-bottom: 2rem;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    footer {
+      background-color: #111;
+      color: #888;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Josh Henry</h1>
+    <p>Software Systems Engineer | Cloud Engineer | Cybersecurity</p>
+  </header>
+
+  <nav>
+    <a href="#summary">Summary</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#coverletter">Cover Letter</a>
+  </nav>
+
+  <section id="summary">
+    <h2>Summary</h2>
+    <p>
+      Highly analytical and results-driven Software Systems Engineer with 8+ years of experience in designing, developing, and deploying robust, scalable software solutions. Expert in .NET, Azure/AWS Cloud Engineering, and cybersecurity. Proven track record in system modernization, security posture improvement, and leveraging emerging technologies like AI/ML (LLAMA, ChatGPT, Ollama, DeepSeek). Seeking to apply technical excellence and innovation to complex systems challenges.
+    </p>
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+
+    <div class="job">
+      <h3>NASA / Comit / SAIC | Systems Engineer (Houston, TX)</h3>
+      <p><em>Sept 2022 – Nov 2024</em></p>
+      <ul>
+        <li>Modernized federal financial systems: migrated from Visual Basic to Vue.js 3, boosting efficiency by 18%.</li>
+        <li>Led AI integrations with tools like ChatGPT, LLAMA, and DeepSeek—cut development time by 15%.</li>
+        <li>Managed 508 compliance, JF198 scans; remediated 250+ vulnerabilities for security compliance.</li>
+        <li>Worked in Agile/SAFe teams; maintained legacy apps using .NET 6–8, Azure DevOps, ColdFusion, etc.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <h3>Sly Noble | .NET Full-stack Consultant (Houston, TX)</h3>
+      <p><em>May 2019 – June 2022</em></p>
+      <ul>
+        <li>Built full-stack applications using .NET 6, Blazor, Angular, React, Azure, AWS.</li>
+        <li>Streamlined cloud deployments to Azure App Service & AWS, improving delivery by 20%.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <h3>Arnold/Swift Transportation | Commercial Truck Driver (Dallas, TX)</h3>
+      <p><em>Nov 2017 – Apr 2019</em></p>
+      <ul>
+        <li>Operated commercial vehicles and ensured timely, safe deliveries.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <h3>Metro Health Services | Linux SysAdmin & Software Dev (Houston, TX)</h3>
+      <p><em>Nov 2010 – Sept 2017</em></p>
+      <ul>
+        <li>Administered Ubuntu servers, hardened Linux security (iptables, SELinux).</li>
+        <li>Developed WPF apps in C# for Medicare & Medicaid, managing 50K+ patient records/year.</li>
+        <li>Utilized SQL Server/PostgreSQL on Linux for database management.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div><strong>OS & Virtualization:</strong> Ubuntu, RHEL, Windows, VMware, KVM</div>
+      <div><strong>Cloud & DevOps:</strong> Azure, AWS, Docker, Terraform, Git, CI/CD</div>
+      <div><strong>Programming:</strong> C#, C++, Python, JavaScript, ColdFusion</div>
+      <div><strong>Security:</strong> Nmap, Nessus, AppArmor, HIPAA, 508 Compliance</div>
+      <div><strong>Web Tech:</strong> Blazor, Angular, React, Vue, ASP.NET, REST APIs</div>
+      <div><strong>Databases:</strong> SQL Server, PostgreSQL, MySQL</div>
+      <div><strong>Monitoring:</strong> Prometheus, Grafana, ELK, Splunk</div>
+      <div><strong
