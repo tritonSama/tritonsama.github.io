@@ -6,7 +6,7 @@ import { SendHorizonal } from "lucide-react";
 
 export default function SalaciaInterface() {
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
+  const [chat, setChat] = useState<{ sender: string; text: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
   const sendMessage = async () => {
@@ -26,6 +26,7 @@ export default function SalaciaInterface() {
       const data = await res.json();
       setChat((prev) => [...prev, { sender: "Salacia", text: data.reply }]);
     } catch (err) {
+      console.error("Error:", err);
       setChat((prev) => [...prev, { sender: "Salacia", text: "Error talking to backend." }]);
     }
 
