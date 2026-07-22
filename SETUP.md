@@ -70,6 +70,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/XXXX/exec";
 
 ## Notes
 
-- Until `SCRIPT_URL` is set, the form shows an error asking you to finish setup.
+- Until `SCRIPT_URL` is set, the form shows an error asking you to finish setup — and visitors cannot unlock the rest of the site.
+- After a successful signup, the browser stores a local flag so that visitor can use Home, Resume, and other pages. Clearing site data requires signing up again.
 - If you change the script later, deploy again (**Deploy → Manage deployments → Edit → New version**).
 - Signup data stays in your Google account; it is not listed publicly on the site.

@@ -72,8 +72,10 @@ form.addEventListener("submit", async function (event) {
     });
 
     if (response.ok && data && data.result === "success") {
-      showStatus("Thanks! Your signup was recorded.", "success");
+      markSignedUp();
+      showStatus("Thanks! Your signup was recorded. Entering…", "success");
       form.reset();
+      window.location.replace("index.html");
     } else {
       const detail =
         data && data.error ? data.error : "Something went wrong. Try again.";
