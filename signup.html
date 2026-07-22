@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up | Operation slipStream</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #00FFFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: auto;
+        }
+
+        .container {
+            background-color: #111;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
+            max-width: 800px;
+            width: 100%;
+            border: 2px solid #00FFFF;
+            font-size: 14px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
+            }
+
+            100% {
+                text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
+            }
+        }
+
+        .nav-links {
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            margin: 0 6px;
+            text-decoration: none;
+        }
+
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 8px;
+            border: 2px solid #00FFFF;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="time"] {
+            padding: 10px;
+            margin: 0 0 8px 0;
+            width: 100%;
+            border: 2px solid #00FFFF;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            color-scheme: dark;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus {
+            outline: none;
+            border-color: #00CCFF;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #00FFFF;
+            border: none;
+            cursor: pointer;
+            color: #000;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 16px;
+        }
+
+        button:hover {
+            background-color: #00CCFF;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-status {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .form-status.success {
+            display: block;
+            background-color: #0a3d3d;
+            border: 1px solid #00FFFF;
+            color: #00FFFF;
+        }
+
+        .form-status.error {
+            display: block;
+            background-color: #3d0a0a;
+            border: 1px solid #ff6666;
+            color: #ff9999;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #00FFFF;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+
+            p,
+            label {
+                font-size: 12px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            p,
+            label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Operation slipStream</h1>
+        <h2>Sign Up</h2>
+        <p>Enter your information to join. Submissions are saved to our records.</p>
+
+        <div class="nav-links">
+            <a href="index.html"><button type="button">Home</button></a>
+            <a href="0.html"><button type="button">agentZero</button></a>
+        </div>
+
+        <div class="form-container">
+            <form id="signupForm" novalidate>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required placeholder="Your name" autocomplete="name">
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+
+                <label for="birthdate">Birthdate</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+
+                <label for="birthtime">Birth time</label>
+                <input type="time" id="birthtime" name="birthtime" required>
+
+                <button type="submit" id="submitBtn">Submit</button>
+            </form>
+            <div id="formStatus" class="form-status" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Operation slipStream</p>
+        </div>
+    </div>
+
+    <script src="js/signup.js"></script>
+</body>
+
+</html>

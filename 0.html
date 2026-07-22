@@ -227,72 +227,17 @@
             </ul>
         </div>
 
-        <!-- Form to add new members -->
-        <h2>Add New Member</h2>
-        <div class="form-container">
-            <form id="addMemberForm">
-                <label for="name">Member Name:</label><br>
-                <input type="text" id="name" name="name" required placeholder="Enter member name"><br>
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required placeholder="Enter member email"><br>
-                <label for="name">First Name:</label><br>
-                <input type="text" id="name" name="name" required placeholder="Enter member name"><br>
-                <label for="email">Last Name:</label><br>
-                <input type="email" id="email" name="email" required placeholder="Enter member email"><br>
-                <label for="name">Member Name:</label><br>
-                <input type="email" id="email" name="email" required placeholder="Enter member email"><br>
-                <button type="submit">Add Member</button>
-            </form>
-        </div>
-
-        <!-- Members List -->
-        <h2>Members List</h2>
-        <ul id="membersList"></ul>
+        <h2>Join</h2>
+        <p>Ready to enter? Record your information on the signup page.</p>
+        <a href="signup.html">
+            <button type="button">Sign up</button>
+        </a>
 
         <div class="footer">
-            <p>&copy; 2024 GuardiansCreed. All rights reserved.</p>
+            <p>&copy; 2026 Operation slipStream. All rights reserved.</p>
         </div>
     </div>
 </body>
 
-    <script>
-        // Sample initial data
-        let members = [
-            { "name": "Triton", "email": "yomama@example.com" },
-            { "name": "Bob", "email": "bob@example.com" }
-        ];
-
-        function updateMembersList() {
-        const membersList = document.getElementById('membersList');
-        membersList.innerHTML = ''; // Clear the list
-
-        members.forEach(member => {
-            const li = document.createElement('li');
-            li.textContent = `${member.name} - ${member.email}`;
-            membersList.appendChild(li);
-        });
-        }
-
-        // Initial update of the list
-        updateMembersList();
-
-        // Handle form submission to add a new member
-        const addMemberForm = document.getElementById('addMemberForm');
-        addMemberForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the form from reloading the page
-
-        // Get the values from the form fields
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-
-        // Add new member to the list
-        members.push({ name, email });
-
-        // Clear the form
-        addMemberForm.reset();
-
-        // Update the members list to reflect the new addition
-        updateMembersList();
-        });
-    </script>
+</html>
 
