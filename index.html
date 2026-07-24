@@ -1,209 +1,1000 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Operation slipStream</title>
-    <style>
-        /* Global Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000; /* Black background */
-            color: #00FFFF; /* Cyan text */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            overflow: auto; /* Allow scrolling */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!-- SEO Meta Tags -->
+  <title>Get Early Access | Master Your Workflow with FlowCraft</title>
+  <meta name="description" content="Join 5,000+ creators mastering their daily workflow with FlowCraft. Get exclusive tips, free templates, and community access.">
+  <meta name="keywords" content="workflow automation, creator tools, productivity templates, early access">
+  <meta property="og:title" content="Get Early Access to FlowCraft">
+  <meta property="og:description" content="Join 5,000+ creators mastering their workflow. No spam, unsubscribe anytime.">
+  <meta property="og:type" content="website">
 
-        .container {
-            background-color: #111; /* Slightly dark container for contrast */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3); /* Light cyan shadow */
-            max-width: 800px;
-            width: 100%;
-            border: 2px solid #00FFFF; /* Cyan border */
-            font-size: 14px;
-            max-height: 90vh; /* Restrict container height to 90% of viewport */
-            overflow-y: auto; /* Scroll vertically if content exceeds max-height */
-        }
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            animation: glow 1.5s ease-in-out infinite alternate;
-        }
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & UTILITIES
+       ========================================================================== */
+    :root {
+      /* Palette */
+      --color-deep-blue: #0F172A;
+      --color-deep-blue-light: #1E293B;
+      --color-white: #FFFFFF;
+      --color-bg-light: #F8FAFC;
+      --color-text-main: #0F172A;
+      --color-text-muted: #64748B;
+      --color-text-light: #94A3B8;
+      
+      /* Vibrant Orange CTA */
+      --color-cta: #F97316;
+      --color-cta-hover: #EA580C;
+      --color-cta-active: #C2410C;
+      
+      /* Status & Accents */
+      --color-success: #10B981;
+      --color-success-bg: #ECFDF5;
+      --color-error: #EF4444;
+      --color-error-bg: #FEF2F2;
+      --color-border: #E2E8F0;
+      --color-border-focus: #F97316;
 
-        p {
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
+      /* Shadows & Radii */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+      
+      --shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+      --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      --shadow-cta: 0 10px 25px -5px rgba(249, 115, 22, 0.4);
+      --shadow-cta-hover: 0 14px 30px -5px rgba(249, 115, 22, 0.55);
 
-        h2 {
-            font-size: 22px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
+      /* Typography */
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-        h3 {
-            font-size: 16px;
-            margin-top: 10px;
-        }
+    /* CSS Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-bg-light);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
 
-        li {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 5px;
-        }
+    /* Layout Containers */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
 
-        /* Glowing text effect */
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
-            }
+    /* Header / Brand Bar */
+    header {
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-white);
+    }
 
-            100% {
-                text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
-            }
-        }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #00FFFF;
-            opacity: 0.7;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--color-deep-blue);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
 
-        /* Form Styles */
-        .form-container {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #222;
-            border-radius: 8px;
-            border: 2px solid #00FFFF;
-        }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--color-deep-blue), var(--color-cta));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+    }
 
-        input[type="text"],
-        input[type="email"] {
-            padding: 10px;
-            margin: 10px 0;
-            width: 90%;
-            border: 2px solid #00FFFF;
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+    .badge-early-access {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      background-color: rgba(249, 115, 22, 0.1);
+      color: var(--color-cta-hover);
+      font-size: 0.825rem;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(249, 115, 22, 0.2);
+    }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus {
-            outline: none;
-            border-color: #00CCFF;
-        }
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--color-cta);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse-dot 2s infinite;
+    }
 
-        button {
-            padding: 12px 20px;
-            background-color: #00FFFF;
-            border: none;
-            cursor: pointer;
-            color: #000;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s ease-in-out;
-        }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
 
-        button:hover {
-            background-color: #00CCFF;
-        }
+    /* ==========================================================================
+       HERO SECTION
+       ========================================================================== */
+    .hero {
+      padding: 4rem 0 5rem;
+      background: linear-gradient(180deg, var(--color-white) 0%, var(--color-bg-light) 100%);
+      position: relative;
+    }
 
-        /* Members List Styling */
-        #membersList {
-            margin-top: 20px;
-            padding: 0;
-            text-align: left;
-        }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
 
-        #membersList li {
-            background-color: #333;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 5px;
-        }
+    @media (min-width: 992px) {
+      .hero-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 4rem;
+      }
+    }
 
-        /* Responsive typography */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
+    .hero-text {
+      max-width: 640px;
+    }
 
-            h2 {
-                font-size: 16px;
-            }
+    .hero-headline {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--color-deep-blue);
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
 
-            h3 {
-                font-size: 14px;
-            }
+    @media (min-width: 768px) {
+      .hero-headline {
+        font-size: 3.25rem;
+      }
+    }
 
-            p,
-            li {
-                font-size: 12px;
-            }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-cta) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-            input[type="text"],
-            input[type="email"],
-            button {
-                width: 100%;
-            }
-        }
+    .hero-subheadline {
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 24px;
-            }
+    /* Social Proof Bar */
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
 
-            h2 {
-                font-size: 14px;
-            }
+    .avatar-group {
+      display: flex;
+    }
 
-            h3 {
-                font-size: 12px;
-            }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--color-white);
+      margin-left: -10px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--color-border);
+    }
 
-            p,
-            li {
-                font-size: 10px;
-            }
-        }
-    </style>
-    <script src="js/gate.js"></script>
-    <script>requireSignup();</script>
+    .avatar:first-child {
+      margin-left: 0;
+    }
+
+    .proof-text {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .proof-text span {
+      color: var(--color-deep-blue);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       SIGNUP FORM CARD
+       ========================================================================== */
+    .form-card {
+      background: var(--color-white);
+      padding: 2.25rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--color-border);
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-deep-blue);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .form-header p {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-deep-blue);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      font-family: var(--font-family);
+      color: var(--color-text-main);
+      background-color: var(--color-bg-light);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: var(--color-text-light);
+    }
+
+    .form-input:focus {
+      background-color: var(--color-white);
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+    }
+
+    /* CTA Button */
+    .cta-button {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: var(--font-family);
+      color: var(--color-white);
+      background-color: var(--color-cta);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: var(--shadow-cta);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .cta-button:hover {
+      background-color: var(--color-cta-hover);
+      box-shadow: var(--shadow-cta-hover);
+      transform: translateY(-2px);
+    }
+
+    .cta-button:active {
+      background-color: var(--color-cta-active);
+      transform: translateY(0);
+      box-shadow: var(--shadow-cta);
+    }
+
+    .cta-button:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Spinner Animation */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--color-white);
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Trust Signals */
+    .trust-signal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-size: 0.825rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    /* Success & Error State Containers */
+    .status-message {
+      padding: 1.5rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .status-message.success {
+      background-color: var(--color-success-bg);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #065F46;
+    }
+
+    .status-message.error {
+      background-color: var(--color-error-bg);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #991B1B;
+      margin-top: 1rem;
+    }
+
+    .success-icon {
+      width: 48px;
+      height: 48px;
+      background-color: var(--color-success);
+      color: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.85rem;
+      font-size: 1.5rem;
+    }
+
+    .success-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #064E3B;
+    }
+
+    .success-desc {
+      font-size: 0.9rem;
+      color: #047857;
+    }
+
+    /* ==========================================================================
+       BENEFITS SECTION
+       ========================================================================== */
+    .benefits {
+      padding: 5rem 0;
+      background-color: var(--color-white);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-deep-blue);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--color-text-muted);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .benefit-card {
+      background: var(--color-bg-light);
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card);
+      border-color: rgba(249, 115, 22, 0.3);
+    }
+
+    .benefit-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(249, 115, 22, 0.1);
+      color: var(--color-cta);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .benefit-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-deep-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .benefit-desc {
+      font-size: 0.925rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* Visual Graphic in Hero */
+    .hero-graphic-card {
+      background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-deep-blue-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: var(--color-white);
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-graphic-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .graphic-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .graphic-dot.red { background-color: #EF4444; }
+    .graphic-dot.yellow { background-color: #F59E0B; }
+    .graphic-dot.green { background-color: #10B981; }
+
+    .graphic-preview-item {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .graphic-badge {
+      padding: 0.25rem 0.6rem;
+      background: rgba(249, 115, 22, 0.2);
+      color: var(--color-cta);
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: var(--radius-pill);
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    footer {
+      padding: 2.5rem 0;
+      background-color: var(--color-deep-blue);
+      color: var(--color-text-light);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--color-text-light);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-white);
+    }
+
+    /* Hidden Utility */
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Operation slipStream</h1>
-        <h2>Under Construction</h2>
-        <a href="resume.html">
-            <button> Resume </button>
-        </a>
-        <a href="https://tritonsama.github.io/salacia/index.html">
-            <button> Salacia </button>
-        </a>
-        <a href="0.html">
-            <button> agentZero </button>
-        </a>
+
+  <!-- ==========================================================================
+       HEADER
+       ========================================================================== -->
+  <header>
+    <div class="container header-content">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <!-- Flow Icon SVG -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        FlowCraft
+      </a>
+      <div class="badge-early-access">
+        <span class="badge-dot"></span>
+        Limited Spots Left
+      </div>
     </div>
+  </header>
+
+  <!-- ==========================================================================
+       HERO SECTION
+       ========================================================================== -->
+  <section class="hero">
+    <div class="container hero-grid">
+      
+      <!-- Hero Text & Pitch -->
+      <div class="hero-text">
+        <h1 class="hero-headline">
+          Get Early Access to <span class="gradient-text">FlowCraft</span>
+        </h1>
+        <p class="hero-subheadline">
+          Join 5,000+ creators mastering their daily workflow. Get automated templates, weekly productivity tips, and private community access. No spam, unsubscribe anytime.
+        </p>
+
+        <!-- Form Card Container -->
+        <div class="form-card">
+          <div class="form-header">
+            <h2>Reserve Your Access Spot</h2>
+            <p>Enter your details below to get instant access when we launch.</p>
+          </div>
+
+          <!-- Lead Generation Form -->
+          <form id="leadForm" novalidate>
+            <div class="form-group">
+              <label for="name" class="form-label">Full Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                class="form-input" 
+                placeholder="e.g. Alex Morgan" 
+                required 
+                autocomplete="name"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-input" 
+                placeholder="alex@example.com" 
+                required 
+                autocomplete="email"
+              >
+            </div>
+
+            <button type="submit" id="submitBtn" class="cta-button">
+              <span id="btnText">Get Instant Access</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Error Alert Banner -->
+          <div id="errorMessage" class="status-message error">
+            ⚠️ <span id="errorText">Something went wrong. Please try again.</span>
+          </div>
+
+          <!-- Success Message Area (Hidden by default) -->
+          <div id="successMessage" class="status-message success">
+            <div class="success-icon">✓</div>
+            <div class="success-title">Thanks! You're on the list.</div>
+            <p class="success-desc">We've saved your spot. Check your inbox soon for your exclusive welcome kit!</p>
+          </div>
+
+          <!-- Trust Signals -->
+          <div class="trust-signal">
+            <span>🔒</span> Secure &amp; Spam-free. Instant 1-click unsubscribe.
+          </div>
+        </div>
+
+        <!-- Social Proof Stats -->
+        <div class="social-proof">
+          <div class="avatar-group">
+            <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');"></div>
+            <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80');"></div>
+            <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80');"></div>
+            <div class="avatar" style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80');"></div>
+          </div>
+          <div class="proof-text">
+            Joined by <span>5,000+ creators</span> and digital builders
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hero Visual Dashboard Preview -->
+      <div class="hero-graphic-card">
+        <div class="hero-graphic-header">
+          <span class="graphic-dot red"></span>
+          <span class="graphic-dot yellow"></span>
+          <span class="graphic-dot green"></span>
+          <span style="font-size: 0.75rem; color: #94A3B8; margin-left: 0.5rem;">FlowCraft Workspace Preview</span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">Automated Creator Stack</h3>
+          <p style="font-size: 0.85rem; color: #94A3B8;">Real-time task synchronization & workflow tracking</p>
+        </div>
+
+        <div class="graphic-preview-item">
+          <div>
+            <div style="font-size: 0.9rem; font-weight: 600;">⚡ Notion Content Pipeline</div>
+            <div style="font-size: 0.75rem; color: #94A3B8;">Auto-sync drafts & calendar</div>
+          </div>
+          <span class="graphic-badge">Active</span>
+        </div>
+
+        <div class="graphic-preview-item">
+          <div>
+            <div style="font-size: 0.9rem; font-weight: 600;">📊 Google Sheets Lead Collector</div>
+            <div style="font-size: 0.75rem; color: #94A3B8;">Zero-backend script connector</div>
+          </div>
+          <span class="graphic-badge">Connected</span>
+        </div>
+
+        <div class="graphic-preview-item">
+          <div>
+            <div style="font-size: 0.9rem; font-weight: 600;">💬 VIP Discord Dispatcher</div>
+            <div style="font-size: 0.75rem; color: #94A3B8;">Instant community notifications</div>
+          </div>
+          <span class="graphic-badge">Ready</span>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #94A3B8;">
+          <span>Weekly Time Saved: <strong>~14.5 Hours</strong></span>
+          <span style="color: #F97316; font-weight: 600;">100% Automated</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       BENEFITS SECTION
+       ========================================================================== -->
+  <section class="benefits">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Everything You Need to Scale Faster</h2>
+        <p class="section-subtitle">Unlock powerful creator tools and strategies built to eliminate guesswork and repetitive admin work.</p>
+      </div>
+
+      <div class="benefits-grid">
+        
+        <!-- Benefit 1 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Exclusive Tips</h3>
+          <p class="benefit-desc">Actionable productivity frameworks and secret workflow blueprints delivered straight to your inbox every single week.</p>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Free Templates</h3>
+          <p class="benefit-desc">Plug-and-play automation templates for Notion, Zapier, and Google Workspace ready to copy with a single click.</p>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Community Access</h3>
+          <p class="benefit-desc">Connect with an active network of top creators, share insights, receive direct feedback, and build together.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer>
+    <div class="container footer-content">
+      <div>
+        &copy; <span id="year"></span> FlowCraft. All rights reserved. Hosted on GitHub Pages.
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       VANILLA JAVASCRIPT & GOOGLE APPS SCRIPT INTEGRATION
+       ========================================================================== -->
+  <script>
+    // =========================================================================
+    // GOOGLE APPS SCRIPT WEB APP CONFIGURATION
+    // =========================================================================
+    // INSTRUCTIONS:
+    // 1. Follow the instructions in README.md to create your Google Sheet & Apps Script.
+    // 2. Deploy your script as a Web App (Execute as: Me, Who has access: Anyone).
+    // 3. Copy your Web App URL and replace the placeholder string below!
+    // Example: const scriptURL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+    // =========================================================================
+
+    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+    /*
+      ===========================================================================
+      RECOMMENDED GOOGLE APPS SCRIPT CODE (Paste in Google Sheets -> Extensions -> Apps Script):
+      ===========================================================================
+      
+      function doPost(e) {
+        var lock = LockService.getScriptLock();
+        lock.tryLock(10000);
+
+        try {
+          var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+          var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+          var nextRow = sheet.getLastRow() + 1;
+          
+          var newRow = headers.map(function(header) {
+            if (header.toLowerCase() === 'timestamp') return new Date();
+            return e.parameter[header] || '';
+          });
+
+          sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
+
+          return ContentService
+            .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
+            .setMimeType(ContentService.MimeType.JSON);
+        } catch (e) {
+          return ContentService
+            .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e.toString() }))
+            .setMimeType(ContentService.MimeType.JSON);
+        } finally {
+          lock.releaseLock();
+        }
+      }
+      ===========================================================================
+    */
+
+    // Set Dynamic Year in Footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // DOM Elements
+    const form = document.getElementById('leadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+
+    // Handle Form Submission
+    form.addEventListener('submit', function(e) {
+      // Prevent standard browser page reload
+      e.preventDefault();
+
+      // Reset previous error display
+      errorMessage.style.display = 'none';
+
+      // Validate Email & Name
+      const nameInput = document.getElementById('name');
+      const emailInput = document.getElementById('email');
+
+      if (!nameInput.value.trim() || !emailInput.value.trim()) {
+        showError('Please fill out all required fields.');
+        return;
+      }
+
+      // Dev Warning Check if scriptURL hasn't been configured yet
+      if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+        console.warn('Google Apps Script URL is not set. Simulating form submission...');
+        setLoadingState(true);
+
+        setTimeout(() => {
+          setLoadingState(false);
+          showSuccess();
+          console.log('Demo submission complete. Remember to set your scriptURL in index.html!');
+        }, 1200);
+        return;
+      }
+
+      // Enter Loading State
+      setLoadingState(true);
+
+      // Create FormData object matching 'name' and 'email' parameters
+      const formData = new FormData(form);
+
+      // Send POST request using Fetch API
+      fetch(scriptURL, { 
+        method: 'POST', 
+        body: formData 
+      })
+      .then(response => {
+        // Handle promise response
+        setLoadingState(false);
+        showSuccess();
+      })
+      .catch(error => {
+        // Handle errors and reset button
+        console.error('Submission error:', error);
+        setLoadingState(false);
+        showError('Unable to submit. Please check your connection and try again.');
+      });
+    });
+
+    /**
+     * Toggles button loading spinner and disabled state
+     * @param {boolean} isLoading 
+     */
+    function setLoadingState(isLoading) {
+      if (isLoading) {
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        
+        // Append spinner if not present
+        if (!submitBtn.querySelector('.spinner')) {
+          const spinner = document.createElement('span');
+          spinner.className = 'spinner';
+          submitBtn.appendChild(spinner);
+        }
+      } else {
+        submitBtn.disabled = false;
+        btnText.style.display = 'inline';
+        
+        const spinner = submitBtn.querySelector('.spinner');
+        if (spinner) {
+          spinner.remove();
+        }
+      }
+    }
+
+    /**
+     * Displays success message container and hides form
+     */
+    function showSuccess() {
+      form.style.display = 'none';
+      successMessage.style.display = 'block';
+    }
+
+    /**
+     * Displays error banner with custom text
+     * @param {string} message 
+     */
+    function showError(message) {
+      errorText.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+  </script>
 </body>
+</html>
