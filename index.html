@@ -1034,18 +1034,44 @@
     });
   </script>
 
-  <!-- External HITEK Widget Integration -->
+  <!-- External HITEK Widget Integration
+       GitHub Pages is HTTPS; http://18.210.213.215:4200 is HTTP-only, so the browser
+       blocks the script (mixed content). Serve the CMS over HTTPS, then put that
+       https:// URL below and remove the protocol check. -->
   <script>
-    window.HitekWidgetEmbed = {
-      widget_id: "cb3db790-328d-4eee-ab53-fc83bbee89df",
-      dealer_id: "5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4",
-      api_base: "http://18.210.213.215:4200"
-    };
+    (function () {
+      var apiBase = 'http://18.210.213.215:4200';
+      var widgetId = 'cb3db790-328d-4eee-ab53-fc83bbee89df';
+      var dealerId = '5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4';
+
+      if (location.protocol === 'https:' && apiBase.indexOf('https:') !== 0) {
+        console.warn(
+          '[HitekWidget] Skipped on HTTPS page: widget host must use HTTPS. Current api_base:',
+          apiBase
+        );
+        return;
+      }
+
+      window.HitekWidgetEmbed = {
+        widget_id: widgetId,
+        dealer_id: dealerId,
+        api_base: apiBase
+      };
+
+      var script = document.createElement('script');
+      script.src =
+        apiBase.replace(/\/$/, '') +
+        '/assets/widget/widget.js?widget_id=' +
+        encodeURIComponent(widgetId) +
+        '&dealer_id=' +
+        encodeURIComponent(dealerId) +
+        '&api_base=' +
+        encodeURIComponent(apiBase);
+      script.setAttribute('data-widget-id', widgetId);
+      script.setAttribute('data-dealer-id', dealerId);
+      document.body.appendChild(script);
+    })();
   </script>
-  <script
-    src="http://18.210.213.215:4200/assets/widget/widget.js?widget_id=cb3db790-328d-4eee-ab53-fc83bbee89df&dealer_id=5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4&api_base=http://18.210.213.215:4200"
-    data-widget-id="cb3db790-328d-4eee-ab53-fc83bbee89df"
-    data-dealer-id="5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4"></script>
 </body>
 
 </html>
