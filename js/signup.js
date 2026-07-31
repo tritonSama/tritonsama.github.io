@@ -2,7 +2,7 @@
  * Paste your Google Apps Script web app URL below after deploying.
  * See SETUP.md for step-by-step instructions.
  */
-const SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec";
 
 const form = document.getElementById("signupForm");
 const statusEl = document.getElementById("formStatus");
@@ -25,11 +25,12 @@ form.addEventListener("submit", async function (event) {
 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
-  const birthdate = document.getElementById("birthdate").value;
-  const birthtime = document.getElementById("birthtime").value;
+  const phone = document.getElementById("phone") ? document.getElementById("phone").value.trim() : "";
+  const birthdate = document.getElementById("birthdate") ? document.getElementById("birthdate").value : "";
+  const birthtime = document.getElementById("birthtime") ? document.getElementById("birthtime").value : "";
 
-  if (!name || !email || !birthdate || !birthtime) {
-    showStatus("Please fill in all fields.", "error");
+  if (!name || !email) {
+    showStatus("Please fill in all required fields.", "error");
     return;
   }
 
@@ -49,6 +50,7 @@ form.addEventListener("submit", async function (event) {
   const payload = {
     name: name,
     email: email,
+    phone: phone,
     birthdate: birthdate,
     birthtime: birthtime,
   };

@@ -8,9 +8,9 @@ Connect the signup form on this site to a Google Sheet so submissions are saved 
 2. Name it something like `Operation slipStream Signups`.
 3. In row 1, add these headers (exactly one per column):
 
-| A | B | C | D | E |
-|---|---|---|---|---|
-| Timestamp | Name | Email | Birthdate | BirthTime |
+| A | B | C | D | E | F | G |
+|---|---|---|---|---|---|---|
+| Timestamp | Name | Email | Phone | GuildClass | Birthdate | BirthTime |
 
 ## 2. Add the Apps Script
 
@@ -18,17 +18,40 @@ Connect the signup form on this site to a Google Sheet so submissions are saved 
 2. Delete any sample code and paste this:
 
 ```javascript
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ result: "success", message: "API active" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
+    var data = {};
+    
+    // Parse JSON payload if sent via application/json or text/plain
+    if (e && e.postData && e.postData.contents) {
+      try { data = JSON.parse(e.postData.contents); } catch (err) {}
+    }
+    
+    // Fall back to e.parameter if sent via form URL encoding
+    var params = (e && e.parameter) ? e.parameter : {};
+
+    var name = data.name || params.name || "";
+    var email = data.email || params.email || "";
+    var phone = data.phone || params.phone || "";
+    var guildClass = data.guildClass || params.guildClass || "";
+    var birthdate = data.birthdate || params.birthdate || params.birthDate || "";
+    var birthtime = data.birthtime || params.birthtime || params.birthTime || "";
 
     sheet.appendRow([
       new Date(),
-      data.name || "",
-      data.email || "",
-      data.birthdate || "",
-      data.birthtime || ""
+      name,
+      email,
+      phone,
+      guildClass,
+      birthdate,
+      birthtime
     ]);
 
     return ContentService

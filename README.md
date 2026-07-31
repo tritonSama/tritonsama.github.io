@@ -31,10 +31,13 @@ A modern, responsive, high-converting lead generation single-page application bu
 1. **Create a Google Sheet**:
    - Go to [Google Sheets](https://sheets.new) and create a new spreadsheet.
    - Name your sheet (e.g., `FlowCraft Leads`).
-   - In **Row 1**, set the following exact column headers in columns A, B, and C:
+   - In **Row 1**, set the following exact column headers in columns A through F:
      - `A1`: `timestamp`
      - `B1`: `name`
      - `C1`: `email`
+     - `D1`: `guildClass`
+     - `E1`: `birthDate`
+     - `F1`: `birthTime`
 
 2. **Open Apps Script Editor**:
    - Click **Extensions** > **Apps Script** in the Google Sheets top menu.
@@ -44,6 +47,12 @@ A modern, responsive, high-converting lead generation single-page application bu
    - Copy and paste the following Google Apps Script code into `Code.gs`:
 
 ```javascript
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ 'result': 'success', 'message': 'GuardiansCreed API is active' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.tryLock(10000);
@@ -53,9 +62,20 @@ function doPost(e) {
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     var nextRow = sheet.getLastRow() + 1;
     
+    // Normalize parameter keys for case-insensitive / space-free matching
+    var params = e.parameter || {};
+    var paramMap = {};
+    for (var key in params) {
+      var normKey = key.toLowerCase().replace(/[\s_]/g, '');
+      paramMap[normKey] = params[key];
+    }
+
     var newRow = headers.map(function(header) {
-      if (header.toLowerCase() === 'timestamp') return new Date();
-      return e.parameter[header] || '';
+      var hStr = String(header).trim();
+      var normHeader = hStr.toLowerCase().replace(/[\s_]/g, '');
+      
+      if (normHeader === 'timestamp' || normHeader === 'date') return new Date();
+      return paramMap[normHeader] !== undefined ? paramMap[normHeader] : (params[hStr] || '');
     });
 
     sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
@@ -63,9 +83,9 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
       .setMimeType(ContentService.MimeType.JSON);
-  } catch (e) {
+  } catch (err) {
     return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e.toString() }))
+      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
@@ -86,7 +106,7 @@ function doPost(e) {
 
 5. **Connect Web App URL to `index.html`**:
    - Open `index.html`.
-   - Locate line ~370 near the bottom in the `<script>` tag:
+   - Locate line ~952 near the bottom in the `<script>` tag:
      ```javascript
      const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
      ```

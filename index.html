@@ -7,60 +7,62 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <!-- SEO Meta Tags -->
-  <title>Get Early Access | Master Your Workflow with FlowCraft</title>
+  <title>GuardiansCreed | Fantasy Guild Platform & Learn-to-Earn Economy</title>
   <meta name="description"
-    content="Join 5,000+ creators mastering their daily workflow with FlowCraft. Get exclusive tips, free templates, and community access.">
-  <meta name="keywords" content="workflow automation, creator tools, productivity templates, early access">
-  <meta property="og:title" content="Get Early Access to FlowCraft">
+    content="Join GuardiansCreed — the abyssal fantasy guild platform blending education, RPG progression, and community with a crypto-enabled Learn-to-Earn economy. Level up from Mage to Paladin!">
+  <meta name="keywords"
+    content="GuardiansCreed, fantasy guild, learn-to-earn, crypto economy, RPG progression, Castle Hub, Creed Points">
+  <meta property="og:title" content="GuardiansCreed | Abyssal Guild Early Access">
   <meta property="og:description"
-    content="Join 5,000+ creators mastering their workflow. No spam, unsubscribe anytime.">
+    content="Embark on education & guild quests, level up your class rank, and earn Creed Points. Reserve your spot today!">
   <meta property="og:type" content="website">
 
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts: Cinzel (Anime Fantasy) & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <style>
     /* ==========================================================================
-       DESIGN SYSTEM & UTILITIES
+       DARK UNDERWATER ANIME GUILD DESIGN SYSTEM - GUARDIANSCREED
        ========================================================================== */
     :root {
-      /* Palette */
-      --color-deep-blue: #0F172A;
-      --color-deep-blue-light: #1E293B;
-      --color-white: #FFFFFF;
-      --color-bg-light: #F8FAFC;
-      --color-text-main: #0F172A;
-      --color-text-muted: #64748B;
-      --color-text-light: #94A3B8;
+      /* Abyssal Palette */
+      --color-abyss-black: #02060D;
+      --color-abyss-dark: #061121;
+      --color-abyss-mid: #0A192F;
+      --color-abyss-card: rgba(10, 25, 47, 0.75);
 
-      /* Vibrant Orange CTA */
-      --color-cta: #F97316;
-      --color-cta-hover: #EA580C;
-      --color-cta-active: #C2410C;
+      /* Bioluminescent Accents */
+      --color-cyan-glow: #00F2FE;
+      --color-teal-glow: #06B6D4;
+      --color-aquamarine: #10B981;
+      --color-guild-gold: #FFD700;
+      --color-guild-gold-hover: #F59E0B;
+      --color-violet-glow: #A855F7;
 
-      /* Status & Accents */
-      --color-success: #10B981;
-      --color-success-bg: #ECFDF5;
-      --color-error: #EF4444;
-      --color-error-bg: #FEF2F2;
-      --color-border: #E2E8F0;
-      --color-border-focus: #F97316;
+      /* Text Colors */
+      --color-text-bright: #F8FAFC;
+      --color-text-subtle: #94A3B8;
+      --color-text-dim: #64748B;
 
-      /* Shadows & Radii */
+      /* Borders & Glass */
+      --border-glass: rgba(6, 182, 212, 0.25);
+      --border-glass-hover: rgba(0, 242, 254, 0.5);
+      --shadow-abyssal: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 242, 254, 0.12);
+      --shadow-gold-cta: 0 10px 30px -5px rgba(255, 215, 0, 0.4), 0 0 20px rgba(245, 158, 11, 0.3);
+
+      /* Radii */
       --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
       --radius-pill: 9999px;
 
-      --shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
-      --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-      --shadow-cta: 0 10px 25px -5px rgba(249, 115, 22, 0.4);
-      --shadow-cta-hover: 0 14px 30px -5px rgba(249, 115, 22, 0.55);
-
-      /* Typography */
-      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      /* Fonts */
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
     }
 
     /* CSS Reset */
@@ -73,28 +75,120 @@
     }
 
     body {
-      font-family: var(--font-family);
-      background-color: var(--color-bg-light);
-      color: var(--color-text-main);
+      font-family: var(--font-body);
+      background-color: var(--color-abyss-black);
+      color: var(--color-text-bright);
       line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      position: relative;
+      background-image:
+        radial-gradient(circle at 50% 15%, rgba(0, 242, 254, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 85% 60%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 15% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        linear-gradient(180deg, #061121 0%, #02060D 100%);
+      background-attachment: fixed;
     }
 
-    /* Layout Containers */
+    /* Floating Bubble Particles Background */
+    .underwater-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -30px;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(0, 242, 254, 0.1));
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 50%;
+      animation: rise 14s infinite linear;
+    }
+
+    .bubble:nth-child(1) {
+      left: 10%;
+      width: 24px;
+      height: 24px;
+      animation-duration: 12s;
+      animation-delay: 0s;
+    }
+
+    .bubble:nth-child(2) {
+      left: 25%;
+      width: 14px;
+      height: 14px;
+      animation-duration: 18s;
+      animation-delay: 2s;
+    }
+
+    .bubble:nth-child(3) {
+      left: 45%;
+      width: 32px;
+      height: 32px;
+      animation-duration: 15s;
+      animation-delay: 4s;
+    }
+
+    .bubble:nth-child(4) {
+      left: 65%;
+      width: 18px;
+      height: 18px;
+      animation-duration: 13s;
+      animation-delay: 1s;
+    }
+
+    .bubble:nth-child(5) {
+      left: 85%;
+      width: 28px;
+      height: 28px;
+      animation-duration: 17s;
+      animation-delay: 3s;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.6;
+      }
+
+      80% {
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: translateY(-110vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* Layout Container */
     .container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
     }
 
-    /* Header / Brand Bar */
+    /* Header */
     header {
-      padding: 1.75rem 0;
-      border-bottom: 1px solid var(--color-border);
-      background: var(--color-white);
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(6, 182, 212, 0.15);
+      background: rgba(6, 17, 33, 0.65);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-content {
@@ -106,115 +200,345 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      font-size: 1.35rem;
+      gap: 0.75rem;
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
       font-weight: 800;
-      color: var(--color-deep-blue);
+      color: var(--color-text-bright);
       text-decoration: none;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
     }
 
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--color-deep-blue), var(--color-cta));
-      border-radius: var(--radius-sm);
+    .logo-crest {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #00F2FE 0%, #7928CA 100%);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--color-white);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
     .badge-early-access {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.85rem;
-      background-color: rgba(249, 115, 22, 0.1);
-      color: var(--color-cta-hover);
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--color-cyan-glow);
       font-size: 0.825rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(249, 115, 22, 0.2);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
     }
 
     .badge-dot {
       width: 8px;
       height: 8px;
-      background-color: var(--color-cta);
+      background-color: var(--color-cyan-glow);
       border-radius: 50%;
-      display: inline-block;
-      animation: pulse-dot 2s infinite;
+      box-shadow: 0 0 8px var(--color-cyan-glow);
+      animation: pulse-glow 2s infinite;
     }
 
-    @keyframes pulse-dot {
+    @keyframes pulse-glow {
 
       0%,
       100% {
         transform: scale(1);
         opacity: 1;
+        box-shadow: 0 0 8px var(--color-cyan-glow);
       }
 
       50% {
-        transform: scale(1.3);
-        opacity: 0.6;
+        transform: scale(1.4);
+        opacity: 0.7;
+        box-shadow: 0 0 16px var(--color-cyan-glow);
       }
     }
 
-    /* ==========================================================================
-       HERO SECTION
-       ========================================================================== */
+    /* Hero Section */
     .hero {
-      padding: 4rem 0 5rem;
-      background: linear-gradient(180deg, var(--color-white) 0%, var(--color-bg-light) 100%);
-      position: relative;
+      padding: 4.5rem 0 5.5rem;
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 3rem;
+      gap: 3.5rem;
       align-items: center;
     }
 
     @media (min-width: 992px) {
       .hero-grid {
-        grid-template-columns: 1.15fr 0.85fr;
+        grid-template-columns: 1.1fr 0.9fr;
         gap: 4rem;
       }
     }
 
-    .hero-text {
-      max-width: 640px;
-    }
-
     .hero-headline {
-      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      font-size: 2.75rem;
       font-weight: 800;
       line-height: 1.15;
-      color: var(--color-deep-blue);
-      letter-spacing: -0.03em;
+      letter-spacing: 0.02em;
       margin-bottom: 1.25rem;
+      color: #FFFFFF;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
     }
 
     @media (min-width: 768px) {
       .hero-headline {
-        font-size: 3.25rem;
+        font-size: 3.5rem;
       }
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-cta) 100%);
+      background: linear-gradient(135deg, #00F2FE 0%, #FFD700 50%, #A855F7 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(0, 242, 254, 0.4);
     }
 
     .hero-subheadline {
       font-size: 1.125rem;
-      color: var(--color-text-muted);
-      line-height: 1.6;
+      color: var(--color-text-subtle);
+      line-height: 1.7;
       margin-bottom: 2rem;
-      font-weight: 400;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--color-abyss-card);
+      backdrop-filter: blur(16px);
+      padding: 2.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-abyssal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00F2FE, #FFD700, #A855F7);
+    }
+
+    .form-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-text-bright);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+
+    .form-header p {
+      font-size: 0.9rem;
+      color: var(--color-text-subtle);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-cyan-glow);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      font-family: var(--font-body);
+      color: var(--color-text-bright);
+      background-color: rgba(6, 17, 33, 0.8);
+      border: 1.5px solid rgba(6, 182, 212, 0.3);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .form-input::placeholder {
+      color: var(--color-text-dim);
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--color-cyan-glow);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+      background-color: rgba(10, 25, 47, 0.9);
+    }
+
+    .form-select option {
+      background-color: #061121;
+      color: #F8FAFC;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8) sepia(1) saturate(5) hue-rotate(150deg);
+      cursor: pointer;
+    }
+
+    /* CTA Button */
+    .cta-button {
+      width: 100%;
+      padding: 1.1rem 1.5rem;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #061121;
+      background: linear-gradient(135deg, #FFD700 0%, #F59E0B 100%);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: var(--shadow-gold-cta);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px -5px rgba(255, 215, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Castle Hub Guild Dashboard Preview Card */
+    .castle-preview-card {
+      background: var(--color-abyss-card);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-abyssal);
+      position: relative;
+    }
+
+    .guild-header-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    .guild-title-box h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--color-guild-gold);
+      letter-spacing: 0.03em;
+    }
+
+    .guild-rank-tag {
+      padding: 0.35rem 0.85rem;
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      color: #D8B4FE;
+      font-size: 0.825rem;
+      font-weight: 800;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+    }
+
+    /* Rank Progression Bar */
+    .progression-track {
+      margin: 1.5rem 0;
+    }
+
+    .rank-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.775rem;
+      font-weight: 700;
+      color: var(--color-text-subtle);
+      margin-bottom: 0.5rem;
+    }
+
+    .rank-labels span.active {
+      color: var(--color-cyan-glow);
+      text-shadow: 0 0 8px var(--color-cyan-glow);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: rgba(6, 17, 33, 0.9);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      width: 65%;
+      height: 100%;
+      background: linear-gradient(90deg, #00F2FE 0%, #FFD700 100%);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.8);
+      border-radius: 5px;
+    }
+
+    /* Quest List Cards */
+    .quest-card {
+      background: rgba(6, 17, 33, 0.7);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+    }
+
+    .quest-card:hover {
+      border-color: var(--color-cyan-glow);
+      background: rgba(10, 25, 47, 0.9);
+      transform: translateX(4px);
+    }
+
+    .quest-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-bright);
+    }
+
+    .quest-info p {
+      font-size: 0.8rem;
+      color: var(--color-text-subtle);
+    }
+
+    .quest-reward {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--color-guild-gold);
+      background: rgba(255, 215, 0, 0.12);
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
     }
 
     /* Social Proof Bar */
@@ -222,9 +546,9 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--color-border);
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(6, 182, 212, 0.2);
     }
 
     .avatar-group {
@@ -232,14 +556,13 @@
     }
 
     .avatar {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      border: 2px solid var(--color-white);
+      border: 2px solid var(--color-cyan-glow);
       margin-left: -10px;
       background-size: cover;
       background-position: center;
-      background-color: var(--color-border);
     }
 
     .avatar:first-child {
@@ -247,236 +570,40 @@
     }
 
     .proof-text {
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      font-weight: 500;
+      font-size: 0.85rem;
+      color: var(--color-text-subtle);
     }
 
     .proof-text span {
-      color: var(--color-deep-blue);
+      color: var(--color-cyan-glow);
       font-weight: 700;
     }
 
-    /* ==========================================================================
-       SIGNUP FORM CARD
-       ========================================================================== */
-    .form-card {
-      background: var(--color-white);
-      padding: 2.25rem;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-card);
-      border: 1px solid var(--color-border);
-      position: relative;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-header {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-header h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--color-deep-blue);
-      margin-bottom: 0.35rem;
-      letter-spacing: -0.01em;
-    }
-
-    .form-header p {
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-      text-align: left;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--color-deep-blue);
-      margin-bottom: 0.4rem;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 0.85rem 1rem;
-      font-size: 1rem;
-      font-family: var(--font-family);
-      color: var(--color-text-main);
-      background-color: var(--color-bg-light);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      transition: all 0.2s ease;
-      outline: none;
-    }
-
-    .form-input::placeholder {
-      color: var(--color-text-light);
-    }
-
-    .form-input:focus {
-      background-color: var(--color-white);
-      border-color: var(--color-border-focus);
-      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
-    }
-
-    /* CTA Button */
-    .cta-button {
-      width: 100%;
-      padding: 1rem 1.5rem;
-      font-size: 1.05rem;
-      font-weight: 700;
-      font-family: var(--font-family);
-      color: var(--color-white);
-      background-color: var(--color-cta);
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      box-shadow: var(--shadow-cta);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      position: relative;
-    }
-
-    .cta-button:hover {
-      background-color: var(--color-cta-hover);
-      box-shadow: var(--shadow-cta-hover);
-      transform: translateY(-2px);
-    }
-
-    .cta-button:active {
-      background-color: var(--color-cta-active);
-      transform: translateY(0);
-      box-shadow: var(--shadow-cta);
-    }
-
-    .cta-button:disabled {
-      opacity: 0.75;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* Spinner Animation */
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2.5px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--color-white);
-      animation: spin 0.8s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Trust Signals */
-    .trust-signal {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      margin-top: 1rem;
-      font-size: 0.825rem;
-      color: var(--color-text-muted);
-      font-weight: 500;
-    }
-
-    /* Success & Error State Containers */
-    .status-message {
-      padding: 1.5rem;
-      border-radius: var(--radius-sm);
-      text-align: center;
-      display: none;
-      animation: fadeIn 0.4s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .status-message.success {
-      background-color: var(--color-success-bg);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #065F46;
-    }
-
-    .status-message.error {
-      background-color: var(--color-error-bg);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #991B1B;
-      margin-top: 1rem;
-    }
-
-    .success-icon {
-      width: 48px;
-      height: 48px;
-      background-color: var(--color-success);
-      color: var(--color-white);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 0.85rem;
-      font-size: 1.5rem;
-    }
-
-    .success-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.35rem;
-      color: #064E3B;
-    }
-
-    .success-desc {
-      font-size: 0.9rem;
-      color: #047857;
-    }
-
-    /* ==========================================================================
-       BENEFITS SECTION
-       ========================================================================== */
+    /* Benefits Section */
     .benefits {
-      padding: 5rem 0;
-      background-color: var(--color-white);
-      border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
+      padding: 5.5rem 0;
+      background: rgba(6, 17, 33, 0.85);
+      border-top: 1px solid rgba(6, 182, 212, 0.15);
+      border-bottom: 1px solid rgba(6, 182, 212, 0.15);
     }
 
     .section-header {
       text-align: center;
-      max-width: 650px;
+      max-width: 680px;
       margin: 0 auto 3.5rem;
     }
 
     .section-title {
-      font-size: 2rem;
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
       font-weight: 800;
-      color: var(--color-deep-blue);
-      letter-spacing: -0.02em;
+      color: var(--color-text-bright);
       margin-bottom: 0.75rem;
     }
 
     .section-subtitle {
       font-size: 1.05rem;
-      color: var(--color-text-muted);
+      color: var(--color-text-subtle);
     }
 
     .benefits-grid {
@@ -492,144 +619,80 @@
     }
 
     .benefit-card {
-      background: var(--color-bg-light);
-      padding: 2rem;
+      background: var(--color-abyss-card);
+      backdrop-filter: blur(12px);
+      padding: 2.25rem;
       border-radius: var(--radius-md);
-      border: 1px solid var(--color-border);
-      transition: all 0.3s ease;
+      border: 1px solid var(--border-glass);
+      transition: all 0.35s ease;
     }
 
     .benefit-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-card);
-      border-color: rgba(249, 115, 22, 0.3);
+      transform: translateY(-6px);
+      border-color: var(--color-cyan-glow);
+      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.2);
     }
 
     .benefit-icon {
-      width: 52px;
-      height: 52px;
-      background: rgba(249, 115, 22, 0.1);
-      color: var(--color-cta);
+      width: 56px;
+      height: 56px;
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--color-cyan-glow);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.6rem;
       margin-bottom: 1.25rem;
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
     }
 
     .benefit-title {
+      font-family: var(--font-heading);
       font-size: 1.2rem;
       font-weight: 700;
-      color: var(--color-deep-blue);
+      color: var(--color-text-bright);
       margin-bottom: 0.5rem;
     }
 
     .benefit-desc {
       font-size: 0.925rem;
-      color: var(--color-text-muted);
+      color: var(--color-text-subtle);
       line-height: 1.6;
     }
 
-    /* Visual Graphic in Hero */
-    .hero-graphic-card {
-      background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-deep-blue-light) 100%);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      color: var(--color-white);
-      box-shadow: var(--shadow-card);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .hero-graphic-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .graphic-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .graphic-dot.red {
-      background-color: #EF4444;
-    }
-
-    .graphic-dot.yellow {
-      background-color: #F59E0B;
-    }
-
-    .graphic-dot.green {
-      background-color: #10B981;
-    }
-
-    .graphic-preview-item {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-sm);
-      padding: 1rem;
-      margin-bottom: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .graphic-badge {
-      padding: 0.25rem 0.6rem;
-      background: rgba(249, 115, 22, 0.2);
-      color: var(--color-cta);
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: var(--radius-pill);
-    }
-
-    /* ==========================================================================
-       FOOTER
-       ========================================================================== */
+    /* Footer */
     footer {
-      padding: 2.5rem 0;
-      background-color: var(--color-deep-blue);
-      color: var(--color-text-light);
+      padding: 3rem 0;
+      background: #02060D;
+      border-top: 1px solid rgba(6, 182, 212, 0.15);
+      color: var(--color-text-dim);
       font-size: 0.875rem;
       text-align: center;
     }
 
-    .footer-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
+    /* Status Messages */
+    .status-message {
+      padding: 1.25rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      display: none;
+      margin-top: 1rem;
     }
 
-    @media (min-width: 768px) {
-      .footer-content {
-        flex-direction: row;
-        justify-content: space-between;
-      }
+    .status-message.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34D399;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 1.5rem;
+    .status-message.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #F87171;
     }
 
-    .footer-links a {
-      color: var(--color-text-light);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      color: var(--color-white);
-    }
-
-    /* Hidden Utility */
     .hidden {
       display: none !important;
     }
@@ -638,68 +701,110 @@
 
 <body>
 
-  <!-- ==========================================================================
-       HEADER
-       ========================================================================== -->
+  <!-- Floating Underwater Bubbles Effect -->
+  <div class="underwater-particles">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <!-- Header -->
   <header>
     <div class="container header-content">
       <a href="#" class="logo">
-        <div class="logo-icon">
-          <!-- Flow Icon SVG -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        <div class="logo-crest">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
           </svg>
         </div>
-        FlowCraft
+        GuardiansCreed
       </a>
       <div class="badge-early-access">
         <span class="badge-dot"></span>
-        Limited Spots Left
+        Chapter 1: Abyssal Realm MVP
       </div>
     </div>
   </header>
 
-  <!-- ==========================================================================
-       HERO SECTION
-       ========================================================================== -->
+  <!-- Hero Section -->
   <section class="hero">
     <div class="container hero-grid">
 
-      <!-- Hero Text & Pitch -->
+      <!-- Hero Pitch & Sign Up -->
       <div class="hero-text">
         <h1 class="hero-headline">
-          Get Early Access to <span class="gradient-text">FlowCraft</span>
+          Enter the Realm of <span class="gradient-text">GuardiansCreed</span>
         </h1>
         <p class="hero-subheadline">
-          Join 5,000+ creators mastering their daily workflow. Get automated templates, weekly productivity tips, and
-          private community access. No spam, unsubscribe anytime.
+          A fantasy guild platform blending education, RPG progression, and community — featuring a crypto-enabled
+          <strong>Learn-to-Earn</strong> economy. Complete quests, level up from Apprentice to Paladin, and earn Creed
+          Points.
         </p>
 
         <!-- Form Card Container -->
         <div class="form-card">
           <div class="form-header">
-            <h2>Reserve Your Access Spot</h2>
-            <p>Enter your details below to get instant access when we launch.</p>
+            <h2>Claim Your Guild Crest</h2>
+            <p>Select your class and get instant early access to the Castle Hub MVP.</p>
           </div>
 
           <!-- Lead Generation Form -->
           <form id="leadForm" novalidate>
             <div class="form-group">
-              <label for="name" class="form-label">Full Name</label>
-              <input type="text" id="name" name="name" class="form-input" placeholder="e.g. Alex Morgan" required
-                autocomplete="name">
+              <label for="name" class="form-label">Guardian Name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="e.g. Kaelen Shadowweaver"
+                required>
             </div>
 
             <div class="form-group">
-              <label for="email" class="form-label">Email Address</label>
-              <input type="email" id="email" name="email" class="form-input" placeholder="alex@example.com" required
-                autocomplete="email">
+              <label for="email" class="form-label">Guardian Email</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="kaelen@abyssalguild.io"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" id="phone" name="phone" class="form-input" placeholder="(555) 000-0000">
+            </div>
+
+            <div class="form-group">
+              <label for="guildClass" class="form-label">Starting Element / Class</label>
+              <select id="guildClass" name="guildClass" class="form-select" required>
+                <option value="" disabled selected>-- Select Your Element --</option>
+                <option value="fire">🔥 Fire (Pyromancer - Attack &amp; DPS)</option>
+                <option value="water">🌊 Water (Hydromancer - Abyssal Healer &amp; Flow)</option>
+                <option value="earth">🪨 Earth (Geomancer - Defense &amp; Citadel Tank)</option>
+                <option value="wind">🌪️ Wind (Aeromancer - Speed &amp; Quest Scout)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="birthDate" class="form-label">Birth Date <span
+                  style="color: var(--color-cyan-glow);">*</span></label>
+              <input type="date" id="birthDate" name="birthDate" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                <label for="birthTime" class="form-label" style="margin-bottom: 0;">Birth Time</label>
+                <label
+                  style="font-size: 0.8rem; color: var(--color-text-subtle); display: flex; align-items: center; gap: 0.35rem; cursor: pointer; text-transform: none; font-weight: 500;">
+                  <input type="checkbox" id="unknownTime" name="unknownTime"
+                    style="accent-color: var(--color-cyan-glow);">
+                  I don't know my birth time
+                </label>
+              </div>
+              <input type="time" id="birthTime" name="birthTime" class="form-input">
             </div>
 
             <button type="submit" id="submitBtn" class="cta-button">
-              <span id="btnText">Get Instant Access</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              <span id="btnText">Pledge &amp; Enter Realm</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                 stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -707,335 +812,240 @@
             </button>
           </form>
 
-          <!-- Error Alert Banner -->
+          <!-- Error Banner -->
           <div id="errorMessage" class="status-message error">
-            ⚠️ <span id="errorText">Something went wrong. Please try again.</span>
+            ⚠️ <span id="errorText">Unable to join realm. Please try again.</span>
           </div>
 
-          <!-- Success Message Area (Hidden by default) -->
+          <!-- Success Message -->
           <div id="successMessage" class="status-message success">
-            <div class="success-icon">✓</div>
-            <div class="success-title">Thanks! You're on the list.</div>
-            <p class="success-desc">We've saved your spot. Check your inbox soon for your exclusive welcome kit!</p>
+            <div class="success-title">✓ Welcome, Guardian!</div>
+            <p>Your crest has been registered in the Abyssal Codex. Check your inbox for your starter key!</p>
           </div>
 
-          <!-- Trust Signals -->
-          <div class="trust-signal">
-            <span>🔒</span> Secure &amp; Spam-free. Instant 1-click unsubscribe.
+          <!-- Social Proof -->
+          <div class="social-proof">
+            <div class="avatar-group">
+              <div class="avatar"
+                style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');">
+              </div>
+              <div class="avatar"
+                style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80');">
+              </div>
+              <div class="avatar"
+                style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80');">
+              </div>
+            </div>
+            <div class="proof-text">
+              Join <span>5,000+ Guardians</span> mastering quests in the Castle Hub.
+            </div>
           </div>
         </div>
-
-        <!-- Social Proof Stats -->
-        <div class="social-proof">
-          <div class="avatar-group">
-            <div class="avatar"
-              style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');">
-            </div>
-            <div class="avatar"
-              style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80');">
-            </div>
-            <div class="avatar"
-              style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80');">
-            </div>
-            <div class="avatar"
-              style="background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80');">
-            </div>
-          </div>
-          <div class="proof-text">
-            Joined by <span>5,000+ creators</span> and digital builders
-          </div>
-        </div>
-
       </div>
 
-      <!-- Hero Visual Dashboard Preview -->
-      <div class="hero-graphic-card">
-        <div class="hero-graphic-header">
-          <span class="graphic-dot red"></span>
-          <span class="graphic-dot yellow"></span>
-          <span class="graphic-dot green"></span>
-          <span style="font-size: 0.75rem; color: #94A3B8; margin-left: 0.5rem;">FlowCraft Workspace Preview</span>
-        </div>
-
-        <div style="margin-bottom: 1.5rem;">
-          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">Automated Creator Stack</h3>
-          <p style="font-size: 0.85rem; color: #94A3B8;">Real-time task synchronization & workflow tracking</p>
-        </div>
-
-        <div class="graphic-preview-item">
-          <div>
-            <div style="font-size: 0.9rem; font-weight: 600;">⚡ Notion Content Pipeline</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">Auto-sync drafts & calendar</div>
+      <!-- Interactive Castle Hub Preview -->
+      <div class="castle-preview-card">
+        <div class="guild-header-badge">
+          <div class="guild-title-box">
+            <h3>🏰 Castle Hub Dashboard</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-subtle);">Active Guild: Abyssal Leviathans</p>
           </div>
-          <span class="graphic-badge">Active</span>
+          <span class="guild-rank-tag">RANK: PALADIN</span>
         </div>
 
-        <div class="graphic-preview-item">
-          <div>
-            <div style="font-size: 0.9rem; font-weight: 600;">📊 Google Sheets Lead Collector</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">Zero-backend script connector</div>
+        <!-- Rank Progression -->
+        <div class="progression-track">
+          <div class="rank-labels">
+            <span>Mage (0 XP)</span>
+            <span class="active">Knight (100 XP)</span>
+            <span>Paladin (500 XP)</span>
           </div>
-          <span class="graphic-badge">Connected</span>
-        </div>
-
-        <div class="graphic-preview-item">
-          <div>
-            <div style="font-size: 0.9rem; font-weight: 600;">💬 VIP Discord Dispatcher</div>
-            <div style="font-size: 0.75rem; color: #94A3B8;">Instant community notifications</div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill"></div>
           </div>
-          <span class="graphic-badge">Ready</span>
         </div>
 
-        <div
-          style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #94A3B8;">
-          <span>Weekly Time Saved: <strong>~14.5 Hours</strong></span>
-          <span style="color: #F97316; font-weight: 600;">100% Automated</span>
+        <!-- Active Quests Preview -->
+        <h4
+          style="font-family: var(--font-heading); font-size: 1rem; color: var(--color-cyan-glow); margin-bottom: 0.75rem;">
+          📜 Available Quests
+        </h4>
+
+        <div class="quest-card">
+          <div class="quest-info">
+            <h4>Abyssal Spellcraft &amp; Code</h4>
+            <p>Education Quest • Master Web3 Smart Contracts</p>
+          </div>
+          <div class="quest-reward">+150 XP • +50 Creed</div>
+        </div>
+
+        <div class="quest-card">
+          <div class="quest-info">
+            <h4>Guild Citadel Raid</h4>
+            <p>Guild Quest • Co-op Boss Defeat</p>
+          </div>
+          <div class="quest-reward">+300 XP • +120 Creed</div>
+        </div>
+
+        <div class="quest-card">
+          <div class="quest-info">
+            <h4>Learn-to-Earn Codex</h4>
+            <p>Story Quest • Unlock Token Vault</p>
+          </div>
+          <div class="quest-reward">+500 XP • +250 Creed</div>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- ==========================================================================
-       BENEFITS SECTION
-       ========================================================================== -->
+  <!-- Benefits Section -->
   <section class="benefits">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Everything You Need to Scale Faster</h2>
-        <p class="section-subtitle">Unlock powerful creator tools and strategies built to eliminate guesswork and
-          repetitive admin work.</p>
+        <h2 class="section-title">Core Guild Architecture</h2>
+        <p class="section-subtitle">
+          Designed for seamless progression, community governance, and crypto rewards.
+        </p>
       </div>
 
       <div class="benefits-grid">
-
         <!-- Benefit 1 -->
         <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
-              </path>
-            </svg>
-          </div>
-          <h3 class="benefit-title">Exclusive Tips</h3>
-          <p class="benefit-desc">Actionable productivity frameworks and secret workflow blueprints delivered straight
-            to your inbox every single week.</p>
+          <div class="benefit-icon">🏰</div>
+          <h3 class="benefit-title">Castle Hub &amp; Guilds</h3>
+          <p class="benefit-desc">
+            Manage your member roster, switch between fantasy guilds, track stats, and oversee live activity feeds.
+          </p>
         </div>
 
         <!-- Benefit 2 -->
         <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-          </div>
-          <h3 class="benefit-title">Free Templates</h3>
-          <p class="benefit-desc">Plug-and-play automation templates for Notion, Zapier, and Google Workspace ready to
-            copy with a single click.</p>
+          <div class="benefit-icon">⚔️</div>
+          <h3 class="benefit-title">Quests &amp; Learn-to-Earn</h3>
+          <p class="benefit-desc">
+            Complete Education, Guild, and Story quests to earn XP and Creed Points convertible to crypto tokens.
+          </p>
         </div>
 
         <!-- Benefit 3 -->
         <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          </div>
-          <h3 class="benefit-title">Community Access</h3>
-          <p class="benefit-desc">Connect with an active network of top creators, share insights, receive direct
-            feedback, and build together.</p>
+          <div class="benefit-icon">🛡️</div>
+          <h3 class="benefit-title">Auto Rank Progression</h3>
+          <p class="benefit-desc">
+            Rise automatically from Mage (0 XP) → Knight (100 XP) → Paladin (500 XP) as you complete guild challenges.
+          </p>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ==========================================================================
-       FOOTER
-       ========================================================================== -->
+  <!-- Footer -->
   <footer>
-    <div class="container footer-content">
-      <div>
-        &copy; <span id="year"></span> FlowCraft. All rights reserved. Hosted on GitHub Pages.
-      </div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Contact</a>
-      </div>
+    <div class="container">
+      <p>© 2026 GuardiansCreed. All rights reserved. Powered by Learn-to-Earn Guild Economy.</p>
     </div>
   </footer>
 
-  <!-- ==========================================================================
-       VANILLA JAVASCRIPT & GOOGLE APPS SCRIPT INTEGRATION
-       ========================================================================== -->
+  <!-- Lead Form JS Script -->
   <script>
-    // =========================================================================
-    // GOOGLE APPS SCRIPT WEB APP CONFIGURATION
-    // =========================================================================
-    // INSTRUCTIONS:
-    // 1. Follow the instructions in README.md to create your Google Sheet & Apps Script.
-    // 2. Deploy your script as a Web App (Execute as: Me, Who has access: Anyone).
-    // 3. Copy your Web App URL and replace the placeholder string below!
+    // -------------------------------------------------------------
+    // GOOGLE APPS SCRIPT URL FOR LEAD COLLECTION
+    // Replace 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' with your Google Web App URL
     // Example: const scriptURL = 'https://script.google.com/macros/s/AKfycbx.../exec';
-    // =========================================================================
+    // -------------------------------------------------------------
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec';
 
-    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-
-    /*
-      ===========================================================================
-      RECOMMENDED GOOGLE APPS SCRIPT CODE (Paste in Google Sheets -> Extensions -> Apps Script):
-      ===========================================================================
-      
-      function doPost(e) {
-        var lock = LockService.getScriptLock();
-        lock.tryLock(10000);
-
-        try {
-          var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-          var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-          var nextRow = sheet.getLastRow() + 1;
-          
-          var newRow = headers.map(function(header) {
-            if (header.toLowerCase() === 'timestamp') return new Date();
-            return e.parameter[header] || '';
-          });
-
-          sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
-
-          return ContentService
-            .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
-            .setMimeType(ContentService.MimeType.JSON);
-        } catch (e) {
-          return ContentService
-            .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e.toString() }))
-            .setMimeType(ContentService.MimeType.JSON);
-        } finally {
-          lock.releaseLock();
-        }
-      }
-      ===========================================================================
-    */
-
-    // Set Dynamic Year in Footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // DOM Elements
     const form = document.getElementById('leadForm');
     const submitBtn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
     const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
-    const errorText = document.getElementById('errorText');
+    const unknownTimeCheckbox = document.getElementById('unknownTime');
+    const birthTimeInput = document.getElementById('birthTime');
 
-    // Handle Form Submission
-    form.addEventListener('submit', function (e) {
-      // Prevent standard browser page reload
-      e.preventDefault();
-
-      // Reset previous error display
-      errorMessage.style.display = 'none';
-
-      // Validate Email & Name
-      const nameInput = document.getElementById('name');
-      const emailInput = document.getElementById('email');
-
-      if (!nameInput.value.trim() || !emailInput.value.trim()) {
-        showError('Please fill out all required fields.');
-        return;
+    // Toggle birth time input state when unknown checkbox changes
+    unknownTimeCheckbox.addEventListener('change', function () {
+      if (this.checked) {
+        birthTimeInput.value = '';
+        birthTimeInput.disabled = true;
+        birthTimeInput.style.opacity = '0.4';
+      } else {
+        birthTimeInput.disabled = false;
+        birthTimeInput.style.opacity = '1';
       }
-
-      // Dev Warning Check if scriptURL hasn't been configured yet
-      if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-        console.warn('Google Apps Script URL is not set. Simulating form submission...');
-        setLoadingState(true);
-
-        setTimeout(() => {
-          setLoadingState(false);
-          showSuccess();
-          console.log('Demo submission complete. Remember to set your scriptURL in index.html!');
-        }, 1200);
-        return;
-      }
-
-      // Enter Loading State
-      setLoadingState(true);
-
-      // Create FormData object matching 'name' and 'email' parameters
-      const formData = new FormData(form);
-
-      // Send POST request using Fetch API
-      fetch(scriptURL, {
-        method: 'POST',
-        body: formData
-      })
-        .then(response => {
-          // Handle promise response
-          setLoadingState(false);
-          showSuccess();
-        })
-        .catch(error => {
-          // Handle errors and reset button
-          console.error('Submission error:', error);
-          setLoadingState(false);
-          showError('Unable to submit. Please check your connection and try again.');
-        });
     });
 
-    /**
-     * Toggles button loading spinner and disabled state
-     * @param {boolean} isLoading 
-     */
-    function setLoadingState(isLoading) {
-      if (isLoading) {
-        submitBtn.disabled = true;
-        btnText.style.display = 'none';
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const guildClass = document.getElementById('guildClass').value;
+      const birthDate = document.getElementById('birthDate').value;
 
-        // Append spinner if not present
-        if (!submitBtn.querySelector('.spinner')) {
-          const spinner = document.createElement('span');
-          spinner.className = 'spinner';
-          submitBtn.appendChild(spinner);
-        }
-      } else {
-        submitBtn.disabled = false;
-        btnText.style.display = 'inline';
-
-        const spinner = submitBtn.querySelector('.spinner');
-        if (spinner) {
-          spinner.remove();
-        }
+      if (!name || !email || !guildClass || !birthDate) {
+        errorMessage.querySelector('#errorText').textContent = 'Please fill out all required fields (including Guardian Name, Email, Class, and Birth Date).';
+        errorMessage.style.display = 'block';
+        return;
       }
-    }
 
-    /**
-     * Displays success message container and hides form
-     */
-    function showSuccess() {
-      form.style.display = 'none';
-      successMessage.style.display = 'block';
-    }
+      errorMessage.style.display = 'none';
+      submitBtn.disabled = true;
+      btnText.textContent = 'Pledging...';
 
-    /**
-     * Displays error banner with custom text
-     * @param {string} message 
-     */
-    function showError(message) {
-      errorText.textContent = message;
-      errorMessage.style.display = 'block';
-    }
+      // Send form data to Google Apps Script if URL is configured
+      if (scriptURL && scriptURL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+        // URL-encoded fields populate e.parameter in Apps Script (JSON body does not).
+        const params = new URLSearchParams({
+          name: name,
+          email: email,
+          phone: phone,
+          guildClass: guildClass,
+          birthDate: birthDate,
+          birthTime: birthTimeInput.disabled ? '' : birthTimeInput.value
+        });
+
+        // Apps Script web apps do not send CORS headers, so use no-cors.
+        // The POST still reaches doPost; the response is opaque.
+        fetch(scriptURL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: params
+        })
+          .then(() => {
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+          })
+          .catch(error => {
+            console.error('Submission error:', error);
+            submitBtn.disabled = false;
+            btnText.textContent = 'Pledge & Enter Realm';
+            errorMessage.querySelector('#errorText').textContent = 'Unable to submit to Google Sheet. Redeploy the Apps Script (Anyone access) and try again.';
+            errorMessage.style.display = 'block';
+          });
+      } else {
+        // Local fallback simulation when URL is not yet replaced
+        setTimeout(() => {
+          form.style.display = 'none';
+          successMessage.style.display = 'block';
+        }, 800);
+      }
+    });
   </script>
+
+  <!-- External HITEK Widget Integration -->
+  <script>
+    window.HitekWidgetEmbed = {
+      widget_id: "cb3db790-328d-4eee-ab53-fc83bbee89df",
+      dealer_id: "5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4",
+      api_base: "http://18.210.213.215:4200"
+    };
+  </script>
+  <script
+    src="http://18.210.213.215:4200/assets/widget/widget.js?widget_id=cb3db790-328d-4eee-ab53-fc83bbee89df&dealer_id=5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4&api_base=http://18.210.213.215:4200"
+    data-widget-id="cb3db790-328d-4eee-ab53-fc83bbee89df"
+    data-dealer-id="5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4"></script>
 </body>
 
 </html>

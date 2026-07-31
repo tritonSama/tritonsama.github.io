@@ -10,8 +10,8 @@
     <script>redirectIfSignedUp();</script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #05050D;
             color: #00FFFF;
             margin: 0;
             padding: 0;
@@ -21,16 +21,22 @@
             min-height: 100vh;
             text-align: center;
             overflow: auto;
+            background-image: 
+                radial-gradient(circle at 30% 20%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.18) 0%, transparent 50%),
+                linear-gradient(180deg, #090918 0%, #03030A 100%);
+            background-attachment: fixed;
         }
 
         .container {
-            background-color: #111;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
+            background: rgba(10, 10, 25, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.25), 0 0 20px rgba(168, 85, 247, 0.3);
             max-width: 800px;
             width: 100%;
-            border: 2px solid #00FFFF;
+            border: 2px solid #A855F7;
             font-size: 14px;
             max-height: 90vh;
             overflow-y: auto;
@@ -39,30 +45,28 @@
         }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            animation: glow 1.5s ease-in-out infinite alternate;
+            font-size: 34px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #00FFFF 0%, #D8B4FE 50%, #A855F7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            letter-spacing: 1px;
         }
 
         h2 {
             font-size: 22px;
-            margin-top: 20px;
+            margin-top: 15px;
             margin-bottom: 10px;
+            color: #D8B4FE;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
         }
 
         p {
             font-size: 14px;
             margin-bottom: 15px;
-        }
-
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
-            }
-
-            100% {
-                text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
-            }
+            color: #00FFFF;
+            opacity: 0.9;
         }
 
         .nav-links {
@@ -72,96 +76,126 @@
         .nav-links a {
             margin: 0 6px;
             text-decoration: none;
+            color: #00FFFF;
         }
 
         .form-container {
             margin-top: 20px;
-            padding: 20px;
-            background-color: #222;
-            border-radius: 8px;
-            border: 2px solid #00FFFF;
+            padding: 24px;
+            background-color: rgba(15, 15, 35, 0.9);
+            border-radius: 10px;
+            border: 1.5px solid #00FFFF;
+            box-shadow: inset 0 0 15px rgba(168, 85, 247, 0.2);
             text-align: left;
         }
 
         label {
             display: block;
-            margin-top: 12px;
-            margin-bottom: 4px;
-            font-size: 14px;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #00FFFF;
+        }
+
+        label:nth-of-type(even) {
+            color: #D8B4FE;
         }
 
         input[type="text"],
         input[type="email"],
+        input[type="tel"],
         input[type="date"],
         input[type="time"] {
-            padding: 10px;
-            margin: 0 0 8px 0;
+            padding: 12px;
+            margin: 0 0 10px 0;
             width: 100%;
-            border: 2px solid #00FFFF;
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 16px;
+            border: 1.5px solid #A855F7;
+            background-color: #0A0A1F;
+            color: #F8FAFC;
+            border-radius: 6px;
+            font-size: 15px;
             box-sizing: border-box;
             color-scheme: dark;
+            transition: all 0.25s ease;
         }
 
         input[type="text"]:focus,
         input[type="email"]:focus,
+        input[type="tel"]:focus,
         input[type="date"]:focus,
         input[type="time"]:focus {
             outline: none;
-            border-color: #00CCFF;
+            border-color: #00FFFF;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+            background-color: #101030;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.8) sepia(1) saturate(5) hue-rotate(150deg);
+            cursor: pointer;
         }
 
         button {
-            padding: 12px 20px;
-            background-color: #00FFFF;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #00FFFF 0%, #A855F7 100%);
             border: none;
             cursor: pointer;
-            color: #000;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s ease-in-out;
-            margin-top: 16px;
+            color: #05050D;
+            font-weight: 800;
+            font-size: 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-top: 18px;
+            width: 100%;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), 0 0 15px rgba(168, 85, 247, 0.3);
         }
 
         button:hover {
-            background-color: #00CCFF;
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 25px rgba(168, 85, 247, 0.5);
         }
 
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
         }
 
         .form-status {
             margin-top: 16px;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 6px;
             font-size: 14px;
             display: none;
+            font-weight: bold;
         }
 
         .form-status.success {
             display: block;
-            background-color: #0a3d3d;
-            border: 1px solid #00FFFF;
+            background-color: rgba(0, 255, 255, 0.15);
+            border: 1.5px solid #00FFFF;
             color: #00FFFF;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
         }
 
         .form-status.error {
             display: block;
-            background-color: #3d0a0a;
-            border: 1px solid #ff6666;
-            color: #ff9999;
+            background-color: rgba(168, 85, 247, 0.15);
+            border: 1.5px solid #A855F7;
+            color: #F472B6;
         }
 
         .footer {
             margin-top: 20px;
             font-size: 12px;
-            color: #00FFFF;
-            opacity: 0.7;
+            color: #D8B4FE;
+            opacity: 0.8;
             text-align: center;
         }
 
@@ -171,31 +205,11 @@
             }
 
             h2 {
-                font-size: 16px;
-            }
-
-            p,
-            label {
-                font-size: 12px;
+                font-size: 18px;
             }
 
             button {
                 width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 24px;
-            }
-
-            h2 {
-                font-size: 14px;
-            }
-
-            p,
-            label {
-                font-size: 10px;
             }
         }
     </style>
@@ -214,6 +228,9 @@
 
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
 
                 <label for="birthdate">Birthdate</label>
                 <input type="date" id="birthdate" name="birthdate" required>
