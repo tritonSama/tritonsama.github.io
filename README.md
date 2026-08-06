@@ -49,7 +49,7 @@ A modern, responsive, high-converting lead generation single-page application bu
 ```javascript
 function doGet(e) {
   return ContentService
-    .createTextOutput(JSON.stringify({ 'result': 'success', 'message': 'GuardiansCreed API is active' }))
+    .createTextOutput(JSON.stringify({ 'result': 'success', 'message': 'Creed API is active' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
