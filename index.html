@@ -1,1077 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-  <!-- SEO Meta Tags -->
-  <title>Fantasy Guild Platform & Learn-to-Earn Economy</title>
-  <meta name="description"
-    content="Join the abyssal fantasy guild platform blending education, RPG progression, and community with a crypto-enabled Learn-to-Earn economy. Level up from Mage to Paladin!">
-  <meta name="keywords"
-    content="fantasy guild, learn-to-earn, crypto economy, RPG progression, Castle Hub, Creed Points">
-  <meta property="og:title" content="Abyssal Guild Early Access">
-  <meta property="og:description"
-    content="Embark on education & guild quests, level up your class rank, and earn Creed Points. Reserve your spot today!">
-  <meta property="og:type" content="website">
-
-  <!-- Google Fonts: Cinzel (Anime Fantasy) & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
-
-  <style>
-    /* ==========================================================================
-       DARK UNDERWATER ANIME GUILD DESIGN SYSTEM - CREED
-       ========================================================================== */
-    :root {
-      /* Abyssal Palette */
-      --color-abyss-black: #02060D;
-      --color-abyss-dark: #061121;
-      --color-abyss-mid: #0A192F;
-      --color-abyss-card: rgba(10, 25, 47, 0.75);
-
-      /* Bioluminescent Accents */
-      --color-cyan-glow: #00F2FE;
-      --color-teal-glow: #06B6D4;
-      --color-aquamarine: #10B981;
-      --color-guild-gold: #FFD700;
-      --color-guild-gold-hover: #F59E0B;
-      --color-violet-glow: #A855F7;
-
-      /* Text Colors */
-      --color-text-bright: #F8FAFC;
-      --color-text-subtle: #94A3B8;
-      --color-text-dim: #64748B;
-
-      /* Borders & Glass */
-      --border-glass: rgba(6, 182, 212, 0.25);
-      --border-glass-hover: rgba(0, 242, 254, 0.5);
-      --shadow-abyssal: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 242, 254, 0.12);
-      --shadow-gold-cta: 0 10px 30px -5px rgba(255, 215, 0, 0.4), 0 0 20px rgba(245, 158, 11, 0.3);
-
-      /* Radii */
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --radius-pill: 9999px;
-
-      /* Fonts */
-      --font-heading: 'Cinzel', serif;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    /* CSS Reset */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: var(--font-body);
-      background-color: var(--color-abyss-black);
-      color: var(--color-text-bright);
-      line-height: 1.6;
-      overflow-x: hidden;
-      position: relative;
-      background-image:
-        radial-gradient(circle at 50% 15%, rgba(0, 242, 254, 0.15) 0%, transparent 60%),
-        radial-gradient(circle at 85% 60%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
-        radial-gradient(circle at 15% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-        linear-gradient(180deg, #061121 0%, #02060D 100%);
-      background-attachment: fixed;
-    }
-
-    /* Floating Bubble Particles Background */
-    .underwater-particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .bubble {
-      position: absolute;
-      bottom: -30px;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(0, 242, 254, 0.1));
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 50%;
-      animation: rise 14s infinite linear;
-    }
-
-    .bubble:nth-child(1) {
-      left: 10%;
-      width: 24px;
-      height: 24px;
-      animation-duration: 12s;
-      animation-delay: 0s;
-    }
-
-    .bubble:nth-child(2) {
-      left: 25%;
-      width: 14px;
-      height: 14px;
-      animation-duration: 18s;
-      animation-delay: 2s;
-    }
-
-    .bubble:nth-child(3) {
-      left: 45%;
-      width: 32px;
-      height: 32px;
-      animation-duration: 15s;
-      animation-delay: 4s;
-    }
-
-    .bubble:nth-child(4) {
-      left: 65%;
-      width: 18px;
-      height: 18px;
-      animation-duration: 13s;
-      animation-delay: 1s;
-    }
-
-    .bubble:nth-child(5) {
-      left: 85%;
-      width: 28px;
-      height: 28px;
-      animation-duration: 17s;
-      animation-delay: 3s;
-    }
-
-    @keyframes rise {
-      0% {
-        transform: translateY(0) scale(0.8);
-        opacity: 0;
-      }
-
-      20% {
-        opacity: 0.6;
-      }
-
-      80% {
-        opacity: 0.6;
-      }
-
-      100% {
-        transform: translateY(-110vh) scale(1.2);
-        opacity: 0;
-      }
-    }
-
-    /* Layout Container */
-    .container {
-      width: 100%;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Header */
-    header {
-      padding: 1.5rem 0;
-      border-bottom: 1px solid rgba(6, 182, 212, 0.15);
-      background: rgba(6, 17, 33, 0.65);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-family: var(--font-heading);
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--color-text-bright);
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
-    }
-
-    .logo-crest {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, #00F2FE 0%, #7928CA 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .badge-early-access {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 1rem;
-      background: rgba(0, 242, 254, 0.1);
-      color: var(--color-cyan-glow);
-      font-size: 0.825rem;
-      font-weight: 700;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--color-cyan-glow);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--color-cyan-glow);
-      animation: pulse-glow 2s infinite;
-    }
-
-    @keyframes pulse-glow {
-
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 8px var(--color-cyan-glow);
-      }
-
-      50% {
-        transform: scale(1.4);
-        opacity: 0.7;
-        box-shadow: 0 0 16px var(--color-cyan-glow);
-      }
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 4.5rem 0 5.5rem;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 3.5rem;
-      align-items: center;
-    }
-
-    @media (min-width: 992px) {
-      .hero-grid {
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 4rem;
-      }
-    }
-
-    .hero-headline {
-      font-family: var(--font-heading);
-      font-size: 2.75rem;
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: 0.02em;
-      margin-bottom: 1.25rem;
-      color: #FFFFFF;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-    }
-
-    @media (min-width: 768px) {
-      .hero-headline {
-        font-size: 3.5rem;
-      }
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, #00F2FE 0%, #FFD700 50%, #A855F7 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(0, 242, 254, 0.4);
-    }
-
-    .hero-subheadline {
-      font-size: 1.125rem;
-      color: var(--color-text-subtle);
-      line-height: 1.7;
-      margin-bottom: 2rem;
-    }
-
-    /* Form Card */
-    .form-card {
-      background: var(--color-abyss-card);
-      backdrop-filter: blur(16px);
-      padding: 2.25rem;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-glass);
-      box-shadow: var(--shadow-abyssal);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .form-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #00F2FE, #FFD700, #A855F7);
-    }
-
-    .form-header h2 {
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--color-text-bright);
-      margin-bottom: 0.4rem;
-      letter-spacing: 0.02em;
-    }
-
-    .form-header p {
-      font-size: 0.9rem;
-      color: var(--color-text-subtle);
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-cyan-glow);
-      margin-bottom: 0.4rem;
-    }
-
-    .form-input,
-    .form-select {
-      width: 100%;
-      padding: 0.85rem 1rem;
-      font-size: 1rem;
-      font-family: var(--font-body);
-      color: var(--color-text-bright);
-      background-color: rgba(6, 17, 33, 0.8);
-      border: 1.5px solid rgba(6, 182, 212, 0.3);
-      border-radius: var(--radius-sm);
-      outline: none;
-      transition: all 0.25s ease;
-    }
-
-    .form-input::placeholder {
-      color: var(--color-text-dim);
-    }
-
-    .form-input:focus,
-    .form-select:focus {
-      border-color: var(--color-cyan-glow);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-      background-color: rgba(10, 25, 47, 0.9);
-    }
-
-    .form-select option {
-      background-color: #061121;
-      color: #F8FAFC;
-    }
-
-    input[type="date"]::-webkit-calendar-picker-indicator,
-    input[type="time"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.8) sepia(1) saturate(5) hue-rotate(150deg);
-      cursor: pointer;
-    }
-
-    /* CTA Button */
-    .cta-button {
-      width: 100%;
-      padding: 1.1rem 1.5rem;
-      font-family: var(--font-heading);
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: #061121;
-      background: linear-gradient(135deg, #FFD700 0%, #F59E0B 100%);
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      box-shadow: var(--shadow-gold-cta);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      margin-top: 0.5rem;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 35px -5px rgba(255, 215, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.5);
-    }
-
-    /* Castle Hub Guild Dashboard Preview Card */
-    .castle-preview-card {
-      background: var(--color-abyss-card);
-      backdrop-filter: blur(16px);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      border: 1px solid var(--border-glass);
-      box-shadow: var(--shadow-abyssal);
-      position: relative;
-    }
-
-    .guild-header-badge {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(6, 182, 212, 0.2);
-    }
-
-    .guild-title-box h3 {
-      font-family: var(--font-heading);
-      font-size: 1.3rem;
-      color: var(--color-guild-gold);
-      letter-spacing: 0.03em;
-    }
-
-    .guild-rank-tag {
-      padding: 0.35rem 0.85rem;
-      background: rgba(168, 85, 247, 0.25);
-      border: 1px solid rgba(168, 85, 247, 0.5);
-      color: #D8B4FE;
-      font-size: 0.825rem;
-      font-weight: 800;
-      border-radius: var(--radius-pill);
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
-    }
-
-    /* Rank Progression Bar */
-    .progression-track {
-      margin: 1.5rem 0;
-    }
-
-    .rank-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.775rem;
-      font-weight: 700;
-      color: var(--color-text-subtle);
-      margin-bottom: 0.5rem;
-    }
-
-    .rank-labels span.active {
-      color: var(--color-cyan-glow);
-      text-shadow: 0 0 8px var(--color-cyan-glow);
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 10px;
-      background: rgba(6, 17, 33, 0.9);
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      width: 65%;
-      height: 100%;
-      background: linear-gradient(90deg, #00F2FE 0%, #FFD700 100%);
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.8);
-      border-radius: 5px;
-    }
-
-    /* Quest List Cards */
-    .quest-card {
-      background: rgba(6, 17, 33, 0.7);
-      border: 1px solid rgba(6, 182, 212, 0.2);
-      border-radius: var(--radius-md);
-      padding: 0.9rem 1.1rem;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.25s ease;
-    }
-
-    .quest-card:hover {
-      border-color: var(--color-cyan-glow);
-      background: rgba(10, 25, 47, 0.9);
-      transform: translateX(4px);
-    }
-
-    .quest-info h4 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--color-text-bright);
-    }
-
-    .quest-info p {
-      font-size: 0.8rem;
-      color: var(--color-text-subtle);
-    }
-
-    .quest-reward {
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--color-guild-gold);
-      background: rgba(255, 215, 0, 0.12);
-      padding: 0.3rem 0.7rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
-    }
-
-    /* Social Proof Bar */
-    .social-proof {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid rgba(6, 182, 212, 0.2);
-    }
-
-    .avatar-group {
-      display: flex;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 2px solid var(--color-cyan-glow);
-      margin-left: -10px;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .avatar:first-child {
-      margin-left: 0;
-    }
-
-    .proof-text {
-      font-size: 0.85rem;
-      color: var(--color-text-subtle);
-    }
-
-    .proof-text span {
-      color: var(--color-cyan-glow);
-      font-weight: 700;
-    }
-
-    /* Benefits Section */
-    .benefits {
-      padding: 5.5rem 0;
-      background: rgba(6, 17, 33, 0.85);
-      border-top: 1px solid rgba(6, 182, 212, 0.15);
-      border-bottom: 1px solid rgba(6, 182, 212, 0.15);
-    }
-
-    .section-header {
-      text-align: center;
-      max-width: 680px;
-      margin: 0 auto 3.5rem;
-    }
-
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: var(--color-text-bright);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-subtitle {
-      font-size: 1.05rem;
-      color: var(--color-text-subtle);
-    }
-
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    @media (min-width: 768px) {
-      .benefits-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .benefit-card {
-      background: var(--color-abyss-card);
-      backdrop-filter: blur(12px);
-      padding: 2.25rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-glass);
-      transition: all 0.35s ease;
-    }
-
-    .benefit-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--color-cyan-glow);
-      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.2);
-    }
-
-    .benefit-icon {
-      width: 56px;
-      height: 56px;
-      background: rgba(0, 242, 254, 0.1);
-      color: var(--color-cyan-glow);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-    }
-
-    .benefit-title {
-      font-family: var(--font-heading);
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--color-text-bright);
-      margin-bottom: 0.5rem;
-    }
-
-    .benefit-desc {
-      font-size: 0.925rem;
-      color: var(--color-text-subtle);
-      line-height: 1.6;
-    }
-
-    /* Footer */
-    footer {
-      padding: 3rem 0;
-      background: #02060D;
-      border-top: 1px solid rgba(6, 182, 212, 0.15);
-      color: var(--color-text-dim);
-      font-size: 0.875rem;
-      text-align: center;
-    }
-
-    /* Status Messages */
-    .status-message {
-      padding: 1.25rem;
-      border-radius: var(--radius-sm);
-      text-align: center;
-      display: none;
-      margin-top: 1rem;
-    }
-
-    .status-message.success {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #34D399;
-    }
-
-    .status-message.error {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #F87171;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-  </style>
+  <title>HeavenlyBound — Tactical Command & Incursion Portal</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕊️</text></svg>">
 </head>
-
 <body>
+  <div class="cyber-bg"></div>
 
-  <!-- Floating Underwater Bubbles Effect -->
-  <div class="underwater-particles">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+  <div class="app-container">
+    <!-- Top HUD Header -->
+    <header class="hud-header">
+      <div class="brand-section">
+        <div class="brand-icon">🕊️</div>
+        <div>
+          <h1 class="brand-title">HEAVENLYBOUND</h1>
+          <div class="brand-subtitle">Operation: Severed Grid Tactical Core</div>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <button class="btn btn-outline" id="openConfigBtn" onclick="openConfigModal()">⚙️ SYSTEM CONFIG</button>
+        <div id="userProfileTag" class="user-tag" style="display: none;">
+          <img id="userAvatarImg" class="user-avatar" src="" alt="Avatar">
+          <span id="userHandleText" class="text-gold">Pilgrim</span>
+          <button class="btn btn-outline" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;" onclick="logoutUser()">LOGOUT</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Command Deck Grid -->
+    <main style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.25rem; flex: 1;">
+      
+      <!-- Left Column: Operations Dossier & Launch Portal -->
+      <section class="tactical-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📡</span> TACTICAL PROTOCOL OVERVIEW
+          </div>
+          <span class="panel-badge badge-outie">SEVERANCE v2.4</span>
+        </div>
+
+        <div class="panel-body" style="gap: 1.25rem;">
+          <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--color-gold);">
+            <h3 style="font-size: 1rem; margin-bottom: 0.4rem;">The Severed Loop</h3>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); line-height: 1.5;">
+              Welcome, Operative. You exist across two isolated states of consciousness:
+              <br><br>
+              <strong>1. The Outie Sanctum (C&C Base Grid):</strong> Manage celestial infrastructure, generate Tithe Credits, and synthesize passive modifiers.
+              <br>
+              <strong>2. The Innie Ascent (D&D 5e Incursion):</strong> Infiltrate procedural ethereal vaults, roll $d20 + \text{Mod}$ to breach daemons, and harvest rare Aether Shards.
+              <br>
+              <strong>3. The Severance Twist:</strong> Synaptic memory decays over time in the incursion plane. You must extract and bank your shards back to the base before total memory amnesia wipe.
+            </p>
+          </div>
+
+          <!-- Auth & Launch Portal Box -->
+          <div id="authPortalBox" style="background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 1.25rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 1rem;">
+            <h3 style="font-size: 0.95rem; color: var(--color-cyan);">Operative Authentication Required</h3>
+            
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-cyan" onclick="loginWithGitHub()">
+                🐙 Authenticate via GitHub OAuth
+              </button>
+              <button class="btn btn-gold" onclick="loginAsGuest()">
+                ⚡ Instant Pilgrim Guest Launch
+              </button>
+            </div>
+
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+              * Data synchronizes serverlessly into Google Sheets via Google Apps Script.
+            </div>
+          </div>
+
+          <!-- Ready to Launch View -->
+          <div id="readyLaunchBox" style="display: none; background: var(--bg-card); border: 1px solid var(--border-gold); padding: 1.25rem; border-radius: var(--radius-sm); flex-direction: column; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h3 style="font-size: 1rem; color: var(--color-gold);">Operative Ready for Deployment</h3>
+                <p id="welcomeUserText" style="font-size: 0.8rem; color: var(--text-secondary);">Authenticated</p>
+              </div>
+              <a href="game.html" class="btn btn-gold" style="font-size: 0.9rem; padding: 0.6rem 1.4rem;">
+                🚀 ENTER THE SEVERED GRID
+              </a>
+            </div>
+          </div>
+
+          <!-- System Architecture Info -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: auto;">
+            <div style="background: var(--bg-surface); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">HOSTING</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: var(--color-cyan);">GitHub Pages</div>
+            </div>
+            <div style="background: var(--bg-surface); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">AUTH</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: var(--color-gold);">GitHub OAuth</div>
+            </div>
+            <div style="background: var(--bg-surface); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">DATABASE</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: var(--color-emerald);">Google Sheets</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Top Pilgrims Terminal & System Log -->
+      <section class="tactical-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🏆</span> TOP PILGRIMS LEADERBOARD
+          </div>
+          <span class="panel-badge badge-innie">LIVE MATRIX</span>
+        </div>
+
+        <div class="panel-body">
+          <div id="leaderboardList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="text-align: center; color: var(--text-muted); padding: 1rem;">Querying Celestial Matrix...</div>
+          </div>
+
+          <div style="margin-top: auto;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase;">
+              Tactical Communications Log
+            </div>
+            <div class="terminal-panel" id="terminalLogContainer" style="max-height: 120px;">
+              <div class="log-entry">
+                <span class="log-time">[SYSTEM]</span>
+                <span class="log-msg info">HeavenlyBound operational. Awaiting operative deployment.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
 
-  <!-- Header -->
-  <header>
-    <div class="container header-content">
-      <a href="#" class="logo">
-        <div class="logo-crest">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
-        </div>
-        Creed
-      </a>
-      <div class="badge-early-access">
-        <span class="badge-dot"></span>
-        Chapter 1: Abyssal Realm MVP
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container hero-grid">
-
-      <!-- Hero Pitch & Sign Up -->
-      <div class="hero-text">
-        <h1 class="hero-headline">
-          Enter the Realm of <span class="gradient-text">Creed</span>
-        </h1>
-        <p class="hero-subheadline">
-          A fantasy guild platform blending education, RPG progression, and community — featuring a crypto-enabled
-          <strong>Learn-to-Earn</strong> economy. Complete quests, level up from Apprentice to Paladin, and earn Creed
-          Points.
-        </p>
-
-        <!-- Form Card Container -->
-        <div class="form-card">
-          <div class="form-header">
-            <h2>Claim Your Guild Crest</h2>
-            <p>Select your class and get instant early access to the Castle Hub MVP.</p>
-          </div>
-
-          <!-- Lead Generation Form -->
-          <form id="leadForm" novalidate>
-            <div class="form-group">
-              <label for="name" class="form-label">Guardian Name</label>
-              <input type="text" id="name" name="name" class="form-input" placeholder="e.g. Kaelen Shadowweaver"
-                required>
-            </div>
-
-            <div class="form-group">
-              <label for="email" class="form-label">Guardian Email</label>
-              <input type="email" id="email" name="email" class="form-input" placeholder="kaelen@abyssalguild.io"
-                required>
-            </div>
-
-            <div class="form-group">
-              <label for="phone" class="form-label">Phone Number</label>
-              <input type="tel" id="phone" name="phone" class="form-input" placeholder="(555) 000-0000">
-            </div>
-
-            <div class="form-group">
-              <label for="guildClass" class="form-label">Starting Element / Class</label>
-              <select id="guildClass" name="guildClass" class="form-select" required>
-                <option value="" disabled selected>-- Select Your Element --</option>
-                <option value="fire">🔥 Fire (Pyromancer - Attack &amp; DPS)</option>
-                <option value="water">🌊 Water (Hydromancer - Abyssal Healer &amp; Flow)</option>
-                <option value="earth">🪨 Earth (Geomancer - Defense &amp; Citadel Tank)</option>
-                <option value="wind">🌪️ Wind (Aeromancer - Speed &amp; Quest Scout)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="birthDate" class="form-label">Birth Date <span
-                  style="color: var(--color-cyan-glow);">*</span></label>
-              <input type="date" id="birthDate" name="birthDate" class="form-input" required>
-            </div>
-
-            <div class="form-group">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-                <label for="birthTime" class="form-label" style="margin-bottom: 0;">Birth Time</label>
-                <label
-                  style="font-size: 0.8rem; color: var(--color-text-subtle); display: flex; align-items: center; gap: 0.35rem; cursor: pointer; text-transform: none; font-weight: 500;">
-                  <input type="checkbox" id="unknownTime" name="unknownTime"
-                    style="accent-color: var(--color-cyan-glow);">
-                  I don't know my birth time
-                </label>
-              </div>
-              <input type="time" id="birthTime" name="birthTime" class="form-input">
-            </div>
-
-            <button type="submit" id="submitBtn" class="cta-button">
-              <span id="btnText">Pledge &amp; Enter Realm</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </button>
-          </form>
-
-          <!-- Error Banner -->
-          <div id="errorMessage" class="status-message error">
-            ⚠️ <span id="errorText">Unable to join realm. Please try again.</span>
-          </div>
-
-          <!-- Success Message -->
-          <div id="successMessage" class="status-message success">
-            <div class="success-title">✓ Welcome, Guardian!</div>
-            <p>Your crest has been registered in the Abyssal Codex. Check your inbox for your starter key!</p>
-          </div>
-
-          <!-- Social Proof -->
-          <div class="social-proof">
-            <div class="avatar-group">
-              <div class="avatar"
-                style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80');">
-              </div>
-              <div class="avatar"
-                style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80');">
-              </div>
-              <div class="avatar"
-                style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80');">
-              </div>
-            </div>
-            <div class="proof-text">
-              Join <span>5,000+ Guardians</span> mastering quests in the Castle Hub.
-            </div>
-          </div>
-        </div>
+  <!-- Config / Settings Modal -->
+  <div class="modal-backdrop" id="configModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title text-gold">⚙️ System Configuration</h3>
+        <button class="modal-close" onclick="closeConfigModal()">✕</button>
       </div>
 
-      <!-- Interactive Castle Hub Preview -->
-      <div class="castle-preview-card">
-        <div class="guild-header-badge">
-          <div class="guild-title-box">
-            <h3>🏰 Castle Hub Dashboard</h3>
-            <p style="font-size: 0.8rem; color: var(--color-text-subtle);">Active Guild: Abyssal Leviathans</p>
-          </div>
-          <span class="guild-rank-tag">RANK: PALADIN</span>
-        </div>
-
-        <!-- Rank Progression -->
-        <div class="progression-track">
-          <div class="rank-labels">
-            <span>Mage (0 XP)</span>
-            <span class="active">Knight (100 XP)</span>
-            <span>Paladin (500 XP)</span>
-          </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill"></div>
-          </div>
-        </div>
-
-        <!-- Active Quests Preview -->
-        <h4
-          style="font-family: var(--font-heading); font-size: 1rem; color: var(--color-cyan-glow); margin-bottom: 0.75rem;">
-          📜 Available Quests
-        </h4>
-
-        <div class="quest-card">
-          <div class="quest-info">
-            <h4>Abyssal Spellcraft &amp; Code</h4>
-            <p>Education Quest • Master Web3 Smart Contracts</p>
-          </div>
-          <div class="quest-reward">+150 XP • +50 Creed</div>
-        </div>
-
-        <div class="quest-card">
-          <div class="quest-info">
-            <h4>Guild Citadel Raid</h4>
-            <p>Guild Quest • Co-op Boss Defeat</p>
-          </div>
-          <div class="quest-reward">+300 XP • +120 Creed</div>
-        </div>
-
-        <div class="quest-card">
-          <div class="quest-info">
-            <h4>Learn-to-Earn Codex</h4>
-            <p>Story Quest • Unlock Token Vault</p>
-          </div>
-          <div class="quest-reward">+500 XP • +250 Creed</div>
-        </div>
+      <div class="form-group">
+        <label for="cfgClientId">GitHub OAuth Client ID</label>
+        <input type="text" id="cfgClientId" class="form-control" placeholder="e.g. Ov23li...">
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Register OAuth App in GitHub Developer Settings</span>
       </div>
 
-    </div>
-  </section>
-
-  <!-- Benefits Section -->
-  <section class="benefits">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Core Guild Architecture</h2>
-        <p class="section-subtitle">
-          Designed for seamless progression, community governance, and crypto rewards.
-        </p>
+      <div class="form-group">
+        <label for="cfgGasUrl">Google Apps Script Web App URL</label>
+        <input type="text" id="cfgGasUrl" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Deployed URL from HeavenlyBound_GameDB script</span>
       </div>
 
-      <div class="benefits-grid">
-        <!-- Benefit 1 -->
-        <div class="benefit-card">
-          <div class="benefit-icon">🏰</div>
-          <h3 class="benefit-title">Castle Hub &amp; Guilds</h3>
-          <p class="benefit-desc">
-            Manage your member roster, switch between fantasy guilds, track stats, and oversee live activity feeds.
-          </p>
-        </div>
-
-        <!-- Benefit 2 -->
-        <div class="benefit-card">
-          <div class="benefit-icon">⚔️</div>
-          <h3 class="benefit-title">Quests &amp; Learn-to-Earn</h3>
-          <p class="benefit-desc">
-            Complete Education, Guild, and Story quests to earn XP and Creed Points convertible to crypto tokens.
-          </p>
-        </div>
-
-        <!-- Benefit 3 -->
-        <div class="benefit-card">
-          <div class="benefit-icon">🛡️</div>
-          <h3 class="benefit-title">Auto Rank Progression</h3>
-          <p class="benefit-desc">
-            Rise automatically from Mage (0 XP) → Knight (100 XP) → Paladin (500 XP) as you complete guild challenges.
-          </p>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+        <button class="btn btn-outline" onclick="testConnection()">⚡ Ping Endpoint</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline" onclick="closeConfigModal()">Cancel</button>
+          <button class="btn btn-gold" onclick="saveConfiguration()">Save Config</button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>© 2026 Creed. All rights reserved. Powered by Learn-to-Earn Guild Economy.</p>
-    </div>
-  </footer>
-
-  <!-- Lead Form JS Script -->
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    // -------------------------------------------------------------
-    // GOOGLE APPS SCRIPT URL FOR LEAD COLLECTION
-    // Replace 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' with your Google Web App URL
-    // Example: const scriptURL = 'https://script.google.com/macros/s/AKfycbx.../exec';
-    // -------------------------------------------------------------
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec';
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Initialize Auth
+      const user = await window.HeavenlyAuth.init();
+      updateAuthUI(user);
 
-    const form = document.getElementById('leadForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-    const unknownTimeCheckbox = document.getElementById('unknownTime');
-    const birthTimeInput = document.getElementById('birthTime');
-
-    // Toggle birth time input state when unknown checkbox changes
-    unknownTimeCheckbox.addEventListener('change', function () {
-      if (this.checked) {
-        birthTimeInput.value = '';
-        birthTimeInput.disabled = true;
-        birthTimeInput.style.opacity = '0.4';
-      } else {
-        birthTimeInput.disabled = false;
-        birthTimeInput.style.opacity = '1';
-      }
+      // 2. Load Leaderboard
+      loadLeaderboard();
     });
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const guildClass = document.getElementById('guildClass').value;
-      const birthDate = document.getElementById('birthDate').value;
+    function updateAuthUI(user) {
+      const authBox = document.getElementById('authPortalBox');
+      const readyBox = document.getElementById('readyLaunchBox');
+      const userTag = document.getElementById('userProfileTag');
+      const avatarImg = document.getElementById('userAvatarImg');
+      const handleText = document.getElementById('userHandleText');
+      const welcomeText = document.getElementById('welcomeUserText');
 
-      if (!name || !email || !guildClass || !birthDate) {
-        errorMessage.querySelector('#errorText').textContent = 'Please fill out all required fields (including Guardian Name, Email, Class, and Birth Date).';
-        errorMessage.style.display = 'block';
+      if (user) {
+        authBox.style.display = 'none';
+        readyBox.style.display = 'flex';
+        userTag.style.display = 'flex';
+
+        avatarImg.src = user.avatarUrl || 'https://api.dicebear.com/7.x/bottts/svg?seed=Pilgrim';
+        handleText.innerText = user.username || user.displayName;
+        welcomeText.innerText = `Operative ID: ${user.githubId} | Auth: ${user.authType}`;
+      } else {
+        authBox.style.display = 'flex';
+        readyBox.style.display = 'none';
+        userTag.style.display = 'none';
+      }
+    }
+
+    function loginWithGitHub() {
+      const cfg = window.HeavenlyAuth.getConfig ? window.HeavenlyAuth.getConfig() : window.HeavenlyAuth.config;
+      if (!cfg.clientId) {
+        openConfigModal();
+        alert('Please enter your GitHub OAuth Client ID first.');
+        return;
+      }
+      window.HeavenlyAuth.loginWithGitHub();
+    }
+
+    function loginAsGuest() {
+      const customName = prompt('Enter Operative / Pilgrim Designation (or leave blank for auto-generate):');
+      const user = window.HeavenlyAuth.loginAsGuest(customName);
+      updateAuthUI(user);
+    }
+
+    function logoutUser() {
+      window.HeavenlyAuth.logout();
+      updateAuthUI(null);
+    }
+
+    function openConfigModal() {
+      const cfg = window.HeavenlyAuth.config;
+      document.getElementById('cfgClientId').value = cfg.clientId || '';
+      document.getElementById('cfgGasUrl').value = cfg.gasApiUrl || '';
+      document.getElementById('configModal').classList.add('open');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.remove('open');
+    }
+
+    function saveConfiguration() {
+      const clientId = document.getElementById('cfgClientId').value;
+      const gasUrl = document.getElementById('cfgGasUrl').value;
+      window.HeavenlyAuth.saveConfig(clientId, gasUrl);
+      closeConfigModal();
+      alert('HeavenlyBound system configuration updated.');
+    }
+
+    async function testConnection() {
+      const pingRes = await window.HeavenlyApi.ping();
+      alert(`Endpoint Status: ${pingRes.status}\nMessage: ${pingRes.message || pingRes.system || 'Connected'}`);
+    }
+
+    async function loadLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      const leaderboard = await window.HeavenlyApi.fetchLeaderboard();
+
+      if (!leaderboard || leaderboard.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted);">No records found in celestial archive.</div>';
         return;
       }
 
-      errorMessage.style.display = 'none';
-      submitBtn.disabled = true;
-      btnText.textContent = 'Pledging...';
-
-      // Send form data to Google Apps Script if URL is configured
-      if (scriptURL && scriptURL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-        // URL-encoded fields populate e.parameter in Apps Script (JSON body does not).
-        const params = new URLSearchParams({
-          name: name,
-          email: email,
-          phone: phone,
-          guildClass: guildClass,
-          birthDate: birthDate,
-          birthTime: birthTimeInput.disabled ? '' : birthTimeInput.value
-        });
-
-        // Apps Script web apps do not send CORS headers, so use no-cors.
-        // The POST still reaches doPost; the response is opaque.
-        fetch(scriptURL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: params
-        })
-          .then(() => {
-            form.style.display = 'none';
-            successMessage.style.display = 'block';
-          })
-          .catch(error => {
-            console.error('Submission error:', error);
-            submitBtn.disabled = false;
-            btnText.textContent = 'Pledge & Enter Realm';
-            errorMessage.querySelector('#errorText').textContent = 'Unable to submit to Google Sheet. Redeploy the Apps Script (Anyone access) and try again.';
-            errorMessage.style.display = 'block';
-          });
-      } else {
-        // Local fallback simulation when URL is not yet replaced
-        setTimeout(() => {
-          form.style.display = 'none';
-          successMessage.style.display = 'block';
-        }, 800);
-      }
-    });
-  </script>
-
-  <!-- External HITEK Widget Integration
-       GitHub Pages is HTTPS; http://18.210.213.215:4200 is HTTP-only, so the browser
-       blocks the script (mixed content). Serve the CMS over HTTPS, then put that
-       https:// URL below and remove the protocol check. -->
-  <script>
-    (function () {
-      var apiBase = 'http://18.210.213.215:4200';
-      var widgetId = 'cb3db790-328d-4eee-ab53-fc83bbee89df';
-      var dealerId = '5ceb6f06-d01d-46a7-8b1d-9b60bd12c5a4';
-
-      if (location.protocol === 'https:' && apiBase.indexOf('https:') !== 0) {
-        console.warn(
-          '[HitekWidget] Skipped on HTTPS page: widget host must use HTTPS. Current api_base:',
-          apiBase
-        );
-        return;
-      }
-
-      window.HitekWidgetEmbed = {
-        widget_id: widgetId,
-        dealer_id: dealerId,
-        api_base: apiBase
-      };
-
-      var script = document.createElement('script');
-      script.src =
-        apiBase.replace(/\/$/, '') +
-        '/assets/widget/widget.js?widget_id=' +
-        encodeURIComponent(widgetId) +
-        '&dealer_id=' +
-        encodeURIComponent(dealerId) +
-        '&api_base=' +
-        encodeURIComponent(apiBase);
-      script.setAttribute('data-widget-id', widgetId);
-      script.setAttribute('data-dealer-id', dealerId);
-      document.body.appendChild(script);
-    })();
+      container.innerHTML = leaderboard.map((item, idx) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-weight: 700; color: ${idx === 0 ? 'var(--color-gold)' : (idx === 1 ? 'var(--color-cyan)' : 'var(--text-secondary)')};">#${idx + 1}</span>
+            <span style="font-size: 0.85rem;">${item.githubId}</span>
+          </div>
+          <span class="text-gold" style="font-weight: 700; font-family: var(--font-display);">${item.highScore} PTS</span>
+        </div>
+      `).join('');
+    }
   </script>
 </body>
-
 </html>

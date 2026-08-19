@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeavenlyBound — Tactical Operations & Incursion Grid</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕊️</text></svg>">
+</head>
+<body>
+  <div class="cyber-bg"></div>
+
+  <div class="app-container">
+    <!-- Top HUD Header -->
+    <header class="hud-header">
+      <div class="brand-section">
+        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+          <span class="brand-icon">🕊️</span>
+          <span class="brand-title" style="font-size: 1.15rem;">HEAVENLYBOUND</span>
+        </a>
+      </div>
+
+      <!-- Resource Counters HUD -->
+      <div class="hud-metrics">
+        <div class="metric-pill">
+          <span class="metric-icon">🪙</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">TITHE:</span>
+          <span id="resCredits" class="metric-value text-gold">150</span>
+        </div>
+
+        <div class="metric-pill">
+          <span class="metric-icon">💠</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">SHARDS:</span>
+          <span id="resShards" class="metric-value text-cyan">40</span>
+        </div>
+
+        <div class="metric-pill">
+          <span class="metric-icon">⚡</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">ENERGY:</span>
+          <span id="resEnergy" class="metric-value">50/100</span>
+        </div>
+
+        <div class="metric-pill">
+          <span class="metric-icon">🗺️</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">FLOOR:</span>
+          <span id="resFloor" class="metric-value text-gold">1</span>
+        </div>
+
+        <!-- Grace / Memory Degradation Gauge -->
+        <div class="grace-bar-container">
+          <span class="grace-label">GRACE:</span>
+          <div class="grace-track">
+            <div id="graceIntegrityFill" class="grace-fill" style="width: 100%;"></div>
+          </div>
+          <span id="graceIntegrityVal" style="font-size: 0.75rem; font-weight: 700; color: var(--color-cyan);">100%</span>
+        </div>
+      </div>
+
+      <!-- Sync & User Tag -->
+      <div class="hud-actions">
+        <span id="syncStatusBadge" class="panel-badge badge-innie">☁️ Synced</span>
+        <button class="btn btn-outline" onclick="manualSaveGame()">💾 SAVE</button>
+        <a href="index.html" class="btn btn-outline">🚪 EXIT</a>
+      </div>
+    </header>
+
+    <!-- Dual Tactical View (C&C Outie Base on Left / D&D Innie Run on Right) -->
+    <main class="dual-viewport-layout">
+
+      <!-- ================================================================== -->
+      <!-- VIEWPORT 1: OUTIE SANCTUM BASE (C&C TACTICAL BUILDER)               -->
+      <!-- ================================================================== -->
+      <section class="tactical-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🏛️</span> SANCTUM GRID OPERATIONS (OUTIE)
+          </div>
+          <span class="panel-badge badge-outie">MACRO FOUNDRY</span>
+        </div>
+
+        <div class="panel-body">
+          <!-- Canvas Grid -->
+          <div class="canvas-wrapper">
+            <canvas id="sanctumCanvas" width="480" height="288"></canvas>
+          </div>
+
+          <div style="font-size: 0.725rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span>[Left Click]: Construct selected / inspect</span>
+            <span>[Right Click]: Demolish structure</span>
+          </div>
+
+          <!-- Building Palette -->
+          <div class="build-palette">
+            <div class="building-card" data-building="SOL_FOUNDRY">
+              <div class="building-name">🏛️ Sol Foundry</div>
+              <div class="building-cost">Cost: 50 Tithes</div>
+              <div class="building-buff">+6 Tithes/tick</div>
+            </div>
+
+            <div class="building-card" data-building="AETHER_WELL">
+              <div class="building-name">💠 Aether Well</div>
+              <div class="building-cost">Cost: 80 Tithes</div>
+              <div class="building-buff">+3 Shards/tick</div>
+            </div>
+
+            <div class="building-card" data-building="GRACE_ANCHOR">
+              <div class="building-name">⚓ Grace Anchor</div>
+              <div class="building-cost">Cost: 120 Tithes</div>
+              <div class="building-buff">-30% Memory Decay</div>
+            </div>
+
+            <div class="building-card" data-building="ASCENDED_CHAMBER">
+              <div class="building-name">⚔️ Ascended Chamber</div>
+              <div class="building-cost">Cost: 160 Tithes</div>
+              <div class="building-buff">+2 D&D Dice Bonus</div>
+            </div>
+
+            <div class="building-card" data-building="HEAVENLY_BEACON">
+              <div class="building-name">✨ Heavenly Beacon</div>
+              <div class="building-cost">Cost: 220 Tithes</div>
+              <div class="building-buff">+35% Extraction Loot</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- VIEWPORT 2: INNIE ASCENT INCURSION (D&D 5E PROCEDURAL CRAWLER)     -->
+      <!-- ================================================================== -->
+      <section class="tactical-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🌌</span> ASCENT INCURSION RUN (INNIE)
+          </div>
+          <span class="panel-badge badge-innie">D20 CELESTIAL MATRIX</span>
+        </div>
+
+        <div class="panel-body">
+          <!-- Operative Stats Bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div>
+              <span style="font-weight: 700; color: var(--color-cyan);">Operative: 7-Bound</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">[Class: Severed Seraph]</span>
+            </div>
+            <div style="font-weight: 700; font-size: 0.85rem;">
+              <span style="color: var(--text-muted);">HP:</span>
+              <span id="operativeHpVal" class="text-emerald">30/30</span>
+            </div>
+          </div>
+
+          <!-- Operative D&D Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-name">Prowess (STR)</div>
+              <div class="stat-score">14 <span class="stat-mod">+2</span></div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Reflex (DEX)</div>
+              <div class="stat-score">15 <span class="stat-mod">+2</span></div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Logic (INT)</div>
+              <div class="stat-score">16 <span class="stat-mod">+3</span></div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Resilience (CON)</div>
+              <div class="stat-score">13 <span class="stat-mod">+1</span></div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Perception (WIS)</div>
+              <div class="stat-score">14 <span class="stat-mod">+2</span></div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Grace (CHA)</div>
+              <div class="stat-score">12 <span class="stat-mod">+1</span></div>
+            </div>
+          </div>
+
+          <!-- Procedural Incursion Container -->
+          <div id="incursionDungeonView" style="flex: 1; display: flex; flex-direction: column;">
+            <!-- Rendered by UI manager -->
+          </div>
+
+          <!-- D20 Die Display Visualizer -->
+          <div class="dice-roller-section">
+            <div class="dice-display">
+              <div class="d20-die" id="d20DieDisplay">20</div>
+              <div>
+                <div style="font-weight: 700; font-size: 0.85rem; color: var(--color-gold);">d20 Tactical Die</div>
+                <div class="roll-formula">Formula: d20 + Mod + Sanctum Buffs</div>
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-align: right;">
+              Nat 20: Critical Glory<br>Nat 1: Severance Fumble
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Command Terminal Log -->
+    <footer class="terminal-panel" id="terminalLogContainer">
+      <div class="log-entry">
+        <span class="log-time">[SYSTEM]</span>
+        <span class="log-msg info">HeavenlyBound Tactical Core operational. Outie and Innie synchronizers linked.</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Initialize Auth
+      await window.HeavenlyAuth.init();
+      if (!window.HeavenlyAuth.isLoggedIn()) {
+        // Auto-login as guest if not logged in
+        window.HeavenlyAuth.loginAsGuest();
+      }
+
+      // 2. Initialize Game Engine
+      await window.HeavenlyEngine.init();
+
+      // 3. Initialize UI Controller & Canvas
+      window.HeavenlyUI.init();
+    });
+
+    async function manualSaveGame() {
+      if (window.HeavenlyEngine) {
+        await window.HeavenlyEngine.autoSave();
+        alert('HeavenlyBound state saved successfully.');
+      }
+    }
+  </script>
+</body>
+</html>

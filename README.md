@@ -1,167 +1,108 @@
-# FlowCraft — High-Converting Lead Generation Landing Page
+# HeavenlyBound — Operation: Severed Grid
 
-A modern, responsive, high-converting lead generation single-page application built to collect leads (Name, Email) directly into **Google Sheets** via **Google Apps Script**, hosted for free on **GitHub Pages**.
+A serverless hybrid cyber-celestial tactical game blending **Command & Conquer** base building (*The Sanctum / Outie Grid*) with **D&D 5e-style d20 procedural dungeon incursions** (*The Ascent / Innie Run*) and a **Severed Memory / Divine Grace degradation loop**, hosted on **GitHub Pages** with **GitHub OAuth** authentication and **Google Sheets / Google Apps Script** cloud persistence.
 
-![Landing Page Preview](https://img.shields.io/badge/Tech_Stack-HTML5_%7C_CSS3_%7C_Vanilla_JS-0F172A?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Tech_Stack-HTML5_%7C_CSS3_%7C_Vanilla_JS-0F172A?style=for-the-badge)
 ![Deployment](https://img.shields.io/badge/Hosting-GitHub_Pages-2EA44F?style=for-the-badge&logo=github)
-![Backend](https://img.shields.io/badge/Backend-Google_Apps_Script-4285F4?style=for-the-badge&logo=google)
+![Backend](https://img.shields.io/badge/Database-Google_Sheets_%2B_Apps_Script-4285F4?style=for-the-badge&logo=google)
+![Auth](https://img.shields.io/badge/Auth-GitHub_OAuth-181717?style=for-the-badge&logo=github)
 
 ---
 
-## ✨ Features
+## 🏛️ System Architecture
 
-- **Zero-Server Architecture**: Uses Google Apps Script as a serverless API endpoint to write leads directly into Google Sheets.
-- **High-Converting Hero Section**: Compelling headline, subheadline, dynamic product preview graphic, and social proof counter (5,000+ creators).
-- **Benefits Section**: 3 responsive feature cards with icons ("Exclusive Tips", "Free Templates", "Community Access").
-- **Interactive Signup Form**:
-  - Validates full name (`name="name"`) and email address (`name="email"`).
-  - Handles `preventDefault()` and `fetch()` submission.
-  - Interactive loading spinner state on the CTA button.
-  - Success message notification card upon completion.
-  - Error banner display if network or script fails.
-- **Modern Aesthetic**: Deep Blue (`#0F172A`) typography, clean whitespace, subtle micro-animations, glassmorphism preview, and Vibrant Orange (`#F97316`) CTA.
-- **Mobile-First & Lightweight**: Fast page loads with zero external JS framework dependencies.
+Because static pages hosted on GitHub Pages cannot securely store backend database connections or secret keys directly, **HeavenlyBound** uses a **Serverless/Client-Side Hybrid Model**:
 
----
+```mermaid
+flowchart TD
+    subgraph Client ["Client-Side (GitHub Pages)"]
+        UI["Dual Tactical Viewport (index.html / game.html)"]
+        Auth["Auth Manager (js/auth.js)"]
+        Engine["Game Engine (js/engine.js)"]
+        API["REST Bridge (js/api.js)"]
+        Synth["Web Audio Synthesizer"]
+    end
 
-## 🛠️ Step-by-Step Setup Guide
+    subgraph GitHub ["GitHub Infrastructure"]
+        OAuth["GitHub OAuth App"]
+        Pages["GitHub Pages Hosting"]
+    end
 
-### 1. Set Up Google Sheet & Google Apps Script
+    subgraph Backend ["Cloud Persistence Layer"]
+        GAS["Google Apps Script Web App (Code.gs)"]
+        Sheet[("Google Sheet: HeavenlyBound_GameDB<br/>• Users Table<br/>• GameStates Table")]
+    end
 
-1. **Create a Google Sheet**:
-   - Go to [Google Sheets](https://sheets.new) and create a new spreadsheet.
-   - Name your sheet (e.g., `FlowCraft Leads`).
-   - In **Row 1**, set the following exact column headers in columns A through F:
-     - `A1`: `timestamp`
-     - `B1`: `name`
-     - `C1`: `email`
-     - `D1`: `guildClass`
-     - `E1`: `birthDate`
-     - `F1`: `birthTime`
-
-2. **Open Apps Script Editor**:
-   - Click **Extensions** > **Apps Script** in the Google Sheets top menu.
-   - Delete any placeholder code in `Code.gs`.
-
-3. **Paste the Backend Script**:
-   - Copy and paste the following Google Apps Script code into `Code.gs`:
-
-```javascript
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ 'result': 'success', 'message': 'Creed API is active' }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(10000);
-
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    var nextRow = sheet.getLastRow() + 1;
-    
-    // Normalize parameter keys for case-insensitive / space-free matching
-    var params = e.parameter || {};
-    var paramMap = {};
-    for (var key in params) {
-      var normKey = key.toLowerCase().replace(/[\s_]/g, '');
-      paramMap[normKey] = params[key];
-    }
-
-    var newRow = headers.map(function(header) {
-      var hStr = String(header).trim();
-      var normHeader = hStr.toLowerCase().replace(/[\s_]/g, '');
-      
-      if (normHeader === 'timestamp' || normHeader === 'date') return new Date();
-      return paramMap[normHeader] !== undefined ? paramMap[normHeader] : (params[hStr] || '');
-    });
-
-    sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
+    UI --> Auth
+    UI --> Engine
+    Engine --> API
+    Engine --> Synth
+    Auth --> OAuth
+    API -->|doGet / doPost JSON| GAS
+    GAS -->|LockService Upsert| Sheet
 ```
 
-4. **Deploy as a Web App**:
-   - Click **Deploy** > **New deployment** (top right).
-   - Click the gear icon next to *Select type* and select **Web app**.
-   - Fill out the deployment parameters:
-     - **Description**: `FlowCraft Lead Collector`
-     - **Execute as**: `Me (your email)`
-     - **Who has access**: `Anyone` *(Crucial: Allows web form to post leads without requiring user login)*
-   - Click **Deploy**.
-   - Grant the necessary permissions if prompted by Google.
-   - **Copy the Web App URL** (it looks like `https://script.google.com/macros/s/AKfycbx.../exec`).
-
-5. **Connect Web App URL to `index.html`**:
-   - Open `index.html`.
-   - Locate line ~952 near the bottom in the `<script>` tag:
-     ```javascript
-     const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-     ```
-   - Replace `'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'` with your copied Web App URL:
-     ```javascript
-     const scriptURL = 'https://script.google.com/macros/s/AKfycbx.../exec';
-     ```
-   - Save `index.html`.
+1. **Frontend Hosting**: GitHub Pages (Vanilla HTML5 / CSS3 / JavaScript with HTML5 Canvas and Web Audio API).
+2. **Authentication**: GitHub OAuth App with instant offline Guest / Pilgrim Simulation fallback.
+3. **Database & Persistence**: Google Sheets (`HeavenlyBound_GameDB`) accessed via Google Apps Script Web App REST API (`doGet` / `doPost`), with local storage buffering.
 
 ---
 
-### 2. Deploy to GitHub Pages
+## 🎮 Core Gameplay Loops
 
-1. **Commit and Push Changes to GitHub**:
-   ```bash
-   git add index.html README.md
-   git commit -m "Deploy FlowCraft lead generation landing page"
-   git push origin main
-   ```
+### 1. The "Outie" Sanctum Grid (Command & Conquer Style)
+- Manage your celestial base on an interactive $10 \times 6$ canvas grid.
+- Construct economic and tactical structures:
+  - **Sol Foundry**: Generates $+6$ Tithe Credits per tick.
+  - **Aether Well**: Harvests $+3$ Aether Shards per tick.
+  - **Grace Anchor**: Reduces incursion memory degradation by $30\%$.
+  - **Ascended Chamber**: Adds $+2$ bonus to all Operative D&D dice rolls.
+  - **Heavenly Beacon**: Amplifies extraction loot shards by $+35\%$.
 
-2. **Enable GitHub Pages**:
-   - Navigate to your repository on [GitHub](https://github.com).
-   - Go to **Settings** > **Pages** (under Code and automation in the left sidebar).
-   - Under **Build and deployment**:
-     - **Source**: Select `Deploy from a branch`.
-     - **Branch**: Select `main` (or `master`) and folder `/ (root)`.
-   - Click **Save**.
+### 2. The "Innie" Ascent Run (D&D 5e-Style Tactical Crawler)
+- Deploy your Operative into procedural $5 \times 5$ node dungeons.
+- Face Corrupted Seraphs, Encrypted Relic Vaults, Void Firewalls, and Restoration Shrines.
+- Interactive $d20 + \text{Mod}$ skill checks:
+  - **Prowess (STR)** & **Reflex (DEX)**: Combat breach and evasive strikes.
+  - **Logic (INT)** & **Perception (WIS)**: Relic decryption and trap scouting.
+  - **Resilience (CON)** & **Grace (CHA)**: Void barrier mitigation and daemon pacification.
+  - **Critical Glory (Nat 20)**: Double loot rewards.
+  - **Critical Fumble (Nat 1)**: Severe damage and accelerated memory loss.
 
-3. **View Your Live Website**:
-   - GitHub Pages will build and deploy your site within 1–2 minutes.
-   - Your live site URL will be displayed at the top of the Pages settings tab:
-     `https://<your-username>.github.io/<repository-name>/`
-
----
-
-## 💻 Local Testing & Verification
-
-1. Double-click `index.html` or open it using a local server (e.g., Live Server extension in VS Code or `npx serve .`).
-2. Enter a test **Full Name** and **Email Address** into the signup form.
-3. Click **Get Instant Access**.
-4. Observe the button transition to a loading state (`.spinner`), followed by the animated green success message.
-5. Check your Google Sheet — a new row with timestamp, name, and email will instantly appear!
+### 3. The "Severed Grace" Degradation Twist
+- Synaptic Memory / Grace Integrity decays per move and action during the run.
+- As Grace drops below $50\%$ and $25\%$, CRT glitch distortions activate and skill check penalties apply.
+- Reach the **Extraction Gate** to bank all harvested Shards safely into Sanctum storage before total severance amnesia wipes your operative.
 
 ---
 
-## 🎨 Customization
+## 📁 Project Structure
 
-- **Product Name**: Search for `FlowCraft` in `index.html` and replace with your brand or product name.
-- **Colors**: Adjust CSS custom properties in `<style>` under `:root`:
-  - Primary text/dark accents: `--color-deep-blue` (`#0F172A`)
-  - CTA Button: `--color-cta` (`#F97316`)
-- **Benefits / Feature Bullet Points**: Modify text inside the `.benefit-card` divs in `index.html`.
+```
+/
+├── index.html                  # Main dashboard, operative dossier & login portal
+├── game.html                   # Core game interface (Dual Outie + Innie viewports)
+├── css/
+│   └── styles.css              # Cyber-celestial / Lumon dark aesthetic styling
+├── js/
+│   ├── auth.js                 # GitHub OAuth & Guest Pilgrim session manager
+│   ├── api.js                  # Google Apps Script REST API bridge & local buffer
+│   ├── engine.js               # C&C base builder + D&D procedural engine + Audio Synth
+│   └── ui.js                   # Canvas renderer & HUD event coordinator
+├── google-apps-script/
+│   └── Code.gs                 # Google Apps Script backend for HeavenlyBound_GameDB
+├── SETUP.md                    # Detailed deployment & configuration walkthrough
+└── README.md                   # Project documentation
+```
 
 ---
 
-## 📜 License
+## 🚀 Quick Start & Deployment
 
-MIT License — Free to use, adapt, and deploy for commercial or personal lead generation projects.
+1. **Deploy to GitHub Pages**:
+   - Push repository to GitHub.
+   - Go to **Settings > Pages > Branch: `main` > Save**.
+2. **Setup Backend**:
+   - Follow the detailed steps in [SETUP.md](SETUP.md) to create your Google Sheet and deploy `Code.gs`.
+3. **Configure Settings**:
+   - Open `index.html`, click **⚙️ SYSTEM CONFIG**, enter your GitHub Client ID and Apps Script URL, then click **Save Config**.
