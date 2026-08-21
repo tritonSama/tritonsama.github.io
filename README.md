@@ -1,78 +1,68 @@
-# HeavenlyBound — Operation: Severed Grid
+# HeavenlyBound — Yu-Gi-Oh Dungeon Defense vs Infiltration (Beta)
 
-A serverless hybrid cyber-celestial tactical game blending **Command & Conquer** base building (*The Sanctum / Outie Grid*) with **D&D 5e-style d20 procedural dungeon incursions** (*The Ascent / Innie Run*) and a **Severed Memory / Divine Grace degradation loop**, hosted on **GitHub Pages** with **GitHub OAuth** authentication and **Google Sheets / Google Apps Script** cloud persistence.
+A serverless tactical game mapping **Yu-Gi-Oh's database primitives** directly into a **Top-Down Dungeon Defense vs. Mobile Tabletop Infiltration Raid** hybrid, powered by live **YGOPRODeck API v7** card data, **GitHub Pages** hosting, **GitHub OAuth** authentication, and **Google Sheets / Google Apps Script** cloud persistence.
 
 ![Tech Stack](https://img.shields.io/badge/Tech_Stack-HTML5_%7C_CSS3_%7C_Vanilla_JS-0F172A?style=for-the-badge)
+![Card DB](https://img.shields.io/badge/Database-YGOPRODeck_API_v7-BC1A6E?style=for-the-badge&logo=yugioh)
 ![Deployment](https://img.shields.io/badge/Hosting-GitHub_Pages-2EA44F?style=for-the-badge&logo=github)
-![Backend](https://img.shields.io/badge/Database-Google_Sheets_%2B_Apps_Script-4285F4?style=for-the-badge&logo=google)
-![Auth](https://img.shields.io/badge/Auth-GitHub_OAuth-181717?style=for-the-badge&logo=github)
+![Backend](https://img.shields.io/badge/Cloud_Storage-Google_Sheets_%2B_Apps_Script-4285F4?style=for-the-badge&logo=google)
 
 ---
 
-## 🏛️ System Architecture
-
-Because static pages hosted on GitHub Pages cannot securely store backend database connections or secret keys directly, **HeavenlyBound** uses a **Serverless/Client-Side Hybrid Model**:
+## 🏛️ Yu-Gi-Oh Primitive Architecture
 
 ```mermaid
 flowchart TD
-    subgraph Client ["Client-Side (GitHub Pages)"]
-        UI["Dual Tactical Viewport (index.html / game.html)"]
-        Auth["Auth Manager (js/auth.js)"]
-        Engine["Game Engine (js/engine.js)"]
-        API["REST Bridge (js/api.js)"]
-        Synth["Web Audio Synthesizer"]
+    subgraph Architect ["Phase 1: Club Setup & Dungeon Defense (Top-Down)"]
+        NT["Normal Traps (Bottomless Trap Hole)<br/>↳ Face-down Gravity/Spike Pit Hazards"]
+        CT["Continuous Traps (Skill Drain)<br/>↳ Indestructible Wall/Ceiling Field Auras"]
+        CTR["Counter Traps (Solemn Judgment)<br/>↳ Spell Speed 3 Reflex Nullifier Sentinels"]
+        TM["Trap Monsters (Embodiment of Apophis)<br/>↳ Disguised Statues animating into Guardians"]
+        CL["Chain Link LIFO Engine<br/>↳ Resolves: CL3 ➔ CL2 ➔ CL1"]
     end
 
-    subgraph GitHub ["GitHub Infrastructure"]
-        OAuth["GitHub OAuth App"]
-        Pages["GitHub Pages Hosting"]
+    subgraph Infiltration ["Phase 2: Infiltration Raid (Tactical Tabletop)"]
+        Stance["Attribute Stances<br/>• DARK: Shadow Stealth<br/>• LIGHT: Radiant Flash<br/>• FIRE: Explosive Breach<br/>• WATER: Frost Shield<br/>• EARTH: Seismic Grounding<br/>• WIND: Zephyr Agility"]
+        Perception["Perception Sonar<br/>↳ Scans magenta outlines on face-down traps"]
+        BreakChain["'Breaking the Chain' Real-Time Window<br/>↳ 3.5s Bullet Time: Cast Mystical Space Typhoon / Effect Veiler"]
+        Core["Master Core Extinction<br/>↳ Extract SPL Tokens & Aether Shards"]
     end
 
-    subgraph Backend ["Cloud Persistence Layer"]
-        GAS["Google Apps Script Web App (Code.gs)"]
-        Sheet[("Google Sheet: HeavenlyBound_GameDB<br/>• Users Table<br/>• GameStates Table")]
+    subgraph CardAPI ["Live Yu-Gi-Oh Database Bridge"]
+        YGODB["YGOPRODeck API v7<br/>• db.ygoprodeck.com/api/v7/cardinfo.php<br/>• HD Card Images & Rulings"]
     end
 
-    UI --> Auth
-    UI --> Engine
-    Engine --> API
-    Engine --> Synth
-    Auth --> OAuth
-    API -->|doGet / doPost JSON| GAS
-    GAS -->|LockService Upsert| Sheet
+    Architect --> CL
+    YGODB --> Architect
+    YGODB --> Infiltration
+    Infiltration --> Perception
+    Infiltration --> BreakChain
+    BreakChain --> Core
 ```
-
-1. **Frontend Hosting**: GitHub Pages (Vanilla HTML5 / CSS3 / JavaScript with HTML5 Canvas and Web Audio API).
-2. **Authentication**: GitHub OAuth App with instant offline Guest / Pilgrim Simulation fallback.
-3. **Database & Persistence**: Google Sheets (`HeavenlyBound_GameDB`) accessed via Google Apps Script Web App REST API (`doGet` / `doPost`), with local storage buffering.
 
 ---
 
-## 🎮 Core Gameplay Loops
+## 🎮 Core Game Modes
 
-### 1. The "Outie" Sanctum Grid (Command & Conquer Style)
-- Manage your celestial base on an interactive $10 \times 6$ canvas grid.
-- Construct economic and tactical structures:
-  - **Sol Foundry**: Generates $+6$ Tithe Credits per tick.
-  - **Aether Well**: Harvests $+3$ Aether Shards per tick.
-  - **Grace Anchor**: Reduces incursion memory degradation by $30\%$.
-  - **Ascended Chamber**: Adds $+2$ bonus to all Operative D&D dice rolls.
-  - **Heavenly Beacon**: Amplifies extraction loot shards by $+35\%$.
+### Phase 1: Dungeon Defense (Top-Down Tabletop Architect)
+- **Normal Traps** (*Bottomless Trap Hole*, *Compulsory Evacuation Device*): Placed face-down on grid tiles. Stepping on the pressure plate triggers high physical damage and knockback.
+- **Continuous Traps** (*Skill Drain*, *Imperial Order*): Placed as glowing runes. Emits a permanent room aura (silencing dash and active abilities) until destroyed.
+- **Counter Traps** (*Solemn Judgment*, *Dark Bribe*): Placed at bottlenecks at **Spell Speed 3**. Automatically negates the intruder's first movement ability upon room entry.
+- **Trap Monsters** (*Embodiment of Apophis*, *Conquistador*): Disguised statues that animate into armed elite guardians when room locks are breached.
+- **Chain Link Logic (LIFO Resolution Engine)**: Multiple traps placed in a room sequence form a chain (CL1 $\to$ CL2 $\to$ CL3) and resolve in **Reverse Order** (CL3 $\to$ CL2 $\to$ CL1)!
 
-### 2. The "Innie" Ascent Run (D&D 5e-Style Tactical Crawler)
-- Deploy your Operative into procedural $5 \times 5$ node dungeons.
-- Face Corrupted Seraphs, Encrypted Relic Vaults, Void Firewalls, and Restoration Shrines.
-- Interactive $d20 + \text{Mod}$ skill checks:
-  - **Prowess (STR)** & **Reflex (DEX)**: Combat breach and evasive strikes.
-  - **Logic (INT)** & **Perception (WIS)**: Relic decryption and trap scouting.
-  - **Resilience (CON)** & **Grace (CHA)**: Void barrier mitigation and daemon pacification.
-  - **Critical Glory (Nat 20)**: Double loot rewards.
-  - **Critical Fumble (Nat 1)**: Severe damage and accelerated memory loss.
-
-### 3. The "Severed Grace" Degradation Twist
-- Synaptic Memory / Grace Integrity decays per move and action during the run.
-- As Grace drops below $50\%$ and $25\%$, CRT glitch distortions activate and skill check penalties apply.
-- Reach the **Extraction Gate** to bank all harvested Shards safely into Sanctum storage before total severance amnesia wipes your operative.
+### Phase 2: Infiltration Raid (Tactical Tabletop Action-Crawler)
+- **Mobile & Touch Optimized**: Clean touch targets ($\ge 44\text{px}$), swipeable layouts, and responsive stance wheels designed for phones and desktop dashboards.
+- **Attribute Stances**:
+  - `DARK` (Shadow Stealth): Invisible to automated turret sensors.
+  - `LIGHT` (Radiant Flash): Blinds cameras and stuns gargoyles.
+  - `FIRE` (Explosive Breach): Melts door locks and deals $+75\%$ damage to the Master Core.
+  - `WATER` (Frost Shield): Chills thermal sensors and absorbs $50\%$ hazard damage.
+  - `EARTH` (Seismic Grounding): Immune to knockback and gravity collapse pits.
+  - `WIND` (Zephyr Agility): Speed boost and trap evasion.
+- **Perception Sonar**: High Perception highlights face-down Normal Traps with a glowing **magenta wireframe** outline!
+- **"Breaking the Chain" Bullet-Time Window**: When a trap chain is triggered, enter a 3.5-second countdown to play a Quick-Play Spell (*Mystical Space Typhoon*) or Hand-Trap (*Effect Veiler*) to negate and break the chain!
+- **Master Core Extinction**: Reach the Master Core Room, destroy the core, and harvest enemy **SPL Token Resources** and Aether Shards.
 
 ---
 
@@ -80,18 +70,19 @@ flowchart TD
 
 ```
 /
-├── index.html                  # Main dashboard, operative dossier & login portal
-├── game.html                   # Core game interface (Dual Outie + Innie viewports)
+├── index.html                  # Main dashboard, operative briefing & login portal
+├── game.html                   # Core tabletop dashboard (Defense, Infiltration, Card Vault)
 ├── css/
-│   └── styles.css              # Cyber-celestial / Lumon dark aesthetic styling
+│   └── styles.css              # Cyber-matrix styling, Yu-Gi-Oh card frames, mobile responsive
 ├── js/
 │   ├── auth.js                 # GitHub OAuth & Guest Pilgrim session manager
 │   ├── api.js                  # Google Apps Script REST API bridge & local buffer
-│   ├── engine.js               # C&C base builder + D&D procedural engine + Audio Synth
-│   └── ui.js                   # Canvas renderer & HUD event coordinator
+│   ├── ygo-api.js              # Live YGOPRODeck API v7 client & card rules mapper
+│   ├── engine.js               # Top-down defense, Chain Link LIFO engine, Infiltration loop
+│   └── ui.js                   # Mobile-first dashboard UI, Chain Link visualizer, Stance selector
 ├── google-apps-script/
 │   └── Code.gs                 # Google Apps Script backend for HeavenlyBound_GameDB
-├── SETUP.md                    # Detailed deployment & configuration walkthrough
+├── SETUP.md                    # Deployment and configuration guide
 └── README.md                   # Project documentation
 ```
 
@@ -99,10 +90,10 @@ flowchart TD
 
 ## 🚀 Quick Start & Deployment
 
-1. **Deploy to GitHub Pages**:
+1. **Host on GitHub Pages**:
    - Push repository to GitHub.
    - Go to **Settings > Pages > Branch: `main` > Save**.
 2. **Setup Backend**:
-   - Follow the detailed steps in [SETUP.md](SETUP.md) to create your Google Sheet and deploy `Code.gs`.
-3. **Configure Settings**:
-   - Open `index.html`, click **⚙️ SYSTEM CONFIG**, enter your GitHub Client ID and Apps Script URL, then click **Save Config**.
+   - Follow [SETUP.md](SETUP.md) to initialize your Google Sheet and deploy `Code.gs`.
+3. **Play Instantly**:
+   - Open `index.html`, tap **⚡ Instant Pilgrim Launch**, and tap **🚀 ENTER THE TACTICAL GRID** to launch into `game.html`!

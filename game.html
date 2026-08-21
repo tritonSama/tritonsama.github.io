@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeavenlyBound — Tactical Operations & Incursion Grid</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HeavenlyBound — Yu-Gi-Oh Dungeon Defense vs Infiltration (Beta)</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕊️</text></svg>">
 </head>
@@ -16,37 +16,35 @@
       <div class="brand-section">
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
           <span class="brand-icon">🕊️</span>
-          <span class="brand-title" style="font-size: 1.15rem;">HEAVENLYBOUND</span>
+          <span class="brand-title">HEAVENLYBOUND</span>
         </a>
       </div>
 
-      <!-- Resource Counters HUD -->
+      <!-- Essence Tokens HUD -->
+      <div class="essence-bar">
+        <span class="ess-badge ess-dark">DARK: <span id="essDark">150</span></span>
+        <span class="ess-badge ess-light">LIGHT: <span id="essLight">150</span></span>
+        <span class="ess-badge ess-earth">EARTH: <span id="essEarth">150</span></span>
+        <span class="ess-badge ess-fire">FIRE: <span id="essFire">120</span></span>
+        <span class="ess-badge ess-water">WATER: <span id="essWater">120</span></span>
+        <span class="ess-badge ess-wind">WIND: <span id="essWind">120</span></span>
+      </div>
+
+      <!-- Resource Metrics HUD -->
       <div class="hud-metrics">
         <div class="metric-pill">
-          <span class="metric-icon">🪙</span>
-          <span style="font-size: 0.7rem; color: var(--text-muted);">TITHE:</span>
-          <span id="resCredits" class="metric-value text-gold">150</span>
+          <span>🪙</span>
+          <span id="resCredits" class="metric-value text-gold">250</span>
         </div>
-
         <div class="metric-pill">
-          <span class="metric-icon">💠</span>
-          <span style="font-size: 0.7rem; color: var(--text-muted);">SHARDS:</span>
-          <span id="resShards" class="metric-value text-cyan">40</span>
+          <span>💠</span>
+          <span id="resShards" class="metric-value text-cyan">80</span>
         </div>
-
         <div class="metric-pill">
-          <span class="metric-icon">⚡</span>
-          <span style="font-size: 0.7rem; color: var(--text-muted);">ENERGY:</span>
-          <span id="resEnergy" class="metric-value">50/100</span>
+          <span>💎</span>
+          <span id="resSPL" class="metric-value text-emerald">150 SPL</span>
         </div>
 
-        <div class="metric-pill">
-          <span class="metric-icon">🗺️</span>
-          <span style="font-size: 0.7rem; color: var(--text-muted);">FLOOR:</span>
-          <span id="resFloor" class="metric-value text-gold">1</span>
-        </div>
-
-        <!-- Grace / Memory Degradation Gauge -->
         <div class="grace-bar-container">
           <span class="grace-label">GRACE:</span>
           <div class="grace-track">
@@ -54,164 +52,207 @@
           </div>
           <span id="graceIntegrityVal" style="font-size: 0.75rem; font-weight: 700; color: var(--color-cyan);">100%</span>
         </div>
-      </div>
 
-      <!-- Sync & User Tag -->
-      <div class="hud-actions">
-        <span id="syncStatusBadge" class="panel-badge badge-innie">☁️ Synced</span>
-        <button class="btn btn-outline" onclick="manualSaveGame()">💾 SAVE</button>
-        <a href="index.html" class="btn btn-outline">🚪 EXIT</a>
+        <div class="hud-actions" style="display: flex; gap: 0.35rem;">
+          <span id="syncStatusBadge" class="panel-badge badge-innie">☁️ Synced</span>
+          <a href="index.html" class="btn btn-outline btn-sm">🚪 EXIT</a>
+        </div>
       </div>
     </header>
 
-    <!-- Dual Tactical View (C&C Outie Base on Left / D&D Innie Run on Right) -->
-    <main class="dual-viewport-layout">
+    <!-- Mode Selector Tabs (Phone & Mobile Friendly) -->
+    <nav class="mode-tabs-bar">
+      <button class="mode-tab-btn active" data-tab="DEFENSE">
+        <span>🛡️</span> DEFENSE ARCHITECT
+      </button>
+      <button class="mode-tab-btn" data-tab="INFILTRATION">
+        <span>⚔️</span> INFILTRATION RAID
+      </button>
+      <button class="mode-tab-btn" data-tab="VAULT">
+        <span>🗃️</span> CARD VAULT & DB
+      </button>
+    </nav>
 
-      <!-- ================================================================== -->
-      <!-- VIEWPORT 1: OUTIE SANCTUM BASE (C&C TACTICAL BUILDER)               -->
-      <!-- ================================================================== -->
-      <section class="tactical-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>🏛️</span> SANCTUM GRID OPERATIONS (OUTIE)
-          </div>
-          <span class="panel-badge badge-outie">MACRO FOUNDRY</span>
+    <!-- ==================================================================== -->
+    <!-- TAB 1: TOP-DOWN DUNGEON DEFENSE (Yu-Gi-Oh Architect)                 -->
+    <!-- ==================================================================== -->
+    <section id="defenseViewSection" class="tactical-panel" style="display: grid;">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🏛️</span> TERRITORY DUNGEON DEFENSE GRID
         </div>
+        <span class="panel-badge badge-outie">CHAIN LINK SYSTEM ACTIVE</span>
+      </div>
 
-        <div class="panel-body">
-          <!-- Canvas Grid -->
-          <div class="canvas-wrapper">
-            <canvas id="sanctumCanvas" width="480" height="288"></canvas>
+      <div class="panel-body">
+        <div class="tabletop-defense-container">
+          <!-- 8x5 Tabletop Grid -->
+          <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+            <div id="tabletopDefenseGrid" class="tabletop-grid">
+              <!-- Rendered by UI manager -->
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+              <span>[Tap/Click]: Set selected trap / Chain link</span>
+              <span>[Right-Click]: Dismantle trap</span>
+            </div>
           </div>
 
-          <div style="font-size: 0.725rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span>[Left Click]: Construct selected / inspect</span>
-            <span>[Right Click]: Demolish structure</span>
-          </div>
-
-          <!-- Building Palette -->
-          <div class="build-palette">
-            <div class="building-card" data-building="SOL_FOUNDRY">
-              <div class="building-name">🏛️ Sol Foundry</div>
-              <div class="building-cost">Cost: 50 Tithes</div>
-              <div class="building-buff">+6 Tithes/tick</div>
+          <!-- Trap Arsenal Palette -->
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase;">
+              Trap Card Arsenal (Select to Set)
             </div>
-
-            <div class="building-card" data-building="AETHER_WELL">
-              <div class="building-name">💠 Aether Well</div>
-              <div class="building-cost">Cost: 80 Tithes</div>
-              <div class="building-buff">+3 Shards/tick</div>
-            </div>
-
-            <div class="building-card" data-building="GRACE_ANCHOR">
-              <div class="building-name">⚓ Grace Anchor</div>
-              <div class="building-cost">Cost: 120 Tithes</div>
-              <div class="building-buff">-30% Memory Decay</div>
-            </div>
-
-            <div class="building-card" data-building="ASCENDED_CHAMBER">
-              <div class="building-name">⚔️ Ascended Chamber</div>
-              <div class="building-cost">Cost: 160 Tithes</div>
-              <div class="building-buff">+2 D&D Dice Bonus</div>
-            </div>
-
-            <div class="building-card" data-building="HEAVENLY_BEACON">
-              <div class="building-name">✨ Heavenly Beacon</div>
-              <div class="building-cost">Cost: 220 Tithes</div>
-              <div class="building-buff">+35% Extraction Loot</div>
+            <div id="defensePaletteList" class="palette-card-list">
+              <!-- Rendered by UI manager -->
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ================================================================== -->
-      <!-- VIEWPORT 2: INNIE ASCENT INCURSION (D&D 5E PROCEDURAL CRAWLER)     -->
-      <!-- ================================================================== -->
-      <section class="tactical-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>🌌</span> ASCENT INCURSION RUN (INNIE)
-          </div>
-          <span class="panel-badge badge-innie">D20 CELESTIAL MATRIX</span>
+    <!-- ==================================================================== -->
+    <!-- TAB 2: INFILTRATION RAID (Tabletop Action-Crawler)                  -->
+    <!-- ==================================================================== -->
+    <section id="infiltrationViewSection" class="tactical-panel" style="display: none;">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🌌</span> FIRST-PERSON INFILTRATION RAID (TACTICAL TABLETOP)
         </div>
+        <span id="activeStanceLabel" class="panel-badge badge-innie" style="color: var(--color-violet);">DARK STANCE</span>
+      </div>
 
-        <div class="panel-body">
-          <!-- Operative Stats Bar -->
-          <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-            <div>
-              <span style="font-weight: 700; color: var(--color-cyan);">Operative: 7-Bound</span>
-              <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">[Class: Severed Seraph]</span>
-            </div>
-            <div style="font-weight: 700; font-size: 0.85rem;">
-              <span style="color: var(--text-muted);">HP:</span>
-              <span id="operativeHpVal" class="text-emerald">30/30</span>
-            </div>
-          </div>
-
-          <!-- Operative D&D Stats Grid -->
-          <div class="stats-grid">
-            <div class="stat-box">
-              <div class="stat-name">Prowess (STR)</div>
-              <div class="stat-score">14 <span class="stat-mod">+2</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-name">Reflex (DEX)</div>
-              <div class="stat-score">15 <span class="stat-mod">+2</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-name">Logic (INT)</div>
-              <div class="stat-score">16 <span class="stat-mod">+3</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-name">Resilience (CON)</div>
-              <div class="stat-score">13 <span class="stat-mod">+1</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-name">Perception (WIS)</div>
-              <div class="stat-score">14 <span class="stat-mod">+2</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-name">Grace (CHA)</div>
-              <div class="stat-score">12 <span class="stat-mod">+1</span></div>
-            </div>
-          </div>
-
-          <!-- Procedural Incursion Container -->
-          <div id="incursionDungeonView" style="flex: 1; display: flex; flex-direction: column;">
+      <div class="panel-body">
+        <div class="infil-layout">
+          <!-- 6x6 Infiltration Sector Grid -->
+          <div id="infilSectorGrid" style="display: flex; flex-direction: column; gap: 0.5rem;">
             <!-- Rendered by UI manager -->
           </div>
 
-          <!-- D20 Die Display Visualizer -->
-          <div class="dice-roller-section">
-            <div class="dice-display">
-              <div class="d20-die" id="d20DieDisplay">20</div>
-              <div>
-                <div style="font-weight: 700; font-size: 0.85rem; color: var(--color-gold);">d20 Tactical Die</div>
-                <div class="roll-formula">Formula: d20 + Mod + Sanctum Buffs</div>
+          <!-- Infiltrator Action Kit (Stances & Hand Deck) -->
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Attribute Stance Selector -->
+            <div class="stance-wheel-container">
+              <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                Suit Attribute Stance (Tap to Shift)
+              </div>
+              <div class="stance-buttons-row">
+                <button class="stance-btn active" data-stance="DARK" style="color: #c084fc;">🌑 DARK</button>
+                <button class="stance-btn" data-stance="LIGHT" style="color: #fde047;">✨ LIGHT</button>
+                <button class="stance-btn" data-stance="FIRE" style="color: #f87171;">🔥 FIRE</button>
+                <button class="stance-btn" data-stance="WATER" style="color: #38bdf8;">❄️ WATER</button>
+                <button class="stance-btn" data-stance="EARTH" style="color: #facc15;">⛰️ EARTH</button>
+                <button class="stance-btn" data-stance="WIND" style="color: #4ade80;">🌪️ WIND</button>
               </div>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); text-align: right;">
-              Nat 20: Critical Glory<br>Nat 1: Severance Fumble
+
+            <!-- Hand Deck Tray -->
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                Active Hand Deck (Quick-Play / Equip / Hand-Traps)
+              </div>
+              <div id="infilHandCards" class="hand-deck-tray">
+                <!-- Rendered by UI manager -->
+              </div>
             </div>
           </div>
-
         </div>
-      </section>
+      </div>
+    </section>
 
-    </main>
+    <!-- ==================================================================== -->
+    <!-- TAB 3: CARD VAULT & LIVE YGOPRODECK SEARCH                          -->
+    <!-- ==================================================================== -->
+    <section id="vaultViewSection" class="tactical-panel" style="display: none;">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>🗃️</span> YGOPRODECK CARD VAULT & LIVE DATABASE
+        </div>
+        <span class="panel-badge badge-outie">YGOPRODECK v7 API</span>
+      </div>
+
+      <div class="panel-body">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <input type="text" id="searchYgoInput" class="form-control" style="flex: 1; min-height: 42px;" placeholder="Search Yu-Gi-Oh cards (e.g. Mirror Force, Skill Drain, Ash Blossom)...">
+          <button id="searchYgoBtn" class="btn btn-gold">🔍 SEARCH DB</button>
+        </div>
+
+        <div id="vaultCardGrid" class="vault-grid">
+          <!-- Rendered by UI manager -->
+        </div>
+      </div>
+    </section>
 
     <!-- Bottom Command Terminal Log -->
     <footer class="terminal-panel" id="terminalLogContainer">
       <div class="log-entry">
         <span class="log-time">[SYSTEM]</span>
-        <span class="log-msg info">HeavenlyBound Tactical Core operational. Outie and Innie synchronizers linked.</span>
+        <span class="log-msg info">HeavenlyBound Yu-Gi-Oh Tactical Engine active. Chain Link clocks running.</span>
       </div>
     </footer>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- REAL-TIME "BREAKING THE CHAIN" BULLET-TIME MODAL                     -->
+  <!-- ==================================================================== -->
+  <div class="modal-backdrop" id="chainLinkModal">
+    <div class="chain-modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--color-crimson); font-size: 1rem; font-weight: 800;">
+          ⚠️ ENEMY CHAIN LINK INITIATED!
+        </h3>
+        <span id="chainTimerLabel" style="font-weight: 900; font-size: 1.1rem; color: var(--color-gold);">3.5s</span>
+      </div>
+
+      <div class="chain-timer-track">
+        <div id="chainTimerBar" class="chain-timer-fill"></div>
+      </div>
+
+      <div style="font-size: 0.75rem; color: var(--text-secondary);">
+        Traps armed in sequence. Chain will resolve in <strong>REVERSE ORDER (LIFO)</strong> unless interrupted!
+      </div>
+
+      <!-- Chain Stack Visualizer -->
+      <div id="chainStackVisualizer" style="display: flex; flex-direction: column; gap: 0.4rem;">
+        <!-- Rendered by UI -->
+      </div>
+
+      <div id="chainResolutionStatus"></div>
+
+      <!-- Reaction Fast-Effect Cards -->
+      <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+        <div style="font-size: 0.7rem; font-weight: 700; color: var(--color-gold); text-transform: uppercase;">
+          Fast-Effect Hand Reaction (Tap to Break Chain):
+        </div>
+        <div id="chainReactionCards" style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+          <!-- Rendered by UI -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Inspection & Details Modal -->
+  <div class="modal-backdrop" id="cardDetailModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalCardName" class="modal-title text-gold">Card Details</h3>
+        <button class="modal-close" onclick="window.HeavenlyUI.closeDetailModal()">✕</button>
+      </div>
+      <div style="display: flex; gap: 0.9rem; flex-direction: column; align-items: center;">
+        <img id="modalCardImg" src="" style="width: 140px; border-radius: var(--radius-sm); border: 2px solid var(--border-gold);" alt="Card Art">
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 0.4rem;">
+          <div id="modalCardCategory" style="font-size: 0.8rem; font-weight: 700; color: var(--color-cyan);">Category</div>
+          <div id="modalCardDesc" style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">Description</div>
+          <div id="modalCardPhysical" style="font-size: 0.75rem; color: var(--color-gold); background: rgba(255, 215, 0, 0.1); padding: 0.5rem; border-radius: var(--radius-sm); border-left: 3px solid var(--color-gold);"></div>
+        </div>
+      </div>
+      <button class="btn btn-outline" onclick="window.HeavenlyUI.closeDetailModal()">Close</button>
+    </div>
   </div>
 
   <!-- Scripts -->
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/ygo-api.js"></script>
   <script src="js/engine.js"></script>
   <script src="js/ui.js"></script>
   <script>
@@ -219,23 +260,15 @@
       // 1. Initialize Auth
       await window.HeavenlyAuth.init();
       if (!window.HeavenlyAuth.isLoggedIn()) {
-        // Auto-login as guest if not logged in
         window.HeavenlyAuth.loginAsGuest();
       }
 
       // 2. Initialize Game Engine
       await window.HeavenlyEngine.init();
 
-      // 3. Initialize UI Controller & Canvas
+      // 3. Initialize UI Controller
       window.HeavenlyUI.init();
     });
-
-    async function manualSaveGame() {
-      if (window.HeavenlyEngine) {
-        await window.HeavenlyEngine.autoSave();
-        alert('HeavenlyBound state saved successfully.');
-      }
-    }
   </script>
 </body>
 </html>

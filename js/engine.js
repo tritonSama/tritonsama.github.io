@@ -1,12 +1,14 @@
 /**
  * ============================================================================
- * HeavenlyBound - Core Game Engine
+ * HeavenlyBound - Core Game Engine (Yu-Gi-Oh Hybrid Edition)
  * ============================================================================
  * Features:
- *   1. Outie Sanctum Base Builder (C&C style grid, structures, resource ticks)
- *   2. Innie Ascent Incursion (D&D 5e-style d20 procedural dungeon crawler)
- *   3. Severed Grace Degradation Loop (Memory decay, glitch shaders, extraction)
- *   4. Pure Web Audio Synthesizer (Retro-cyber celestial SFX)
+ *   1. Top-Down Tabletop Dungeon Defense Architect (Yu-Gi-Oh Trap Primitives)
+ *   2. Chain Link LIFO Resolution Engine (CL1 -> CL2 -> CL3 => CL3 -> CL2 -> CL1)
+ *   3. Tactical Infiltration Action-Crawler (Attribute Stances, Spell Decks, Perception)
+ *   4. Real-time "Breaking the Chain" Reaction Window
+ *   5. Master Core Extinction & SPL Token / Aether Harvesting
+ *   6. Web Audio Synthesizer (Yu-Gi-Oh activation sounds, dice rolls, alarms)
  * ============================================================================
  */
 
@@ -49,10 +51,20 @@
     }
 
     playClick() { this.playTone(880, 'triangle', 0.05, 0.05); }
-    playBuildingPlaced() {
-      this.playTone(330, 'square', 0.1, 0.08);
-      setTimeout(() => this.playTone(554, 'square', 0.15, 0.08), 80);
-      setTimeout(() => this.playTone(659, 'sine', 0.2, 0.1), 160);
+    playCardActivate() {
+      this.playTone(520, 'square', 0.08, 0.08);
+      setTimeout(() => this.playTone(784, 'sine', 0.12, 0.1), 60);
+      setTimeout(() => this.playTone(1046, 'sine', 0.2, 0.12), 120);
+    }
+    playChainTrigger() {
+      this.playTone(220, 'sawtooth', 0.1, 0.15);
+      setTimeout(() => this.playTone(440, 'sawtooth', 0.15, 0.15), 80);
+      setTimeout(() => this.playTone(880, 'sawtooth', 0.25, 0.2), 160);
+    }
+    playChainBreak() {
+      [1046, 880, 659, 1318].forEach((f, i) => {
+        setTimeout(() => this.playTone(f, 'triangle', 0.18, 0.1), i * 50);
+      });
     }
     playDiceRoll() {
       for (let i = 0; i < 4; i++) {
@@ -74,203 +86,102 @@
     }
   }
 
-  // --- GAME CONSTANTS ---
-  const STRUCTURE_TYPES = {
-    SOL_FOUNDRY: {
-      id: 'SOL_FOUNDRY',
-      name: 'Sol Foundry',
-      cost: 50,
-      energyCost: 5,
-      creditGen: 6,
-      shardGen: 0,
-      color: '#ffd700',
-      icon: '🏛️',
-      desc: '+6 Tithe Credits/tick',
-      buffDesc: 'Economic backbone of the Sanctum'
-    },
-    AETHER_WELL: {
-      id: 'AETHER_WELL',
-      name: 'Aether Well',
-      cost: 80,
-      energyCost: 8,
-      creditGen: 0,
-      shardGen: 3,
-      color: '#00f0ff',
-      icon: '💠',
-      desc: '+3 Aether Shards/tick',
-      buffDesc: 'Extracts celestial raw matrix'
-    },
-    GRACE_ANCHOR: {
-      id: 'GRACE_ANCHOR',
-      name: 'Grace Anchor',
-      cost: 120,
-      energyCost: 12,
-      creditGen: 2,
-      shardGen: 1,
-      color: '#00ff88',
-      icon: '⚓',
-      desc: 'Decay Resistance',
-      buffDesc: 'Slows Innie memory degradation by 30%'
-    },
-    ASCENDED_CHAMBER: {
-      id: 'ASCENDED_CHAMBER',
-      name: 'Ascended Chamber',
-      cost: 160,
-      energyCost: 15,
-      creditGen: 0,
-      shardGen: 2,
-      color: '#a855f7',
-      icon: '⚔️',
-      desc: '+2 Operative D&D Mods',
-      buffDesc: 'Improves dice checks in Ascent incursions'
-    },
-    HEAVENLY_BEACON: {
-      id: 'HEAVENLY_BEACON',
-      name: 'Heavenly Beacon',
-      cost: 220,
-      energyCost: 20,
-      creditGen: 4,
-      shardGen: 4,
-      color: '#ffaa00',
-      icon: '✨',
-      desc: '+35% Extraction Loot',
-      buffDesc: 'Amplifies extraction shard banking'
-    }
-  };
-
-  const ROOM_TYPES = [
-    {
-      type: 'CORRUPTED_SERAPH',
-      title: 'Corrupted Seraph Daemon',
-      icon: '👾',
-      desc: 'A rogue security entity bars the way. Neutralize it or bypass its optic sensors.',
-      dc: 12,
-      statCheck: 'prowess',
-      statName: 'Prowess (STR)',
-      altCheck: 'reflex',
-      altName: 'Reflex (DEX)',
-      shardReward: 15,
-      creditReward: 25
-    },
-    {
-      type: 'ENCRYPTED_SCRIPTURE',
-      title: 'Encrypted Celestial Terminal',
-      icon: '💾',
-      desc: 'A glowing data altar containing forgotten divine code matrices.',
-      dc: 13,
-      statCheck: 'logic',
-      statName: 'Logic (INT)',
-      altCheck: 'perception',
-      altName: 'Perception (WIS)',
-      shardReward: 25,
-      creditReward: 15
-    },
-    {
-      type: 'VOID_FIREWALL',
-      title: 'Void Fracture Barrier',
-      icon: '⚡',
-      desc: 'Corrosive energy ripples across the sector. Endure the shock or channel grace.',
-      dc: 11,
-      statCheck: 'resilience',
-      statName: 'Resilience (CON)',
-      altCheck: 'grace',
-      altName: 'Grace (CHA)',
-      shardReward: 10,
-      creditReward: 30
-    },
-    {
-      type: 'SANCTUM_SHRINE',
-      title: 'Sanctum Restoration Node',
-      icon: '🕊️',
-      desc: 'A quiet harmonic nexus that temporarily re-stabilizes psychic severance.',
-      dc: 8,
-      statCheck: 'grace',
-      statName: 'Grace (CHA)',
-      altCheck: 'perception',
-      altName: 'Perception (WIS)',
-      shardReward: 5,
-      creditReward: 10,
-      isHealing: true
-    },
-    {
-      type: 'EXTRACTION_GATE',
-      title: 'Ascent Extraction Gate',
-      icon: '🚪',
-      desc: 'Sub-dimensional elevator back to the Outie Sanctum. Bank all collected loot immediately.',
-      isExit: true
-    }
-  ];
-
   class HeavenlyGameEngine {
     constructor() {
       this.sound = new HeavenlyAudioSynth();
-      
-      // Base State (Outie C&C Grid)
-      this.gridCols = 10;
-      this.gridRows = 6;
-      this.baseGrid = Array(this.gridRows).fill(null).map(() => Array(this.gridCols).fill(null));
-      this.selectedBuildTool = null;
 
-      // Resources
-      this.credits = 150;
-      this.aetherShards = 40;
-      this.energy = 50;
-      this.maxEnergy = 100;
-      this.baseLevel = 1;
+      // Club & Resource State
+      this.credits = 250;      // Tithe Credits
+      this.aetherShards = 80;  // Aether Shards
+      this.splTokens = 150;    // SPL Token Resources
+      this.essence = {
+        DARK: 150,
+        LIGHT: 150,
+        EARTH: 150,
+        FIRE: 120,
+        WATER: 120,
+        WIND: 120
+      };
       this.highScore = 0;
 
-      // Operative State (Innie D&D Run)
+      // Active Mode: 'DEFENSE' or 'INFILTRATION'
+      this.currentMode = 'DEFENSE';
+
+      // --- PHASE 1: DUNGEON DEFENSE GRID ---
+      this.defCols = 8;
+      this.defRows = 5;
+      this.defenseGrid = Array(this.defRows).fill(null).map(() => Array(this.defCols).fill(null));
+      this.selectedTrapCard = null;
+
+      // --- PHASE 2: INFILTRATION RAID STATE ---
       this.operative = {
-        name: 'Agent 7-Bound',
-        hp: 30,
-        maxHp: 30,
-        graceIntegrity: 100, // Memory degradation (100% down to 0%)
+        name: 'Operative 7-Bound',
+        hp: 100,
+        maxHp: 100,
+        stamina: 100,
+        maxStamina: 100,
+        graceIntegrity: 100,
+        stance: 'DARK', // 'DARK', 'LIGHT', 'FIRE', 'WATER', 'EARTH', 'WIND'
         stats: {
-          prowess: 14,    // STR (+2)
-          reflex: 15,     // DEX (+2)
-          logic: 16,      // INT (+3)
-          resilience: 13, // CON (+1)
-          perception: 14, // WIS (+2)
-          grace: 12       // CHA (+1)
-        }
+          prowess: 14,
+          reflex: 16,
+          logic: 16,
+          resilience: 13,
+          perception: 16, // Reveals face-down normal traps
+          grace: 14
+        },
+        hand: [] // Active Quick-Play / Equip / Hand-Traps
       };
 
-      // Incursion Run State
+      // Infiltration Map (Enemy Club Sector)
+      this.infilRows = 6;
+      this.infilCols = 6;
+      this.infilGrid = [];
+      this.infilPlayerPos = { r: 0, c: 0 };
       this.inRun = false;
-      this.dungeonFloor = 1;
-      this.incursionGrid = [];
-      this.currentNode = null;
-      this.incursionShardsLooted = 0;
-      this.incursionCreditsLooted = 0;
+      this.raidFloor = 1;
+      this.raidLoot = { spl: 0, shards: 0, credits: 0 };
 
-      // Tick Loops
+      // Chain Link Real-Time Window
+      this.activeChain = null; // { room, links: [], timer: null, timeLeft: 0 }
+      this.chainWindowActive = false;
+
+      // Master Core State
+      this.masterCore = {
+        hp: 200,
+        maxHp: 200,
+        shieldActive: true,
+        destroyed: false
+      };
+
+      // Tick & Save loops
       this.tickTimer = null;
       this.saveTimer = null;
-      this.isRolling = false;
     }
 
-    /**
-     * Initialize Engine
-     */
     async init() {
       const user = window.HeavenlyAuth ? window.HeavenlyAuth.getCurrentUser() : null;
       if (user) {
         await this.loadSavedState(user.githubId);
       } else {
-        this.setupDefaultBase();
+        this.setupDefaultDefense();
       }
 
+      this.initInfiltratorHand();
       this.startBaseTickLoop();
       this.startAutoSaveLoop();
-      this.log('HeavenlyBound Tactical Core Initialized. Sanctum link established.', 'info');
+      this.log('HeavenlyBound Yu-Gi-Oh Tactical Grid Initialized. Spell Speed clocks synchronized.', 'info');
     }
 
-    /**
-     * Start Resource Generation Tick Loop
-     */
+    initInfiltratorHand() {
+      if (window.YgoApi) {
+        this.operative.hand = window.YgoApi.getInfiltratorHand();
+      }
+    }
+
     startBaseTickLoop() {
       if (this.tickTimer) clearInterval(this.tickTimer);
-      this.tickTimer = setInterval(() => this.processBaseTick(), 2000);
+      this.tickTimer = setInterval(() => this.processEssenceTick(), 2500);
     }
 
     startAutoSaveLoop() {
@@ -278,392 +189,487 @@
       this.saveTimer = setInterval(() => this.autoSave(), 30000);
     }
 
-    /**
-     * Process 1 Tick of Base Production
-     */
-    processBaseTick() {
-      let creditDelta = 2; // Passive base stipend
-      let shardDelta = 0;
-      let usedEnergy = 0;
+    processEssenceTick() {
+      // Passive essence distillation
+      this.credits += 4;
+      this.aetherShards += 1;
+      this.essence.DARK += 2;
+      this.essence.LIGHT += 2;
+      this.essence.EARTH += 2;
+      this.essence.FIRE += 1;
+      this.essence.WATER += 1;
+      this.essence.WIND += 1;
 
-      for (let r = 0; r < this.gridRows; r++) {
-        for (let c = 0; c < this.gridCols; c++) {
-          const struct = this.baseGrid[r][c];
-          if (struct) {
-            creditDelta += struct.creditGen || 0;
-            shardDelta += struct.shardGen || 0;
-            usedEnergy += struct.energyCost || 0;
-          }
-        }
-      }
-
-      this.credits += creditDelta;
-      this.aetherShards += shardDelta;
-      this.energy = Math.max(0, this.maxEnergy - usedEnergy);
-
-      // Trigger UI updates
       if (window.HeavenlyUI) {
         window.HeavenlyUI.updateResourceDisplays();
       }
     }
 
-    /**
-     * Place Structure on Outie Base Grid
-     */
-    placeStructure(r, c, typeKey) {
-      const def = STRUCTURE_TYPES[typeKey];
-      if (!def) return false;
+    // --------------------------------------------------------------------------
+    // PHASE 1: TOP-DOWN DUNGEON DEFENSE (Yu-Gi-Oh Architect)
+    // --------------------------------------------------------------------------
 
-      if (this.credits < def.cost) {
-        this.log(`Insufficient Tithe Credits! Requires ${def.cost} Credits.`, 'warning');
+    setupDefaultDefense() {
+      // Place starting defense layout
+      if (!window.YgoApi) return;
+      const bHole = window.YgoApi.getCard(29401950); // Bottomless Trap Hole
+      const sDrain = window.YgoApi.getCard(82732705); // Skill Drain
+      const sJudge = window.YgoApi.getCard(41420027); // Solemn Judgment
+      const apophis = window.YgoApi.getCard(28649820); // Embodiment of Apophis
+
+      if (bHole) this.placeTrap(1, 2, bHole);
+      if (sDrain) this.placeTrap(2, 3, sDrain);
+      if (sJudge) this.placeTrap(2, 5, sJudge);
+      if (apophis) this.placeTrap(3, 4, apophis);
+    }
+
+    /**
+     * Place Trap Card onto Defense Grid Tile
+     */
+    placeTrap(r, c, card) {
+      if (!card) return false;
+
+      // Check costs
+      if (this.credits < (card.cost.tithes || 0)) {
+        this.log(`Insufficient Tithe Credits! Requires ${card.cost.tithes} Credits.`, 'warning');
         this.sound.playAlarm();
         return false;
       }
 
-      if (this.baseGrid[r][c] !== null) {
-        this.log('Location occupied by another structure.', 'warning');
+      const attr = card.attribute || 'DARK';
+      const reqEssence = card.cost[attr.toLowerCase()] || 0;
+      if (this.essence[attr] < reqEssence) {
+        this.log(`Insufficient ${attr} Essence! Requires ${reqEssence} ${attr} Essence.`, 'warning');
+        this.sound.playAlarm();
         return false;
       }
 
-      this.credits -= def.cost;
-      this.baseGrid[r][c] = {
-        ...def,
-        placedAt: Date.now()
-      };
+      // Deduct cost
+      this.credits -= (card.cost.tithes || 0);
+      this.essence[attr] -= reqEssence;
 
-      this.sound.playBuildingPlaced();
-      this.log(`Constructed [${def.name}] at sector (${c + 1}, ${r + 1}).`, 'success');
+      const existing = this.defenseGrid[r][c];
+      if (existing) {
+        // Append into Chain Link sequence if slot has existing trap
+        if (!existing.chain) existing.chain = [existing.card];
+        existing.chain.push(card);
+        this.log(`Chain Link Augmented at Sector (${c + 1}, ${r + 1}): [Chain Link ${existing.chain.length}: ${card.name} (${card.category})].`, 'success');
+      } else {
+        this.defenseGrid[r][c] = {
+          card: card,
+          chain: [card],
+          isFaceDown: card.mechanicType === 'NORMAL_TRAP',
+          r, c,
+          placedAt: Date.now()
+        };
+        this.log(`Set [${card.name}] (${card.category}) at Sector (${c + 1}, ${r + 1}).`, 'success');
+      }
+
+      this.sound.playCardActivate();
       this.autoSave();
 
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderCanvas();
+        window.HeavenlyUI.renderDefenseGrid();
         window.HeavenlyUI.updateResourceDisplays();
       }
       return true;
     }
 
     /**
-     * Demolish Structure
+     * Remove / Dismantle Trap from Grid Tile
      */
-    demolishStructure(r, c) {
-      const struct = this.baseGrid[r][c];
-      if (!struct) return;
+    removeTrap(r, c) {
+      const tile = this.defenseGrid[r][c];
+      if (!tile) return;
 
-      const refund = Math.floor(struct.cost * 0.5);
-      this.credits += refund;
-      this.baseGrid[r][c] = null;
-      this.log(`Decommissioned [${struct.name}]. Refunded +${refund} Credits.`, 'info');
+      const refundCredits = Math.floor((tile.card.cost.tithes || 40) * 0.5);
+      this.credits += refundCredits;
+      this.defenseGrid[r][c] = null;
+
+      this.log(`Dismantled defense at Sector (${c + 1}, ${r + 1}). Refunded +${refundCredits} Credits.`, 'info');
       this.sound.playClick();
 
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderCanvas();
+        window.HeavenlyUI.renderDefenseGrid();
         window.HeavenlyUI.updateResourceDisplays();
       }
     }
 
-    /**
-     * Count structures of given type
-     */
-    countStructures(typeKey) {
-      let count = 0;
-      for (let r = 0; r < this.gridRows; r++) {
-        for (let c = 0; c < this.gridCols; c++) {
-          if (this.baseGrid[r][c] && this.baseGrid[r][c].id === typeKey) {
-            count++;
-          }
-        }
-      }
-      return count;
-    }
-
     // --------------------------------------------------------------------------
-    // INNIE ASCENT INCURSION (D&D 5E LOOP)
+    // PHASE 2: INFILTRATION RAID (Tabletop Action-Crawler)
     // --------------------------------------------------------------------------
 
-    /**
-     * Deploy Operative into Ascent Incursion
-     */
-    startIncursion() {
+    startInfiltrationRaid() {
       this.inRun = true;
-      this.incursionShardsLooted = 0;
-      this.incursionCreditsLooted = 0;
       this.operative.hp = this.operative.maxHp;
+      this.operative.stamina = this.operative.maxStamina;
       this.operative.graceIntegrity = 100;
+      this.infilPlayerPos = { r: 0, c: 0 };
+      this.raidLoot = { spl: 0, shards: 0, credits: 0 };
 
-      this.generateDungeonGrid(5, 5);
+      this.masterCore.hp = this.masterCore.maxHp;
+      this.masterCore.destroyed = false;
+
+      this.generateInfiltrationSector(6, 6);
       this.sound.playSuccess();
-      this.log(`+++ DEPLOYING OPERATIVE INTO CELESTIAL INCURSION FLOOR ${this.dungeonFloor} +++`, 'info');
+      this.log(`+++ INFILTRATING ENEMY CLUB TERRITORY SECTOR ${this.raidFloor} +++`, 'info');
 
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderIncursion();
+        window.HeavenlyUI.renderInfiltration();
       }
     }
 
-    /**
-     * Generate Procedural 5x5 Incursion Grid
-     */
-    generateDungeonGrid(rows = 5, cols = 5) {
-      this.incursionGrid = [];
-      const totalNodes = rows * cols;
-      const exitIndex = totalNodes - 1;
+    generateInfiltrationSector(rows = 6, cols = 6) {
+      this.infilGrid = [];
+      const total = rows * cols;
+      const coreIndex = total - 1;
 
-      for (let i = 0; i < totalNodes; i++) {
+      // Sample preset traps from YGOPRODeck cards for the enemy dungeon
+      const enemyTrapPool = [
+        window.YgoApi.getCard(29401950), // Bottomless Trap Hole
+        window.YgoApi.getCard(77414722), // Compulsory Evacuation
+        window.YgoApi.getCard(82732705), // Skill Drain
+        window.YgoApi.getCard(41420027), // Solemn Judgment
+        window.YgoApi.getCard(28649820), // Embodiment of Apophis
+        window.YgoApi.getCard(44095762)  // Mirror Force
+      ].filter(Boolean);
+
+      for (let i = 0; i < total; i++) {
         const r = Math.floor(i / cols);
         const c = i % cols;
 
-        let nodeData;
+        let node;
         if (i === 0) {
-          // Entry Node
-          nodeData = {
+          node = {
             id: i, r, c,
-            isEntry: true,
+            type: 'ENTRY',
+            title: 'Insertion AirLock',
+            desc: 'Starting point of the territory raid.',
+            icon: '🚪',
             cleared: true,
             fogged: false,
-            title: 'Ascent Insertion Gateway',
-            desc: 'Starting point of the ethereal run.',
-            icon: '🚪'
+            chain: []
           };
-          this.currentNode = nodeData;
-        } else if (i === exitIndex) {
-          // Exit / Extraction Gate
-          const exitType = ROOM_TYPES.find(rt => rt.isExit);
-          nodeData = {
+        } else if (i === coreIndex) {
+          node = {
             id: i, r, c,
-            ...exitType,
+            type: 'MASTER_CORE',
+            title: 'Master Territory Core',
+            desc: 'The beating heart of the rival club territory. Destroy it to liberate the sector!',
+            icon: '💠',
             cleared: false,
-            fogged: true
+            fogged: true,
+            chain: []
           };
         } else {
-          // Random Room Encounter
-          const encounterPool = ROOM_TYPES.filter(rt => !rt.isExit);
-          const template = encounterPool[Math.floor(Math.random() * encounterPool.length)];
-          nodeData = {
+          // 40% chance of traps, 25% chance of chained trap combo!
+          const hasTrap = Math.random() < 0.55;
+          const chain = [];
+          if (hasTrap && enemyTrapPool.length > 0) {
+            const trap1 = enemyTrapPool[Math.floor(Math.random() * enemyTrapPool.length)];
+            chain.push(trap1);
+            if (Math.random() < 0.35) {
+              const trap2 = enemyTrapPool[Math.floor(Math.random() * enemyTrapPool.length)];
+              chain.push(trap2);
+            }
+          }
+
+          node = {
             id: i, r, c,
-            ...template,
+            type: chain.length > 0 ? 'TRAP_CHAMBER' : 'DATA_CORRIDOR',
+            title: chain.length > 0 ? 'Armed Defense Chamber' : 'Security Corridor',
+            desc: chain.length > 0 ? 'Heavy sensors and ethereal rune signatures detected.' : 'Clear hallway with minor data caches.',
+            icon: chain.length > 0 ? '⚠️' : '▪️',
             cleared: false,
-            fogged: true
+            fogged: true,
+            chain: chain,
+            shards: Math.floor(10 + Math.random() * 20),
+            spl: Math.floor(15 + Math.random() * 30)
           };
         }
-
-        this.incursionGrid.push(nodeData);
+        this.infilGrid.push(node);
       }
 
-      // Unfog neighboring rooms around starting point
-      this.revealNeighbors(0, 0);
+      this.revealInfiltrationNeighbors(0, 0);
     }
 
-    revealNeighbors(r, c) {
+    revealInfiltrationNeighbors(r, c) {
       const neighbors = [
         { r: r - 1, c }, { r: r + 1, c },
         { r, c: c - 1 }, { r, c: c + 1 }
       ];
 
       neighbors.forEach(n => {
-        if (n.r >= 0 && n.r < 5 && n.c >= 0 && n.c < 5) {
-          const idx = n.r * 5 + n.c;
-          if (this.incursionGrid[idx]) {
-            this.incursionGrid[idx].fogged = false;
+        if (n.r >= 0 && n.r < this.infilRows && n.c >= 0 && n.c < this.infilCols) {
+          const idx = n.r * this.infilCols + n.c;
+          if (this.infilGrid[idx]) {
+            this.infilGrid[idx].fogged = false;
           }
         }
       });
     }
 
     /**
-     * Move to adjacent node
+     * Set Active Infiltrator Attribute Stance
      */
-    moveToNode(nodeIndex) {
-      const targetNode = this.incursionGrid[nodeIndex];
-      if (!targetNode || targetNode.fogged) return;
-
-      const dist = Math.abs(targetNode.r - this.currentNode.r) + Math.abs(targetNode.c - this.currentNode.c);
-      if (dist > 1) {
-        this.log('Can only traverse to adjacent nodes!', 'warning');
-        return;
-      }
-
-      this.currentNode = targetNode;
-      this.revealNeighbors(targetNode.r, targetNode.c);
-
-      // Severed Degradation Step
-      this.applyGraceDegradation(3);
-
+    setStance(newStance) {
+      this.operative.stance = newStance;
       this.sound.playClick();
+      this.log(`Operative Stance shifted to [${newStance}]: ${this.getStanceDescription(newStance)}`, 'info');
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderIncursion();
+        window.HeavenlyUI.updateStanceDisplay();
+      }
+    }
+
+    getStanceDescription(stance) {
+      switch (stance) {
+        case 'DARK': return 'Shadow Stealth (Undetectable by automated turrets)';
+        case 'LIGHT': return 'Radiant Flash (Blinds security cameras & stuns guardians)';
+        case 'FIRE': return 'Explosive Breach (Melts door locks & reinforced mounts)';
+        case 'WATER': return 'Frost Shield (Chills sensors, 50% hazard reduction)';
+        case 'EARTH': return 'Seismic Grounding (Immune to gravity collapse pits)';
+        case 'WIND': return 'Zephyr Agility (Speed boost, evasion)';
+        default: return '';
       }
     }
 
     /**
-     * Resolve D&D Encounter with D20 Dice Roll
+     * Move Infiltrator to Target Node
      */
-    async executeD20Check(chosenStatKey) {
-      if (!this.currentNode || this.currentNode.cleared || this.isRolling) return;
-
-      this.isRolling = true;
-      this.sound.playDiceRoll();
-
-      if (window.HeavenlyUI) {
-        window.HeavenlyUI.animateDiceRoll();
+    moveInfiltrator(r, c) {
+      if (this.chainWindowActive) {
+        this.log('Cannot move while Chain Link is resolving! Break the chain or wait.', 'warning');
+        return;
       }
 
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const current = this.infilPlayerPos;
+      const dist = Math.abs(r - current.r) + Math.abs(c - current.c);
+      if (dist > 1) {
+        this.log('Can only move to adjacent sectors!', 'warning');
+        return;
+      }
 
-      const d20 = Math.floor(1 + Math.random() * 20);
-      const statScore = this.operative.stats[chosenStatKey] || 10;
-      const baseMod = Math.floor((statScore - 10) / 2);
-      
-      // Buff from Ascended Chambers in Base
-      const chamberBuff = this.countStructures('ASCENDED_CHAMBER') * 2;
+      const idx = r * this.infilCols + c;
+      const targetNode = this.infilGrid[idx];
+      if (!targetNode || targetNode.fogged) return;
 
-      // Penalty if Grace Integrity is critical (< 50%)
-      const gracePenalty = this.operative.graceIntegrity < 25 ? -3 : (this.operative.graceIntegrity < 50 ? -1 : 0);
+      this.infilPlayerPos = { r, c };
+      this.revealInfiltrationNeighbors(r, c);
+      this.sound.playClick();
 
-      const totalMod = baseMod + chamberBuff + gracePenalty;
-      const totalScore = d20 + totalMod;
-      const targetDC = this.currentNode.dc || 10;
+      // Check if room has armed Chain Link traps
+      if (targetNode.chain && targetNode.chain.length > 0 && !targetNode.cleared) {
+        this.triggerChainLinkEncounter(targetNode);
+      } else {
+        targetNode.cleared = true;
+        this.operative.graceIntegrity = Math.max(0, this.operative.graceIntegrity - 3);
+        if (targetNode.type === 'DATA_CORRIDOR') {
+          this.raidLoot.shards += (targetNode.shards || 5);
+          this.raidLoot.spl += (targetNode.spl || 10);
+        }
+      }
 
-      const isNat20 = (d20 === 20);
-      const isNat1 = (d20 === 1);
-      const isSuccess = isNat20 || (!isNat1 && totalScore >= targetDC);
+      if (window.HeavenlyUI) {
+        window.HeavenlyUI.renderInfiltration();
+        window.HeavenlyUI.updateResourceDisplays();
+      }
+    }
 
-      let resultMsg = `Rolled [d20: ${d20}] + Mod (${totalMod}) = ${totalScore} vs DC ${targetDC}. `;
+    // --------------------------------------------------------------------------
+    // CHAIN LINK RESOLUTION & "BREAKING THE CHAIN" REAL-TIME WINDOW
+    // --------------------------------------------------------------------------
 
-      if (isSuccess) {
-        this.sound.playSuccess();
-        this.currentNode.cleared = true;
+    /**
+     * Trigger Chain Link in Room
+     */
+    triggerChainLinkEncounter(roomNode) {
+      this.chainWindowActive = true;
+      this.sound.playChainTrigger();
 
-        if (this.currentNode.isHealing) {
-          this.operative.graceIntegrity = Math.min(100, this.operative.graceIntegrity + 25);
-          this.operative.hp = Math.min(this.operative.maxHp, this.operative.hp + 10);
-          resultMsg += 'Restoration Harmonic Achieved! (+25% Grace, +10 HP)';
-        } else {
-          const rewardMultiplier = isNat20 ? 2 : 1;
-          const shards = (this.currentNode.shardReward || 10) * rewardMultiplier;
-          const creds = (this.currentNode.creditReward || 15) * rewardMultiplier;
+      this.activeChain = {
+        room: roomNode,
+        links: [...roomNode.chain], // [CL1, CL2, CL3...]
+        chainBroken: false,
+        brokenBy: null,
+        timeLeft: 3.5
+      };
 
-          this.incursionShardsLooted += shards;
-          this.incursionCreditsLooted += creds;
-          resultMsg += `SUCCESS! Harvested +${shards} Aether Shards, +${creds} Credits.`;
-          if (isNat20) resultMsg += ' [CRITICAL GLORY NAT 20!]';
+      this.log(`⚠️ CHAIN LINK INITIATED! Detected ${roomNode.chain.length} linked trap mechanism(s)!`, 'danger');
+      roomNode.chain.forEach((card, i) => {
+        this.log(`↳ Chain Link ${i + 1}: [${card.name}] (${card.category}) armed.`, 'warning');
+      });
+
+      if (window.HeavenlyUI) {
+        window.HeavenlyUI.showChainLinkModal(this.activeChain);
+      }
+
+      // Countdown Timer for Bullet-Time Reaction Window
+      const timerInterval = setInterval(() => {
+        if (!this.activeChain) {
+          clearInterval(timerInterval);
+          return;
         }
 
-        this.log(resultMsg, 'success');
-      } else {
-        this.sound.playGlitch();
-        const damage = isNat1 ? 12 : 6;
-        this.operative.hp = Math.max(0, this.operative.hp - damage);
-        this.applyGraceDegradation(isNat1 ? 12 : 6);
+        this.activeChain.timeLeft -= 0.5;
+        if (window.HeavenlyUI) {
+          window.HeavenlyUI.updateChainTimer(this.activeChain.timeLeft);
+        }
 
-        resultMsg += `FAILED! Suffered ${damage} damage & Severance degradation.`;
-        if (isNat1) resultMsg += ' [CRITICAL FUMBLE NAT 1!]';
-        this.log(resultMsg, 'danger');
+        if (this.activeChain.timeLeft <= 0) {
+          clearInterval(timerInterval);
+          this.resolveChainLinks(this.activeChain);
+        }
+      }, 500);
+    }
+
+    /**
+     * Infiltrator Plays Fast-Effect Card from Hand to "Break the Chain"
+     */
+    castReactionCard(cardId) {
+      if (!this.activeChain || !this.chainWindowActive) return;
+
+      const card = window.YgoApi.getCard(cardId);
+      if (!card) return;
+
+      this.sound.playChainBreak();
+      this.activeChain.chainBroken = true;
+      this.activeChain.brokenBy = card;
+
+      this.log(`⚡ REACTION PLAYED: [${card.name}] (${card.category}) cast from active hand!`, 'success');
+      this.log(`>>> TRAP CHAIN INTERRUPTED & NEGATED BY ${card.name.toUpperCase()}! <<<`, 'success');
+
+      if (window.HeavenlyUI) {
+        window.HeavenlyUI.updateChainBrokenDisplay(card);
+      }
+
+      // Resolve early
+      setTimeout(() => {
+        this.resolveChainLinks(this.activeChain);
+      }, 1000);
+    }
+
+    /**
+     * Resolve Chain in LIFO (Reverse Order: CL3 -> CL2 -> CL1)
+     */
+    resolveChainLinks(chainObj) {
+      this.chainWindowActive = false;
+      const room = chainObj.room;
+      room.cleared = true;
+
+      if (chainObj.chainBroken) {
+        this.log('Chain resolution halted. Infiltrator bypassed security mechanisms unharmed!', 'success');
+        this.raidLoot.shards += 35;
+        this.raidLoot.spl += 50;
+      } else {
+        this.log('--- RESOLVING TRAP CHAIN IN REVERSE ORDER (LIFO: CL' + chainObj.links.length + ' ➔ CL1) ---', 'danger');
+
+        // Resolve in REVERSE order
+        const reverseLinks = [...chainObj.links].reverse();
+        reverseLinks.forEach((trap, idx) => {
+          const clNum = chainObj.links.length - idx;
+          let damage = 20;
+
+          // Water Stance mitigation
+          if (this.operative.stance === 'WATER') damage = Math.floor(damage * 0.5);
+
+          if (trap.mechanicType === 'COUNTER_TRAP') {
+            this.log(`↳ Resolving CL${clNum} [${trap.name}]: Spell Speed 3 Reflex Nullifier disabled operative dash!`, 'danger');
+            this.operative.stamina = Math.max(0, this.operative.stamina - 40);
+          } else if (trap.mechanicType === 'CONTINUOUS_TRAP') {
+            this.log(`↳ Resolving CL${clNum} [${trap.name}]: Field Aura ignited. Active abilities silenced!`, 'danger');
+            this.operative.graceIntegrity = Math.max(0, this.operative.graceIntegrity - 20);
+          } else if (trap.mechanicType === 'NORMAL_TRAP') {
+            this.log(`↳ Resolving CL${clNum} [${trap.name}]: Hazard triggered! Inflicted ${damage} damage.`, 'danger');
+            this.operative.hp = Math.max(0, this.operative.hp - damage);
+          } else if (trap.mechanicType === 'TRAP_MONSTER') {
+            this.log(`↳ Resolving CL${clNum} [${trap.name}]: Guardian animated! Inflicted ${damage + 10} combat damage.`, 'danger');
+            this.operative.hp = Math.max(0, this.operative.hp - (damage + 10));
+          }
+        });
 
         if (this.operative.hp <= 0) {
-          this.handleOperativeDeath('HP Depleted');
-          this.isRolling = false;
+          this.handleRaidFailure('Terminated by Trap Chain Reaction');
           return;
         }
       }
 
-      this.isRolling = false;
+      this.activeChain = null;
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderIncursion();
+        window.HeavenlyUI.closeChainModal();
+        window.HeavenlyUI.renderInfiltration();
         window.HeavenlyUI.updateResourceDisplays();
       }
     }
 
     /**
-     * Apply Memory/Grace Degradation
+     * Attack Master Core in Final Chamber
      */
-    applyGraceDegradation(amount) {
-      // Grace Anchors reduce degradation
-      const anchorCount = this.countStructures('GRACE_ANCHOR');
-      const resistanceFactor = Math.max(0.3, 1 - (anchorCount * 0.25));
-      const actualLoss = Math.max(1, Math.round(amount * resistanceFactor));
+    attackMasterCore() {
+      if (this.masterCore.destroyed) return;
 
-      this.operative.graceIntegrity = Math.max(0, this.operative.graceIntegrity - actualLoss);
+      const stance = this.operative.stance;
+      let damage = 40;
+      if (stance === 'FIRE') damage = 70; // Fire stance bonus vs Core
 
-      if (this.operative.graceIntegrity <= 0) {
-        this.sound.playAlarm();
-        this.handleOperativeDeath('Complete Synaptic Severance Wipe');
-      } else if (this.operative.graceIntegrity <= 25) {
-        this.sound.playGlitch();
-        this.log('WARNING: CRITICAL SEVERANCE DEGRADATION! Visual distortions active.', 'danger');
+      this.masterCore.hp = Math.max(0, this.masterCore.hp - damage);
+      this.sound.playCardActivate();
+      this.log(`Fired Kinetic Plasma Blaster at Master Core! Inflicted ${damage} damage. Core HP: ${this.masterCore.hp}/${this.masterCore.maxHp}`, 'info');
+
+      if (this.masterCore.hp <= 0) {
+        this.masterCore.destroyed = true;
+        this.sound.playSuccess();
+        this.log('💥 MASTER CORE DESTROYED! TERRITORY EXTINCTION ACHIEVED! 💥', 'success');
+
+        // Extract massive SPL & Aether loot
+        const extractedSPL = 450 + (this.raidFloor * 100);
+        const extractedShards = 120 + (this.raidFloor * 30);
+        const extractedCredits = 200;
+
+        this.splTokens += extractedSPL;
+        this.aetherShards += extractedShards;
+        this.credits += extractedCredits;
+
+        this.raidLoot.spl += extractedSPL;
+        this.raidLoot.shards += extractedShards;
+        this.highScore = Math.max(this.highScore, this.splTokens * 5 + this.aetherShards * 10);
+
+        this.inRun = false;
+        this.raidFloor++;
+        this.autoSave();
       }
-    }
 
-    /**
-     * Extract & Bank Harvested Shards into Base
-     */
-    extractFromIncursion() {
-      if (!this.currentNode || !this.currentNode.isExit) {
-        this.log('Extraction only possible at the Ascent Extraction Gate!', 'warning');
-        return;
-      }
-
-      const beaconCount = this.countStructures('HEAVENLY_BEACON');
-      const beaconMultiplier = 1 + (beaconCount * 0.35);
-
-      const finalShards = Math.round(this.incursionShardsLooted * beaconMultiplier);
-      const finalCredits = this.incursionCreditsLooted;
-
-      this.aetherShards += finalShards;
-      this.credits += finalCredits;
-
-      const runScore = (finalShards * 10) + finalCredits + (this.dungeonFloor * 100);
-      this.highScore = Math.max(this.highScore, runScore);
-
-      this.inRun = false;
-      this.dungeonFloor++;
-      this.sound.playSuccess();
-      this.log(`+++ EXTRACTION SUCCESSFUL! +++ Banked +${finalShards} Shards & +${finalCredits} Credits.`, 'success');
-
-      this.autoSave();
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderIncursion();
+        window.HeavenlyUI.renderInfiltration();
         window.HeavenlyUI.updateResourceDisplays();
       }
     }
 
-    /**
-     * Handle Operative Death or Amnesia Collapse
-     */
-    handleOperativeDeath(reason) {
+    handleRaidFailure(reason) {
       this.inRun = false;
       this.sound.playAlarm();
-      this.log(`OPERATIVE CASUALTY [${reason}]. Incursion shards lost to the void. Re-initializing clone in Sanctum...`, 'danger');
-      this.incursionShardsLooted = 0;
-      this.incursionCreditsLooted = 0;
+      this.log(`OPERATIVE CASUALTY [${reason}]. Extracted back to Sanctum with zero loot.`, 'danger');
       this.operative.hp = this.operative.maxHp;
       this.operative.graceIntegrity = 100;
 
       if (window.HeavenlyUI) {
-        window.HeavenlyUI.renderIncursion();
+        window.HeavenlyUI.renderInfiltration();
         window.HeavenlyUI.updateResourceDisplays();
       }
     }
 
     // --------------------------------------------------------------------------
-    // STATE SERIALIZATION & CLOUD PERSISTENCE
+    // STATE PERSISTENCE
     // --------------------------------------------------------------------------
-
-    setupDefaultBase() {
-      // Place initial Starter buildings
-      this.baseGrid[2][2] = { ...STRUCTURE_TYPES.SOL_FOUNDRY, placedAt: Date.now() };
-      this.baseGrid[2][4] = { ...STRUCTURE_TYPES.AETHER_WELL, placedAt: Date.now() };
-      this.baseGrid[3][3] = { ...STRUCTURE_TYPES.GRACE_ANCHOR, placedAt: Date.now() };
-    }
 
     serializeState() {
       return {
         credits: this.credits,
         aetherShards: this.aetherShards,
-        energy: this.energy,
-        maxEnergy: this.maxEnergy,
-        baseLevel: this.baseLevel,
+        splTokens: this.splTokens,
+        essence: this.essence,
         highScore: this.highScore,
-        dungeonFloor: this.dungeonFloor,
-        baseGrid: this.baseGrid,
+        raidFloor: this.raidFloor,
+        defenseGrid: this.defenseGrid,
         operative: this.operative,
         lastSaved: new Date().toISOString()
       };
@@ -673,12 +679,11 @@
       if (!data) return;
       if (data.credits !== undefined) this.credits = data.credits;
       if (data.aetherShards !== undefined) this.aetherShards = data.aetherShards;
-      if (data.energy !== undefined) this.energy = data.energy;
-      if (data.maxEnergy !== undefined) this.maxEnergy = data.maxEnergy;
-      if (data.baseLevel !== undefined) this.baseLevel = data.baseLevel;
+      if (data.splTokens !== undefined) this.splTokens = data.splTokens;
+      if (data.essence) this.essence = { ...this.essence, ...data.essence };
       if (data.highScore !== undefined) this.highScore = data.highScore;
-      if (data.dungeonFloor !== undefined) this.dungeonFloor = data.dungeonFloor;
-      if (Array.isArray(data.baseGrid)) this.baseGrid = data.baseGrid;
+      if (data.raidFloor !== undefined) this.raidFloor = data.raidFloor;
+      if (Array.isArray(data.defenseGrid)) this.defenseGrid = data.defenseGrid;
       if (data.operative) this.operative = { ...this.operative, ...data.operative };
     }
 
@@ -687,17 +692,19 @@
       if (!user || !user.githubId) return;
 
       const stateObj = this.serializeState();
-      await window.HeavenlyApi.saveGameState(user.githubId, stateObj, this.highScore);
+      if (window.HeavenlyApi) {
+        await window.HeavenlyApi.saveGameState(user.githubId, stateObj, this.highScore);
+      }
     }
 
     async loadSavedState(githubId) {
-      if (!githubId) return;
+      if (!githubId || !window.HeavenlyApi) return;
       const state = await window.HeavenlyApi.loadGameState(githubId);
       if (state) {
         this.deserializeState(state);
-        this.log('Sanctum state successfully synchronized from memory.', 'success');
+        this.log('Territory & Deck state loaded from memory archive.', 'success');
       } else {
-        this.setupDefaultBase();
+        this.setupDefaultDefense();
       }
     }
 
