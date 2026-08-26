@@ -1,0 +1,134 @@
+[
+  {
+    "id": "CARD_001",
+    "name": "Cryo-Armor Directive",
+    "type": "Trap/Tool",
+    "grammar_role": "trigger",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 30 },
+    "targeting_vector": "self",
+    "resolution_payload": "Grant +30 kinetic shield and absorb incoming damage.",
+    "effect": { "shield": 30, "log": "Deployed Sub-Zero Cryo-Armor (+30 Shield)!" }
+  },
+  {
+    "id": "CARD_002",
+    "name": "Aether Inversion Protocol",
+    "type": "Spell/Quick-Play",
+    "grammar_role": "reaction",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 25 },
+    "targeting_vector": "target_chain",
+    "resolution_payload": "Negate the opponent's previous chain link and refund 20 energy.",
+    "effect": { "negate": true, "energyRefund": 20, "log": "Aether Inversion Protocol NEGATED previous chain link!" }
+  },
+  {
+    "id": "CARD_003",
+    "name": "Solaris Flare Overcharge",
+    "type": "Action/Attack",
+    "grammar_role": "action",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 40 },
+    "targeting_vector": "opponent",
+    "resolution_payload": "Unleash a radiant thermal burst dealing 40 damage.",
+    "effect": { "damage": 40, "log": "Solaris Flare struck opponent for 40 thermal damage!" }
+  },
+  {
+    "id": "CARD_004",
+    "name": "Synaptic Echo Anchor",
+    "type": "Passive/Aura",
+    "grammar_role": "continuous",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 20 },
+    "targeting_vector": "self",
+    "resolution_payload": "Restore 25 Energy and repair 15 HP.",
+    "effect": { "heal": 15, "energy": 25, "log": "Synaptic Anchor channeled +15 HP and +25 Energy!" }
+  },
+  {
+    "id": "CARD_005",
+    "name": "Kinetic Breaker Railgun",
+    "type": "Action/Attack",
+    "grammar_role": "action",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 35 },
+    "targeting_vector": "opponent",
+    "resolution_payload": "Fire a hyper-velocity slug dealing 35 piercing damage.",
+    "effect": { "damage": 35, "pierce": true, "log": "Kinetic Railgun pierced through for 35 damage!" }
+  },
+  {
+    "id": "CARD_006",
+    "name": "Effect Veiler Pulse",
+    "type": "Hand-Trap/Reaction",
+    "grammar_role": "reaction",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 20 },
+    "targeting_vector": "target_chain",
+    "resolution_payload": "Fast-reaction discard from hand: Negate opponent's active attack.",
+    "effect": { "negate": true, "log": "Effect Veiler Pulse discarded: Opponent attack nullified!" }
+  },
+  {
+    "id": "CARD_007",
+    "name": "Bottomless Void Collapse",
+    "type": "Trap/Tool",
+    "grammar_role": "trigger",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 35 },
+    "targeting_vector": "opponent",
+    "resolution_payload": "Trigger a localized singularity dealing 35 gravity damage.",
+    "effect": { "damage": 35, "log": "Bottomless Void Collapse triggered! 35 Gravity damage!" }
+  },
+  {
+    "id": "CARD_008",
+    "name": "Skill Drain Matrix",
+    "type": "Continuous Trap",
+    "grammar_role": "continuous",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 30 },
+    "targeting_vector": "opponent",
+    "resolution_payload": "Drain 30 Energy from opponent and disrupt their stance.",
+    "effect": { "energyDrain": 30, "log": "Skill Drain Matrix drained 30 Energy from opponent!" }
+  },
+  {
+    "id": "CARD_009",
+    "name": "Plasma Ray Surge",
+    "type": "Action/Attack",
+    "grammar_role": "action",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 45 },
+    "targeting_vector": "opponent",
+    "resolution_payload": "Discharge an overcharged plasma beam dealing 45 damage.",
+    "effect": { "damage": 45, "log": "Plasma Ray Surge blasted opponent for 45 damage!" }
+  },
+  {
+    "id": "CARD_010",
+    "name": "Solemn Sentinel Barrier",
+    "type": "Counter Trap",
+    "grammar_role": "reaction",
+    "spell_speed": 3,
+    "activation_cost": { "energy": 40 },
+    "targeting_vector": "target_chain",
+    "resolution_payload": "Spell Speed 3 Sentinel: Negate opponent action and reflect 20 damage.",
+    "effect": { "negate": true, "reflect": 20, "log": "Solemn Sentinel Barrier (Spell Speed 3) negated action & reflected 20 damage!" }
+  },
+  {
+    "id": "CARD_011",
+    "name": "Mystical Space Typhoon",
+    "type": "Spell/Quick-Play",
+    "grammar_role": "reaction",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 25 },
+    "targeting_vector": "target_rune",
+    "resolution_payload": "Target and destroy opponent shield barrier instantly.",
+    "effect": { "destroyShield": true, "log": "Mystical Space Typhoon shattered opponent shields!" }
+  },
+  {
+    "id": "CARD_012",
+    "name": "Apophis Guardian Summon",
+    "type": "Trap Monster",
+    "grammar_role": "trigger",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 35 },
+    "targeting_vector": "self",
+    "resolution_payload": "Awaken stone guardian providing +40 Shield and +15 counter-strike.",
+    "effect": { "shield": 40, "reflect": 15, "log": "Apophis Stone Guardian summoned (+40 Shield / +15 Counter)!" }
+  }
+]
