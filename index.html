@@ -1,260 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HeavenlyBound — Yu-Gi-Oh Tactical Defense & Infiltration (Beta)</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕊️</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeavenlyBound | Operative Armor Duel Arena</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="cyber-bg"></div>
+    <div class="terminal-container">
+        <header>
+            <h1>HEAVENLYBOUND</h1>
+            <p>Operation: Severed Grid | Operative Armor Duel Arena | Pilgrim Protocol v2.9</p>
+        </header>
 
-  <div class="app-container">
-    <!-- Top HUD Header -->
-    <header class="hud-header">
-      <div class="brand-section">
-        <div class="brand-icon">🕊️</div>
-        <div>
-          <h1 class="brand-title">HEAVENLYBOUND</h1>
-          <div class="brand-subtitle">Yu-Gi-Oh Defense vs Infiltration Protocol (Beta)</div>
-        </div>
-      </div>
+        <!-- Auth -->
+        <section id="auth-section" class="panel">
+            <h2>Operative Authentication & Synaptic Calibration</h2>
+            <p>Enter your operative handle and clearance timestamp to calibrate tactical link.</p>
+            <input type="text" id="player-id" placeholder="Enter Operative Handle (e.g. ALPHA-7)">
+            <input type="date" id="player-birthday" title="Clearance Timestamp">
+            <button onclick="initializeOperative()">Initialize Grid Link</button>
+        </section>
 
-      <div class="hud-actions">
-        <button class="btn btn-outline" id="openConfigBtn" onclick="openConfigModal()">⚙️ CONFIG</button>
-        <div id="userProfileTag" class="user-tag" style="display: none;">
-          <img id="userAvatarImg" class="user-avatar" src="" alt="Avatar">
-          <span id="userHandleText" class="text-gold">Pilgrim</span>
-          <button class="btn btn-outline" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;" onclick="logoutUser()">LOGOUT</button>
-        </div>
-      </div>
-    </header>
+        <!-- Mode Tabs -->
+        <nav id="mode-tabs" class="mode-tabs-bar hidden">
+            <button id="tab-duel" class="mode-tab-btn active" onclick="switchAppMode('DUEL')">⚔️ 2-PLAYER ARMOR DUEL</button>
+            <button id="tab-solo" class="mode-tab-btn" onclick="switchAppMode('SOLO')">🛡️ SOLO ASCENT</button>
+        </nav>
 
-    <!-- Main Command Deck Grid -->
-    <main style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem; flex: 1;">
-      
-      <!-- Left Column: Operations Dossier & Launch Portal -->
-      <section class="tactical-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>📡</span> YU-GI-OH TACTICAL RULES BRIEFING
-          </div>
-          <span class="panel-badge badge-outie">TABLETOP BETA v3.0</span>
-        </div>
-
-        <div class="panel-body" style="gap: 1rem;">
-          <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--color-gold);">
-            <h3 style="font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--color-gold);">Yu-Gi-Oh Primitive Architecture</h3>
-            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45;">
-              <strong>1. Phase 1: Dungeon Defense (Top-Down Architect):</strong> Place <em>Normal Traps</em> (face-down hazards), <em>Continuous Traps</em> (field auras), <em>Counter Traps</em> (Spell Speed 3 reflex nullifiers), and <em>Trap Monsters</em> (animated guardians) with configurable <strong>Chain Link (LIFO)</strong> execution.
-              <br><br>
-              <strong>2. Phase 2: Infiltration Raid (Tactical Tabletop):</strong> Infiltrate enemy territory using Attribute Stances (<em>DARK</em> stealth, <em>LIGHT</em> flash, <em>FIRE</em> breach, <em>WATER</em> frost shield), scan traps with your <strong>Perception Sonar</strong>, and <strong>Break the Chain</strong> in real time using Quick-Play Spells (<em>Mystical Space Typhoon</em>) and Hand-Traps (<em>Effect Veiler</em>) to claim the Master Core!
-            </p>
-          </div>
-
-          <!-- Auth & Launch Portal Box -->
-          <div id="authPortalBox" style="background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.75rem;">
-            <h3 style="font-size: 0.9rem; color: var(--color-cyan);">Operative Authentication</h3>
-            
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <button class="btn btn-cyan" onclick="loginWithGitHub()">
-                🐙 Login with GitHub OAuth
-              </button>
-              <button class="btn btn-gold" onclick="loginAsGuest()">
-                ⚡ Instant Pilgrim Launch
-              </button>
+        <!-- ======================================================== -->
+        <!-- PRE-DUEL LOADOUT & DECK SELECTION SCREEN                -->
+        <!-- ======================================================== -->
+        <section id="pre-duel-setup-section" class="panel hidden">
+            <div class="setup-header">
+                <h2>⚡ OPERATIVE TACTICAL DECK SELECTION</h2>
+                <p>Configure archetypes and loadout profiles before entering the combat grid.</p>
             </div>
-          </div>
 
-          <!-- Ready to Launch View -->
-          <div id="readyLaunchBox" style="display: none; background: var(--bg-card); border: 1px solid var(--border-gold); padding: 1rem; border-radius: var(--radius-sm); flex-direction: column; gap: 0.75rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-              <div>
-                <h3 style="font-size: 0.95rem; color: var(--color-gold);">Operative Ready for Incursion</h3>
-                <p id="welcomeUserText" style="font-size: 0.75rem; color: var(--text-secondary);">Authenticated</p>
-              </div>
-              <a href="game.html" class="btn btn-gold btn-large">
-                🚀 ENTER THE TACTICAL GRID
-              </a>
-            </div>
-          </div>
+            <div class="pre-duel-grid">
+                <!-- P1 Configuration Card -->
+                <div class="setup-player-card p1-setup-border">
+                    <div class="setup-card-title">🔱 OPERATIVE 1 (ALPHA)</div>
+                    <label for="setup-p1-deck">Select Combat Archetype:</label>
+                    <select id="setup-p1-deck" onchange="DuelEngine.updateSetupPreview('P1', this.value)">
+                        <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
+                        <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
+                        <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
+                        <option value="TERRA_MAGNET">🪨 Terra-Magnet Bastion (EARTH Excavate / Resonance)</option>
+                        <option value="DEFAULT">⚡ Tactical Default Hybrid</option>
+                    </select>
 
-          <!-- System Architecture Info -->
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: auto;">
-            <div style="background: var(--bg-surface); padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-              <div style="font-size: 0.65rem; color: var(--text-muted);">HOSTING</div>
-              <div style="font-weight: 700; font-size: 0.8rem; color: var(--color-cyan);">GitHub Pages</div>
+                    <div id="setup-p1-desc" class="archetype-description-box">
+                        <strong style="color:#38bdf8;">Abyssal Tide Corps</strong><br>
+                        <span>Deep-grid pressure-alloy armor. Strips enemy tactical assets and executes rapid search combos.</span>
+                    </div>
+                </div>
+
+                <!-- P2 Configuration Card -->
+                <div class="setup-player-card p2-setup-border">
+                    <div class="setup-card-title">🔥 OPERATIVE 2 (OMEGA)</div>
+                    <label for="setup-p2-deck">Select Combat Archetype:</label>
+                    <select id="setup-p2-deck" onchange="DuelEngine.updateSetupPreview('P2', this.value)">
+                        <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
+                        <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
+                        <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
+                        <option value="TERRA_MAGNET">🪨 Terra-Magnet Bastion (EARTH Excavate / Resonance)</option>
+                        <option value="DEFAULT">⚡ Tactical Default Hybrid</option>
+                    </select>
+
+                    <div id="setup-p2-desc" class="archetype-description-box">
+                        <strong style="color:#f87171;">Infernal Forge Corps</strong><br>
+                        <span>Volcanic-core reactor plating. Emits passive End Phase burn damage and reflects kinetic strikes.</span>
+                    </div>
+                </div>
             </div>
-            <div style="background: var(--bg-surface); padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-              <div style="font-size: 0.65rem; color: var(--text-muted);">DATABASE</div>
-              <div style="font-weight: 700; font-size: 0.8rem; color: var(--color-gold);">YGOPRODeck v7</div>
+
+            <div class="setup-action-row">
+                <button class="btn-start-duel" onclick="DuelEngine.startConfiguredMatch()">⚔️ INITIALIZE DUEL & ENGAGE COMBAT</button>
             </div>
-            <div style="background: var(--bg-surface); padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-              <div style="font-size: 0.65rem; color: var(--text-muted);">STORAGE</div>
-              <div style="font-weight: 700; font-size: 0.8rem; color: var(--color-emerald);">Google Sheets</div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ARMOR DUEL ACTIVE COMBAT ARENA                           -->
+        <!-- ======================================================== -->
+        <section id="duel-section" class="panel hidden">
+            <!-- Top Controls Row -->
+            <div class="duel-top-bar">
+                <div class="deck-indicator-summary">
+                    <span id="p1-summary-badge" class="p-tag p1-tag">P1: ABYSSAL TIDE</span>
+                    <span style="color:#64748b; font-size:11px;">VS</span>
+                    <span id="p2-summary-badge" class="p-tag p2-tag">P2: INFERNAL FORGE</span>
+                </div>
+                <button class="btn-sm btn-reconfigure" onclick="DuelEngine.openSetupScreen()">⚙️ Change Decks / Setup</button>
             </div>
-          </div>
+
+            <!-- Turn Banner & Phase Bar -->
+            <div class="duel-arena-header">
+                <div id="turn-indicator" class="turn-status-banner">👉 INITIALIZING...</div>
+                <div id="phase-bar" class="phase-bar-container"></div>
+                <div class="phase-action-buttons">
+                    <button class="btn-sm btn-phase" onclick="DuelEngine.startBattlePhase()">⚔️ Battle Phase</button>
+                    <button class="btn-sm btn-phase" onclick="DuelEngine.startMainPhase2()">🏛️ Main Phase 2</button>
+                    <button class="btn-sm btn-phase" onclick="DuelEngine.startEndPhase()">🚪 End Turn</button>
+                    <button class="btn-sm btn-warn"  onclick="DuelEngine.passReaction(DuelEngine.reactionPlayer)">⏭️ Pass Reaction</button>
+                    <button class="btn-sm btn-phase" onclick="DuelEngine.declareStrike()">⚔️ Declare Strike</button>
+                    <button class="btn-sm btn-reset" onclick="DuelEngine.initMatch()">🔁 Restart Match</button>
+                </div>
+            </div>
+
+            <!-- Chain Link Stack -->
+            <div class="chain-arena-box">
+                <div style="font-size:11px; font-weight:bold; color:#f43f5e; margin-bottom:4px;">⚡ Active LIFO Chain Link Stack:</div>
+                <div id="duel-chain-stack" class="chain-stack-flex">
+                    <span style="color:#64748b; font-size:11px;">[No Active Chain Links]</span>
+                </div>
+            </div>
+
+            <!-- Dual Operative Command Panels -->
+            <div class="duel-split-layout">
+
+                <!-- P1: OPERATIVE ALPHA -->
+                <div class="player-deck-card p1-card">
+                    <div class="player-header">
+                        <span id="p1-deck-badge" class="p-tag p1-tag">P1: ALPHA (ABYSSAL TIDE)</span>
+                        <div class="p-stats">
+                            <span>❤️ <strong id="p1-lp"     style="color:#4ade80;">4000</strong> LP</span>
+                            <span>⚡ <strong id="p1-energy" style="color:#38bdf8;">100</strong></span>
+                        </div>
+                    </div>
+                    <div class="operative-combat-stats">
+                        <span>⚔️ ATK: <strong id="p1-atk" style="color:#ef4444;">500</strong></span>
+                        <span>🛡️ DEF: <strong id="p1-def" style="color:#38bdf8;">500</strong></span>
+                        <span>🧥 Gear: <strong id="p1-pieces" style="color:#fbbf24;">0/5</strong></span>
+                    </div>
+
+                    <!-- Armor Loadout -->
+                    <div class="field-zone-label">🧥 Operative Armor Loadout:</div>
+                    <div id="p1-armor" class="armor-loadout-grid"></div>
+
+                    <!-- Spell/Trap Zone -->
+                    <div class="field-zone-label">🎴 Active Spells & Traps:</div>
+                    <div id="p1-spells" class="spell-trap-zone"></div>
+
+                    <!-- Hand -->
+                    <div class="field-zone-label">🖐️ Hand Cards (<span id="p1-deck-count" style="color:#94a3b8;">Deck: 0</span>):</div>
+                    <div id="p1-hand" class="hand-cards-grid"></div>
+                </div>
+
+                <!-- P2: OPERATIVE OMEGA -->
+                <div class="player-deck-card p2-card">
+                    <div class="player-header">
+                        <span id="p2-deck-badge" class="p-tag p2-tag">P2: OMEGA (INFERNAL FORGE)</span>
+                        <div class="p-stats">
+                            <span>❤️ <strong id="p2-lp"     style="color:#4ade80;">4000</strong> LP</span>
+                            <span>⚡ <strong id="p2-energy" style="color:#c084fc;">100</strong></span>
+                        </div>
+                    </div>
+                    <div class="operative-combat-stats">
+                        <span>⚔️ ATK: <strong id="p2-atk" style="color:#ef4444;">500</strong></span>
+                        <span>🛡️ DEF: <strong id="p2-def" style="color:#38bdf8;">500</strong></span>
+                        <span>🧥 Gear: <strong id="p2-pieces" style="color:#fbbf24;">0/5</strong></span>
+                    </div>
+
+                    <!-- Armor Loadout -->
+                    <div class="field-zone-label">🧥 Operative Armor Loadout:</div>
+                    <div id="p2-armor" class="armor-loadout-grid"></div>
+
+                    <!-- Spell/Trap Zone -->
+                    <div class="field-zone-label">🎴 Active Spells & Traps:</div>
+                    <div id="p2-spells" class="spell-trap-zone"></div>
+
+                    <!-- Hand -->
+                    <div class="field-zone-label">🖐️ Hand Cards (<span id="p2-deck-count" style="color:#94a3b8;">Deck: 0</span>):</div>
+                    <div id="p2-hand" class="hand-cards-grid"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SOLO ASCENT -->
+        <section id="dashboard-section" class="panel hidden">
+            <div class="grid-stats">
+                <div class="card">
+                    <h3>Outie Sanctum (Base)</h3>
+                    <p>Synaptic Anchor: <strong id="anchor-display" style="color:#60a5fa;">--</strong></p>
+                    <p>Aether Shards: <strong id="shard-display" style="color:#fbbf24;">100</strong></p>
+                </div>
+                <div class="card">
+                    <h3>Rules Engine State</h3>
+                    <p>Toggle Mode: <strong id="toggle-status" style="color:#34d399;">AUTO</strong></p>
+                    <button onclick="toggleGameEngineMode()">Cycle Toggle (AUTO/ON/OFF)</button>
+                </div>
+            </div>
+            <div style="margin-top:12px;">
+                <button id="action-btn" onclick="executeTacticalAction()">Simulate Incursion Action (Vault Breach)</button>
+            </div>
+        </section>
+
+        <!-- Shared Combat Log -->
+        <div class="terminal-box">
+            <div style="font-size:11px; color:#22c55e; font-weight:bold; margin-bottom:6px; text-transform:uppercase;">📡 Tactical Combat Log</div>
+            <div id="terminal-log">
+                <div>[SYSTEM] Awaiting operative command...</div>
+            </div>
         </div>
-      </section>
-
-      <!-- Right Column: Top Pilgrims Terminal & System Log -->
-      <section class="tactical-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>🏆</span> TERRITORY CONQUEST LEADERBOARD
-          </div>
-          <span class="panel-badge badge-innie">LIVE CLOUD</span>
-        </div>
-
-        <div class="panel-body">
-          <div id="leaderboardList" style="display: flex; flex-direction: column; gap: 0.4rem;">
-            <div style="text-align: center; color: var(--text-muted); padding: 1rem;">Querying Celestial Matrix...</div>
-          </div>
-
-          <div style="margin-top: auto;">
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem; text-transform: uppercase;">
-              Tactical Communications Log
-            </div>
-            <div class="terminal-panel" id="terminalLogContainer" style="max-height: 100px;">
-              <div class="log-entry">
-                <span class="log-time">[SYSTEM]</span>
-                <span class="log-msg info">HeavenlyBound Yu-Gi-Oh tactical core ready.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- Config / Settings Modal -->
-  <div class="modal-backdrop" id="configModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-title text-gold">⚙️ System Configuration</h3>
-        <button class="modal-close" onclick="closeConfigModal()">✕</button>
-      </div>
-
-      <div class="form-group">
-        <label for="cfgClientId">GitHub OAuth Client ID</label>
-        <input type="text" id="cfgClientId" class="form-control" placeholder="e.g. Ov23li...">
-      </div>
-
-      <div class="form-group">
-        <label for="cfgGasUrl">Google Apps Script Web App URL</label>
-        <input type="text" id="cfgGasUrl" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
-      </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-        <button class="btn btn-outline" onclick="testConnection()">⚡ Ping Endpoint</button>
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn btn-outline" onclick="closeConfigModal()">Cancel</button>
-          <button class="btn btn-gold" onclick="saveConfiguration()">Save</button>
-        </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="js/auth.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/ygo-api.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const user = await window.HeavenlyAuth.init();
-      updateAuthUI(user);
-      loadLeaderboard();
-    });
-
-    function updateAuthUI(user) {
-      const authBox = document.getElementById('authPortalBox');
-      const readyBox = document.getElementById('readyLaunchBox');
-      const userTag = document.getElementById('userProfileTag');
-      const avatarImg = document.getElementById('userAvatarImg');
-      const handleText = document.getElementById('userHandleText');
-      const welcomeText = document.getElementById('welcomeUserText');
-
-      if (user) {
-        authBox.style.display = 'none';
-        readyBox.style.display = 'flex';
-        userTag.style.display = 'flex';
-
-        avatarImg.src = user.avatarUrl || 'https://api.dicebear.com/7.x/bottts/svg?seed=Pilgrim';
-        handleText.innerText = user.username || user.displayName;
-        welcomeText.innerText = `Operative ID: ${user.githubId} | Auth: ${user.authType}`;
-      } else {
-        authBox.style.display = 'flex';
-        readyBox.style.display = 'none';
-        userTag.style.display = 'none';
-      }
-    }
-
-    function loginWithGitHub() {
-      const cfg = window.HeavenlyAuth.config;
-      if (!cfg.clientId) {
-        openConfigModal();
-        alert('Please enter your GitHub OAuth Client ID first.');
-        return;
-      }
-      window.HeavenlyAuth.loginWithGitHub();
-    }
-
-    function loginAsGuest() {
-      const customName = prompt('Enter Operative / Pilgrim Handle:');
-      const user = window.HeavenlyAuth.loginAsGuest(customName);
-      updateAuthUI(user);
-    }
-
-    function logoutUser() {
-      window.HeavenlyAuth.logout();
-      updateAuthUI(null);
-    }
-
-    function openConfigModal() {
-      const cfg = window.HeavenlyAuth.config;
-      document.getElementById('cfgClientId').value = cfg.clientId || '';
-      document.getElementById('cfgGasUrl').value = cfg.gasApiUrl || '';
-      document.getElementById('configModal').classList.add('open');
-    }
-
-    function closeConfigModal() {
-      document.getElementById('configModal').classList.remove('open');
-    }
-
-    function saveConfiguration() {
-      const clientId = document.getElementById('cfgClientId').value;
-      const gasUrl = document.getElementById('cfgGasUrl').value;
-      window.HeavenlyAuth.saveConfig(clientId, gasUrl);
-      closeConfigModal();
-      alert('Configuration saved.');
-    }
-
-    async function testConnection() {
-      const pingRes = await window.HeavenlyApi.ping();
-      alert(`Status: ${pingRes.status}\nMessage: ${pingRes.message || pingRes.system || 'Connected'}`);
-    }
-
-    async function loadLeaderboard() {
-      const container = document.getElementById('leaderboardList');
-      const leaderboard = await window.HeavenlyApi.fetchLeaderboard();
-
-      if (!leaderboard || leaderboard.length === 0) {
-        container.innerHTML = '<div style="color: var(--text-muted);">No records found.</div>';
-        return;
-      }
-
-      container.innerHTML = leaderboard.map((item, idx) => `
-        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-          <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <span style="font-weight: 700; color: ${idx === 0 ? 'var(--color-gold)' : (idx === 1 ? 'var(--color-cyan)' : 'var(--text-secondary)')};">#${idx + 1}</span>
-            <span style="font-size: 0.8rem;">${item.githubId}</span>
-          </div>
-          <span class="text-gold" style="font-weight: 700; font-family: var(--font-display); font-size: 0.85rem;">${item.highScore} PTS</span>
-        </div>
-      `).join('');
-    }
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>

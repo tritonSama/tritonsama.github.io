@@ -1,11 +1,11 @@
 /**
  * ============================================================================
- * HeavenlyBound - Google Apps Script Database Bridge
+ * Seraphim Unbound / HeavenlyBound - Google Apps Script Database Bridge
  * ============================================================================
- * Sheet Name: HeavenlyBound_GameDB
- * Tables (Worksheets):
- *   1. Users       -> [GitHubID, Username, CreatedAt, ResourceCredits, BaseLevel, LastSeen]
- *   2. GameStates  -> [GitHubID, SaveDataJSON, LastUpdated, HighScore]
+ * Sheets:
+ *   1. Pilgrims    -> [player_id, zodiac_sign, action_type, result, timestamp]
+ *   2. Users       -> [GitHubID, Username, CreatedAt, ResourceCredits, BaseLevel, LastSeen]
+ *   3. GameStates  -> [GitHubID, SaveDataJSON, LastUpdated, HighScore]
  * 
  * Deployment: Deploy as Web App -> Execute as: Me -> Who has access: Anyone
  * ============================================================================
@@ -14,7 +14,16 @@
 function setupDatabase() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // 1. Ensure 'Users' sheet
+  // 1. Ensure 'Pilgrims' sheet
+  var pilgrimsSheet = ss.getSheetByName("Pilgrims");
+  if (!pilgrimsSheet) {
+    pilgrimsSheet = ss.insertSheet("Pilgrims");
+    pilgrimsSheet.appendRow(["player_id", "zodiac_sign", "action_type", "result", "timestamp"]);
+    pilgrimsSheet.getRange("A1:E1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
+    pilgrimsSheet.setFrozenRows(1);
+  }
+
+  // 2. Ensure 'Users' sheet
   var usersSheet = ss.getSheetByName("Users");
   if (!usersSheet) {
     usersSheet = ss.insertSheet("Users");
@@ -23,7 +32,7 @@ function setupDatabase() {
     usersSheet.setFrozenRows(1);
   }
 
-  // 2. Ensure 'GameStates' sheet
+  // 3. Ensure 'GameStates' sheet
   var statesSheet = ss.getSheetByName("GameStates");
   if (!statesSheet) {
     statesSheet = ss.insertSheet("GameStates");
@@ -32,55 +41,52 @@ function setupDatabase() {
     statesSheet.setFrozenRows(1);
   }
 
-  return "HeavenlyBound Database initialized successfully.";
+  return "Database initialized successfully.";
 }
 
 /**
- * Handle GET requests (Health check, Get User Profile, Get Game State, Get Leaderboard)
+ * Handle GET requests (Health check, Ping, Get Pilgrims, etc.)
  */
 function doGet(e) {
   var params = e ? e.parameter : {};
   var action = params.action || "ping";
-  var githubId = params.githubId || "";
-
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
   try {
     if (action === "ping") {
       return jsonResponse({
         status: "success",
-        system: "HeavenlyBound Core API",
+        system: "Seraphim Unbound Core API",
         timestamp: new Date().toISOString(),
-        message: "Celestial Link Operational."
+        message: "Pilgrim Tactical Protocol Operational."
       });
     }
 
-    if (action === "getUser") {
-      if (!githubId) return jsonError("Missing required parameter: githubId");
-      var user = findUser(ss, githubId);
-      return jsonResponse({ status: "success", user: user });
+    if (action === "getPilgrims") {
+      var sheet = ss.getSheetByName("Pilgrims");
+      if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("Pilgrims"); }
+      var data = sheet.getDataRange().getValues();
+      var pilgrims = [];
+      for (var i = 1; i < data.length; i++) {
+        pilgrims.push({
+          playerId: data[i][0],
+          zodiac: data[i][1],
+          action: data[i][2],
+          result: data[i][3],
+          timestamp: data[i][4]
+        });
+      }
+      return jsonResponse({ status: "success", pilgrims: pilgrims });
     }
 
-    if (action === "getGameState") {
-      if (!githubId) return jsonError("Missing required parameter: githubId");
-      var state = findGameState(ss, githubId);
-      return jsonResponse({ status: "success", state: state });
-    }
-
-    if (action === "getLeaderboard") {
-      var leaderboard = getTopPilgrims(ss, 10);
-      return jsonResponse({ status: "success", leaderboard: leaderboard });
-    }
-
-    return jsonError("Unknown action: " + action);
-
+    return jsonResponse({ status: "success", message: "API active." });
   } catch (err) {
     return jsonError(err.toString());
   }
 }
 
 /**
- * Handle POST requests (Save User Profile, Save Game State, Sync Shards)
+ * Handle POST requests (Pilgrim Sync, Vault Breach, State Saves)
  */
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -104,153 +110,29 @@ function doPost(e) {
       payload = e.parameter;
     }
 
-    var action = payload.action || "syncState";
-    var githubId = String(payload.githubId || "").trim();
-
-    if (!githubId) {
-      return jsonError("Invalid request: Missing githubId");
+    var sheet = ss.getSheetByName("Pilgrims");
+    if (!sheet) {
+      setupDatabase();
+      sheet = ss.getSheetByName("Pilgrims");
     }
 
-    if (action === "syncUser") {
-      var username = payload.username || "Unknown Pilgrim";
-      var credits = Number(payload.credits || 0);
-      var baseLevel = Number(payload.baseLevel || 1);
+    // Append to Pilgrims Table
+    sheet.appendRow([
+      payload.player_id || payload.playerId || "Anonymous",
+      payload.zodiac || payload.zodiac_sign || "N/A",
+      payload.action || payload.action_type || "tactical_sync",
+      payload.card || payload.result || "None",
+      new Date().toISOString()
+    ]);
 
-      var userResult = upsertUser(ss, githubId, username, credits, baseLevel);
-      return jsonResponse({ status: "success", action: "syncUser", data: userResult });
-    }
-
-    if (action === "syncState") {
-      var saveData = payload.saveData || (typeof payload.saveDataJSON === "string" ? payload.saveDataJSON : JSON.stringify(payload.saveDataJSON || {}));
-      if (typeof saveData !== "string") {
-        saveData = JSON.stringify(saveData);
-      }
-      var highScore = Number(payload.highScore || 0);
-
-      var stateResult = upsertGameState(ss, githubId, saveData, highScore);
-      
-      // Also update user credits/base level if present
-      if (payload.credits !== undefined || payload.baseLevel !== undefined) {
-        upsertUser(ss, githubId, payload.username || "Pilgrim", Number(payload.credits || 0), Number(payload.baseLevel || 1));
-      }
-
-      return jsonResponse({ status: "success", action: "syncState", data: stateResult });
-    }
-
-    return jsonError("Unsupported POST action: " + action);
+    var response = { status: "success", shards: 120, timestamp: new Date().toISOString() };
+    return jsonResponse(response);
 
   } catch (err) {
     return jsonError("Server error: " + err.toString());
   } finally {
     lock.releaseLock();
   }
-}
-
-// ----------------------------------------------------------------------------
-// Helper Data Access Functions
-// ----------------------------------------------------------------------------
-
-function findUser(ss, githubId) {
-  var sheet = ss.getSheetByName("Users");
-  if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("Users"); }
-
-  var data = sheet.getDataRange().getValues();
-  for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(githubId)) {
-      return {
-        githubId: data[i][0],
-        username: data[i][1],
-        createdAt: data[i][2],
-        credits: data[i][3],
-        baseLevel: data[i][4],
-        lastSeen: data[i][5]
-      };
-    }
-  }
-  return null;
-}
-
-function upsertUser(ss, githubId, username, credits, baseLevel) {
-  var sheet = ss.getSheetByName("Users");
-  if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("Users"); }
-
-  var data = sheet.getDataRange().getValues();
-  var now = new Date().toISOString();
-
-  for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(githubId)) {
-      var row = i + 1;
-      if (username) sheet.getRange(row, 2).setValue(username);
-      if (credits !== undefined && !isNaN(credits)) sheet.getRange(row, 4).setValue(credits);
-      if (baseLevel !== undefined && !isNaN(baseLevel)) sheet.getRange(row, 5).setValue(baseLevel);
-      sheet.getRange(row, 6).setValue(now);
-      return { row: row, status: "updated" };
-    }
-  }
-
-  // Insert new user
-  sheet.appendRow([githubId, username, now, credits || 100, baseLevel || 1, now]);
-  return { row: sheet.getLastRow(), status: "created" };
-}
-
-function findGameState(ss, githubId) {
-  var sheet = ss.getSheetByName("GameStates");
-  if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("GameStates"); }
-
-  var data = sheet.getDataRange().getValues();
-  for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(githubId)) {
-      return {
-        githubId: data[i][0],
-        saveDataJSON: data[i][1],
-        lastUpdated: data[i][2],
-        highScore: data[i][3]
-      };
-    }
-  }
-  return null;
-}
-
-function upsertGameState(ss, githubId, saveDataJSON, highScore) {
-  var sheet = ss.getSheetByName("GameStates");
-  if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("GameStates"); }
-
-  var data = sheet.getDataRange().getValues();
-  var now = new Date().toISOString();
-
-  for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0]) === String(githubId)) {
-      var row = i + 1;
-      sheet.getRange(row, 2).setValue(saveDataJSON);
-      sheet.getRange(row, 3).setValue(now);
-      var currHighScore = Number(data[i][3] || 0);
-      if (highScore > currHighScore) {
-        sheet.getRange(row, 4).setValue(highScore);
-      }
-      return { row: row, status: "updated" };
-    }
-  }
-
-  sheet.appendRow([githubId, saveDataJSON, now, highScore || 0]);
-  return { row: sheet.getLastRow(), status: "created" };
-}
-
-function getTopPilgrims(ss, limit) {
-  var sheet = ss.getSheetByName("GameStates");
-  if (!sheet) return [];
-
-  var data = sheet.getDataRange().getValues();
-  var list = [];
-  for (var i = 1; i < data.length; i++) {
-    list.push({
-      githubId: data[i][0],
-      highScore: Number(data[i][3] || 0),
-      lastUpdated: data[i][2]
-    });
-  }
-
-  list.sort(function(a, b) { return b.highScore - a.highScore; });
-  return list.slice(0, limit || 10);
 }
 
 function jsonResponse(data) {

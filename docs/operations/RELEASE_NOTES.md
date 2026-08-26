@@ -2,24 +2,33 @@
 
 ---
 
-## [v2.5.0] — 2-Player Tactical Sample Deck Duel Mode (August 2026)
+## [v2.6.0] — Official 6-Phase TCG Duel Engine & Resource Dice Roll (August 2026)
 
 ### 🌟 New Features & Enhancements
-- **2-Player Local & Hotseat Duel Arena:** Added full 2-player tactical card dueling mode allowing two operatives to battle on the same screen with balanced sample decks.
-- **Sample Deck Distributer (`cards.json`):**
-  - **Player 1 (Operative Alpha - Sanctum Deck):** *Cryo-Armor Directive*, *Aether Inversion Protocol*, *Solaris Flare Overcharge*, *Synaptic Echo Anchor*, *Kinetic Breaker Railgun*, *Effect Veiler Pulse*.
-  - **Player 2 (Operative Omega - Void Deck):** *Bottomless Void Collapse*, *Skill Drain Matrix*, *Plasma Ray Surge*, *Solemn Sentinel Barrier*, *Mystical Space Typhoon*, *Apophis Guardian Summon*.
-- **Interactive Reaction Window & LIFO Resolution:** Real-time chaining ($CL1 \to CL2 \to \dots$) and automatic reverse resolution ($CL_n \to \dots \to CL1$) calculating kinetic damage, shields, energy refunds, and direct negations.
-- **Dual Player Split Command Dashboard:** Live tracking for HP, Energy, and Kinetic Shields with visual card playable states.
-- **App Mode Switcher:** Tabbed interface switching between **[⚔️ 2-PLAYER DUEL]** and **[🛡️ SOLO ASCENT]**.
+- **Official 6-Phase Turn State Machine:** Implemented the complete competitive TCG turn progression:
+  1. `Draw Phase` (First turn skip rule + $d6$ resource dice rolling for $+25 \text{ to } +50$ Energy/Shards).
+  2. `Standby Phase` (Continuous effect evaluations).
+  3. `Main Phase 1` (Normal Summon, Set, Spell activations, Trap settings).
+  4. `Battle Phase` (Attack declarations, Battle Step fast effects, Damage Step LP calculation).
+  5. `Main Phase 2` (Post-combat Spells, Sets, Summons).
+  6. `End Phase` (Hand limit enforcement $>6$ cards and turn passing).
+- **10+ Card Randomized Decks:** Each player draws from a balanced 10–12 card deck containing Level 1–8 Monsters (ATK/DEF), Spells (Normal, Quick-Play, Equip, Continuous), and Traps (Normal, Continuous, Counter Speed 3, Hand-Traps).
+- **Tribute Summoning System:** Level 5–6 monsters require 1 Tribute from the field; Level 7+ monsters require 2 Tributes.
+- **Damage Step Calculations:** Accurate ATK vs ATK (battle damage + destruction), ATK vs DEF (defense break / rebound damage), and direct LP attacks.
+- **Life Points System (4000 LP):** High-stakes TCG life points tracked on interactive player command decks.
+
+---
+
+## [v2.5.0] — 2-Player Tactical Sample Deck Duel Mode (August 2026)
+- 2-Player Local & Hotseat Duel Arena with split command decks.
+- Real-time reaction windows and LIFO chain resolution.
 
 ---
 
 ## [v2.4.0] — Stage 1 Tactical Core & Hidden Synaptic Anchor (August 2026)
-- Astrological anchor calculated silently in the background.
+- Hidden background astrological calibration.
 - Rules Engine mode cycler (`AUTO`, `ON`, `OFF`).
-- Scrolling combat terminal with asynchronous resolution steps.
-- Backend synchronization to Google Apps Script `Pilgrims` sheet.
+- Scrolling combat terminal.
 
 ---
 

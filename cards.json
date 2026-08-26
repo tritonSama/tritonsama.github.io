@@ -1,134 +1,206 @@
 [
   {
-    "id": "CARD_001",
-    "name": "Cryo-Armor Directive",
-    "type": "Trap/Tool",
-    "grammar_role": "trigger",
-    "spell_speed": 2,
-    "activation_cost": { "energy": 30 },
-    "targeting_vector": "self",
-    "resolution_payload": "Grant +30 kinetic shield and absorb incoming damage.",
-    "effect": { "shield": 30, "log": "Deployed Sub-Zero Cryo-Armor (+30 Shield)!" }
+    "id": "ARMOR_001",
+    "name": "Seraph Blade Gauntlets",
+    "type": "Armor/Equipment",
+    "slot": "arms",
+    "tier": 1,
+    "atkBonus": 400,
+    "defBonus": 150,
+    "activation_cost": { "energy": 20 },
+    "resolution_payload": "Equip to Arms Slot: Dual radiant energy blades surge from the gauntlets (+400 ATK / +150 DEF).",
+    "effect": { "equipSlot": "arms", "atkBonus": 400, "defBonus": 150 }
   },
   {
-    "id": "CARD_002",
+    "id": "ARMOR_002",
+    "name": "Apophis Stone Vanguard Plate",
+    "type": "Armor/Equipment",
+    "slot": "torso",
+    "tier": 1,
+    "atkBonus": 200,
+    "defBonus": 600,
+    "activation_cost": { "energy": 25 },
+    "resolution_payload": "Equip to Torso Slot: Ancient subterranean stone plate reinforces the operative's core (+200 ATK / +600 DEF).",
+    "effect": { "equipSlot": "torso", "atkBonus": 200, "defBonus": 600 }
+  },
+  {
+    "id": "ARMOR_003",
+    "name": "Cybernetic Archangel Wings",
+    "type": "Armor/Equipment",
+    "slot": "back",
+    "tier": 2,
+    "atkBonus": 700,
+    "defBonus": 500,
+    "activation_cost": { "energy": 40 },
+    "resolution_payload": "Equip to Back Slot: Titanium-ceramic wings deploy, sharpening aerial strike vectors (+700 ATK / +500 DEF).",
+    "effect": { "equipSlot": "back", "atkBonus": 700, "defBonus": 500 }
+  },
+  {
+    "id": "ARMOR_004",
+    "name": "Solaris Seraph Crown",
+    "type": "Armor/Equipment",
+    "slot": "helm",
+    "tier": 3,
+    "atkBonus": 900,
+    "defBonus": 700,
+    "activation_cost": { "energy": 50 },
+    "resolution_payload": "Equip to Helm Slot: Supreme sovereign crown channels solar energy into the operative's neural core (+900 ATK / +700 DEF).",
+    "effect": { "equipSlot": "helm", "atkBonus": 900, "defBonus": 700 }
+  },
+  {
+    "id": "ARMOR_005",
+    "name": "Void Stalker Stealth Cloak",
+    "type": "Armor/Equipment",
+    "slot": "back",
+    "tier": 1,
+    "atkBonus": 550,
+    "defBonus": 200,
+    "activation_cost": { "energy": 20 },
+    "resolution_payload": "Equip to Back Slot: Dark matter infiltration cloak sharpens kinetic assault vectors (+550 ATK / +200 DEF).",
+    "effect": { "equipSlot": "back", "atkBonus": 550, "defBonus": 200 }
+  },
+  {
+    "id": "ARMOR_006",
+    "name": "Cryo Sentry Leg Guards",
+    "type": "Armor/Equipment",
+    "slot": "legs",
+    "tier": 1,
+    "atkBonus": 150,
+    "defBonus": 650,
+    "activation_cost": { "energy": 20 },
+    "resolution_payload": "Equip to Legs Slot: Sub-zero cryo-alloy plating fortifies the operative's stance (+150 ATK / +650 DEF).",
+    "effect": { "equipSlot": "legs", "atkBonus": 150, "defBonus": 650 }
+  },
+  {
+    "id": "ARMOR_007",
+    "name": "Dark Matter Behemoth Shoulderplates",
+    "type": "Armor/Equipment",
+    "slot": "arms",
+    "tier": 2,
+    "atkBonus": 800,
+    "defBonus": 550,
+    "activation_cost": { "energy": 40 },
+    "resolution_payload": "Equip to Arms Slot: Void-forged titanite pauldrons amplify strike force vectors (+800 ATK / +550 DEF).",
+    "effect": { "equipSlot": "arms", "atkBonus": 800, "defBonus": 550 }
+  },
+  {
+    "id": "ARMOR_008",
+    "name": "Abyssal Dragon Scale Chestplate",
+    "type": "Armor/Equipment",
+    "slot": "torso",
+    "tier": 3,
+    "atkBonus": 600,
+    "defBonus": 900,
+    "activation_cost": { "energy": 50 },
+    "resolution_payload": "Equip to Torso Slot: Primordial void-dragon scales provide near-impenetrable kinetic shielding (+600 ATK / +900 DEF).",
+    "effect": { "equipSlot": "torso", "atkBonus": 600, "defBonus": 900 }
+  },
+  {
+    "id": "SPELL_001",
     "name": "Aether Inversion Protocol",
     "type": "Spell/Quick-Play",
-    "grammar_role": "reaction",
     "spell_speed": 2,
     "activation_cost": { "energy": 25 },
-    "targeting_vector": "target_chain",
-    "resolution_payload": "Negate the opponent's previous chain link and refund 20 energy.",
-    "effect": { "negate": true, "energyRefund": 20, "log": "Aether Inversion Protocol NEGATED previous chain link!" }
+    "resolution_payload": "Quick-Play Spell: Negate opponent's active chain link and refund 20 energy.",
+    "effect": { "negate": true, "energyRefund": 20 }
   },
   {
-    "id": "CARD_003",
-    "name": "Solaris Flare Overcharge",
-    "type": "Action/Attack",
-    "grammar_role": "action",
+    "id": "SPELL_002",
+    "name": "Solaris Flare Burst",
+    "type": "Spell/Normal",
     "spell_speed": 1,
-    "activation_cost": { "energy": 40 },
-    "targeting_vector": "opponent",
-    "resolution_payload": "Unleash a radiant thermal burst dealing 40 damage.",
-    "effect": { "damage": 40, "log": "Solaris Flare struck opponent for 40 thermal damage!" }
-  },
-  {
-    "id": "CARD_004",
-    "name": "Synaptic Echo Anchor",
-    "type": "Passive/Aura",
-    "grammar_role": "continuous",
-    "spell_speed": 1,
-    "activation_cost": { "energy": 20 },
-    "targeting_vector": "self",
-    "resolution_payload": "Restore 25 Energy and repair 15 HP.",
-    "effect": { "heal": 15, "energy": 25, "log": "Synaptic Anchor channeled +15 HP and +25 Energy!" }
-  },
-  {
-    "id": "CARD_005",
-    "name": "Kinetic Breaker Railgun",
-    "type": "Action/Attack",
-    "grammar_role": "action",
-    "spell_speed": 1,
-    "activation_cost": { "energy": 35 },
-    "targeting_vector": "opponent",
-    "resolution_payload": "Fire a hyper-velocity slug dealing 35 piercing damage.",
-    "effect": { "damage": 35, "pierce": true, "log": "Kinetic Railgun pierced through for 35 damage!" }
-  },
-  {
-    "id": "CARD_006",
-    "name": "Effect Veiler Pulse",
-    "type": "Hand-Trap/Reaction",
-    "grammar_role": "reaction",
-    "spell_speed": 2,
-    "activation_cost": { "energy": 20 },
-    "targeting_vector": "target_chain",
-    "resolution_payload": "Fast-reaction discard from hand: Negate opponent's active attack.",
-    "effect": { "negate": true, "log": "Effect Veiler Pulse discarded: Opponent attack nullified!" }
-  },
-  {
-    "id": "CARD_007",
-    "name": "Bottomless Void Collapse",
-    "type": "Trap/Tool",
-    "grammar_role": "trigger",
-    "spell_speed": 2,
-    "activation_cost": { "energy": 35 },
-    "targeting_vector": "opponent",
-    "resolution_payload": "Trigger a localized singularity dealing 35 gravity damage.",
-    "effect": { "damage": 35, "log": "Bottomless Void Collapse triggered! 35 Gravity damage!" }
-  },
-  {
-    "id": "CARD_008",
-    "name": "Skill Drain Matrix",
-    "type": "Continuous Trap",
-    "grammar_role": "continuous",
-    "spell_speed": 2,
     "activation_cost": { "energy": 30 },
-    "targeting_vector": "opponent",
-    "resolution_payload": "Drain 30 Energy from opponent and disrupt their stance.",
-    "effect": { "energyDrain": 30, "log": "Skill Drain Matrix drained 30 Energy from opponent!" }
+    "resolution_payload": "Normal Spell: Unleash solar flare dealing 800 direct LP damage.",
+    "effect": { "directDamage": 800 }
   },
   {
-    "id": "CARD_009",
-    "name": "Plasma Ray Surge",
-    "type": "Action/Attack",
-    "grammar_role": "action",
-    "spell_speed": 1,
-    "activation_cost": { "energy": 45 },
-    "targeting_vector": "opponent",
-    "resolution_payload": "Discharge an overcharged plasma beam dealing 45 damage.",
-    "effect": { "damage": 45, "log": "Plasma Ray Surge blasted opponent for 45 damage!" }
-  },
-  {
-    "id": "CARD_010",
-    "name": "Solemn Sentinel Barrier",
-    "type": "Counter Trap",
-    "grammar_role": "reaction",
-    "spell_speed": 3,
-    "activation_cost": { "energy": 40 },
-    "targeting_vector": "target_chain",
-    "resolution_payload": "Spell Speed 3 Sentinel: Negate opponent action and reflect 20 damage.",
-    "effect": { "negate": true, "reflect": 20, "log": "Solemn Sentinel Barrier (Spell Speed 3) negated action & reflected 20 damage!" }
-  },
-  {
-    "id": "CARD_011",
+    "id": "SPELL_003",
     "name": "Mystical Space Typhoon",
     "type": "Spell/Quick-Play",
-    "grammar_role": "reaction",
     "spell_speed": 2,
-    "activation_cost": { "energy": 25 },
-    "targeting_vector": "target_rune",
-    "resolution_payload": "Target and destroy opponent shield barrier instantly.",
-    "effect": { "destroyShield": true, "log": "Mystical Space Typhoon shattered opponent shields!" }
+    "activation_cost": { "energy": 20 },
+    "resolution_payload": "Quick-Play Spell: Target and destroy 1 equipped Armor piece on opponent or active Trap.",
+    "effect": { "destroyEquipment": true }
   },
   {
-    "id": "CARD_012",
-    "name": "Apophis Guardian Summon",
-    "type": "Trap Monster",
-    "grammar_role": "trigger",
+    "id": "SPELL_004",
+    "name": "Pot of Aether Greed",
+    "type": "Spell/Normal",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 25 },
+    "resolution_payload": "Normal Spell: Draw 2 additional cards from your deck.",
+    "effect": { "drawCards": 2 }
+  },
+  {
+    "id": "SPELL_005",
+    "name": "Synaptic Echo Anchor",
+    "type": "Spell/Continuous",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 20 },
+    "resolution_payload": "Continuous Spell: Restore +300 LP and +20 Energy during each of your Standby Phases.",
+    "effect": { "standbyHeal": 300, "standbyEnergy": 20 }
+  },
+  {
+    "id": "SPELL_006",
+    "name": "Power Bond Sync",
+    "type": "Spell/Normal",
+    "spell_speed": 1,
+    "activation_cost": { "energy": 35 },
+    "resolution_payload": "Normal Spell: Double the ATK bonus of one of your equipped Armor pieces this turn.",
+    "effect": { "doubleEquipAtk": true }
+  },
+  {
+    "id": "TRAP_001",
+    "name": "Cryo-Armor Directive",
+    "type": "Trap/Normal",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 25 },
+    "resolution_payload": "Normal Trap: When opponent attacks: Halt the attack and grant +600 LP.",
+    "effect": { "haltAttack": true, "heal": 600 }
+  },
+  {
+    "id": "TRAP_002",
+    "name": "Armor Shatter Collapse",
+    "type": "Trap/Normal",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 30 },
+    "resolution_payload": "Normal Trap: Destroy target Armor piece equipped on opponent operative.",
+    "effect": { "destroyTargetArmor": true }
+  },
+  {
+    "id": "TRAP_003",
+    "name": "Mirror Force Radiance",
+    "type": "Trap/Normal",
     "spell_speed": 2,
     "activation_cost": { "energy": 35 },
-    "targeting_vector": "self",
-    "resolution_payload": "Awaken stone guardian providing +40 Shield and +15 counter-strike.",
-    "effect": { "shield": 40, "reflect": 15, "log": "Apophis Stone Guardian summoned (+40 Shield / +15 Counter)!" }
+    "resolution_payload": "Normal Trap: When opponent declares an attack: Destroy 1 random equipped Armor piece on their operative!",
+    "effect": { "reflectDestroyArmor": true }
+  },
+  {
+    "id": "TRAP_004",
+    "name": "Skill Drain Matrix",
+    "type": "Trap/Continuous",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 30 },
+    "resolution_payload": "Continuous Trap: Drain 40 Energy from opponent each turn.",
+    "effect": { "energyDrain": 40 }
+  },
+  {
+    "id": "TRAP_005",
+    "name": "Solemn Sentinel Barrier",
+    "type": "Trap/Counter",
+    "spell_speed": 3,
+    "activation_cost": { "energy": 40 },
+    "resolution_payload": "Counter Trap (Spell Speed 3): Pay 500 LP; negate opponent action completely.",
+    "effect": { "counterNegate": true, "costLP": 500 }
+  },
+  {
+    "id": "TRAP_006",
+    "name": "Effect Veiler Pulse",
+    "type": "Hand-Trap/Reaction",
+    "spell_speed": 2,
+    "activation_cost": { "energy": 20 },
+    "resolution_payload": "Hand-Trap: Discard from hand to negate opponent equipment activation or attack.",
+    "effect": { "handTrapNegate": true }
   }
 ]
