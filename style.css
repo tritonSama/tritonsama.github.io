@@ -392,3 +392,100 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 #terminal-log { color: #22c55e; min-height: 110px; max-height: 170px; overflow-y: auto; font-size: 11px; line-height: 1.35; padding-right: 4px; }
 #terminal-log::-webkit-scrollbar { width: 5px; }
 #terminal-log::-webkit-scrollbar-thumb { background: #15803d; border-radius: 3px; }
+
+/* ========================================================================== */
+/* Training Area & Multiplayer Lobby Styles                                   */
+/* ========================================================================== */
+.lobby-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+}
+@media (max-width: 760px) {
+    .lobby-grid { grid-template-columns: 1fr; }
+}
+
+.lobby-card {
+    background: #090e1a;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+.host-card { border-left: 4px solid #38bdf8; }
+.join-card { border-left: 4px solid #a855f7; }
+.spectate-card { border-left: 4px solid #64748b; }
+.local-card { border-left: 4px solid #22c55e; }
+
+.lobby-card-badge {
+    font-size: 10px;
+    font-weight: bold;
+    background: #1e3a8a;
+    color: #93c5fd;
+    padding: 2px 6px;
+    border-radius: 3px;
+    width: fit-content;
+}
+
+.lobby-card h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #f8fafc;
+}
+
+.lobby-card p {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.lobby-card label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #cbd5e1;
+    text-transform: uppercase;
+}
+
+.lobby-status-box {
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+.lobby-status-box.normal  { background: #0f172a; border: 1px solid #334155; color: #cbd5e1; }
+.lobby-status-box.pending { background: rgba(59,130,246,0.15); border: 1px solid #3b82f6; color: #93c5fd; }
+.lobby-status-box.success { background: rgba(34,197,94,0.15); border: 1px solid #22c55e; color: #4ade80; }
+.lobby-status-box.error   { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; }
+
+.room-code-display {
+    margin-top: 8px;
+    background: #0f172a;
+    border: 1px dashed #38bdf8;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.code-copy-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+.code-copy-row input {
+    font-weight: bold;
+    font-size: 14px;
+    color: #38bdf8;
+    text-align: center;
+    letter-spacing: 1px;
+    margin: 0;
+}
+.code-copy-row button {
+    margin: 0;
+    min-width: 100px;
+}
+

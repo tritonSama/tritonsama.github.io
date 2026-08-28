@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeavenlyBound | Operative Armor Duel Arena</title>
+    <title>HeavenlyBound | Operative Armor Duel Arena & Training Area</title>
     <link rel="stylesheet" href="style.css">
+    <!-- PeerJS WebRTC P2P Signaling CDN -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
 <body>
     <div class="terminal-container">
@@ -23,14 +25,14 @@
             
             <div class="welcome-features-grid">
                 <div class="feature-card">
+                    <div class="feature-icon">🏟️</div>
+                    <div class="feature-title">P2P Training Area</div>
+                    <div class="feature-desc">Host matches, join as Player 2 over WebRTC, or spectate live matches in real time.</div>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon">⚔️</div>
                     <div class="feature-title">2-Player Armor Duels</div>
                     <div class="feature-desc">4 competitive archetypes (WATER, FIRE, WIND, EARTH) with 25+ card tactical decks.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⛓️</div>
-                    <div class="feature-title">6-Phase Turn Machine</div>
-                    <div class="feature-desc">Draw, Standby, Main 1, Battle, Main 2, and End Phase with fast-effect chain windows.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🛡️</div>
@@ -42,7 +44,8 @@
             <div class="welcome-input-row">
                 <input type="text" id="welcome-player-id" placeholder="Enter Operative Callsign (e.g. ALPHA-7)" value="PILGRIM-ALPHA">
                 <div class="welcome-cta-group">
-                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" onclick="enterStage1Demo()">⚔️ ENTER STAGE 1 DEMO & COMBAT ARENA</button>
+                    <button type="button" id="btn-welcome-lobby" class="btn-welcome-enter" onclick="switchAppMode('LOBBY')">🏟️ ENTER TRAINING AREA & LOBBY</button>
+                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" style="background:linear-gradient(135deg, #1e3a8a, #4338ca);" onclick="enterStage1Demo()">⚔️ QUICK PLAY COMBAT ARENA</button>
                     <button type="button" id="btn-welcome-beta" class="btn-welcome-beta" onclick="enterBetaSignup()">📝 SIGN UP TO BE A BETA TESTER</button>
                 </div>
             </div>
@@ -50,9 +53,69 @@
 
         <!-- Mode Tabs -->
         <nav id="mode-tabs" class="mode-tabs-bar hidden">
-            <button id="tab-duel" class="mode-tab-btn active" onclick="switchAppMode('DUEL')">⚔️ 2-PLAYER ARMOR DUEL</button>
+            <button id="tab-lobby" class="mode-tab-btn" onclick="switchAppMode('LOBBY')">🏟️ TRAINING AREA / LOBBY</button>
+            <button id="tab-duel" class="mode-tab-btn active" onclick="switchAppMode('DUEL')">⚔️ ARMOR DUEL ARENA</button>
             <button id="tab-beta" class="mode-tab-btn" onclick="switchAppMode('BETA')">📝 BETA TESTER SIGN-UP</button>
         </nav>
+
+        <!-- ======================================================== -->
+        <!-- TRAINING AREA & P2P MULTIPLAYER LOBBY                    -->
+        <!-- ======================================================== -->
+        <section id="training-lobby-section" class="panel hidden">
+            <div class="setup-header">
+                <h2>🏟️ TACTICAL TRAINING AREA & MULTIPLAYER LOBBY</h2>
+                <p>Choose your match pathway: Host a new combat room, connect as Player 2 over WebRTC, spectate a live match, or launch offline practice.</p>
+            </div>
+
+            <div id="lobby-status-msg" class="lobby-status-box hidden"></div>
+
+            <div class="lobby-grid">
+                <!-- Option 1: Create / Host -->
+                <div class="lobby-card host-card">
+                    <div class="lobby-card-badge">🔱 HOST (PLAYER 1)</div>
+                    <h3>1. Create New Match</h3>
+                    <p>Initialize a WebRTC combat room as Player 1. Runs the authoritative duel engine and broadcasts state to connecting peers.</p>
+                    <button type="button" class="btn-start-duel" onclick="MultiplayerManager.hostMatch()">🎮 Create Match & Generate Room ID</button>
+                    
+                    <div id="lobby-room-code-display" class="room-code-display hidden">
+                        <label for="lobby-generated-code">Your Room ID (Share with Opponent / Spectator):</label>
+                        <div class="code-copy-row">
+                            <input type="text" id="lobby-generated-code" readonly value="">
+                            <button type="button" id="btn-copy-code" class="btn-sm btn-phase" onclick="MultiplayerManager.copyRoomCode()">📋 Copy Code</button>
+                        </div>
+                        <button type="button" class="btn-start-duel" style="margin-top:6px;" onclick="switchAppMode('DUEL')">⚔️ Enter Deck Selector</button>
+                    </div>
+                </div>
+
+                <!-- Option 2: Join as Player 2 -->
+                <div class="lobby-card join-card">
+                    <div class="lobby-card-badge" style="background:#581c87; color:#d8b4fe;">🔥 CLIENT (PLAYER 2)</div>
+                    <h3>2. Join as Second Player</h3>
+                    <p>Paste a Room ID generated by the Host to link directly via WebRTC DataChannels as Player 2.</p>
+                    <label for="lobby-join-code">Enter Host Room ID:</label>
+                    <input type="text" id="lobby-join-code" placeholder="e.g. HB-4821">
+                    <button type="button" class="btn-start-duel" onclick="MultiplayerManager.joinMatch(document.getElementById('lobby-join-code').value)">⚔️ Connect & Join as Player 2</button>
+                </div>
+
+                <!-- Option 3: Spectate -->
+                <div class="lobby-card spectate-card">
+                    <div class="lobby-card-badge" style="background:#334155; color:#cbd5e1;">👁️ SPECTATOR</div>
+                    <h3>3. Watch Live Match</h3>
+                    <p>Observe a live match in real-time read-only mode without occupying a player slot.</p>
+                    <label for="lobby-spectate-code">Enter Match Room ID:</label>
+                    <input type="text" id="lobby-spectate-code" placeholder="e.g. HB-4821">
+                    <button type="button" class="btn-sm btn-phase" style="width:100%; margin-top:6px; padding:10px;" onclick="MultiplayerManager.spectateMatch(document.getElementById('lobby-spectate-code').value)">📺 Join as Spectator</button>
+                </div>
+
+                <!-- Option 4: Local Solo / Hotseat -->
+                <div class="lobby-card local-card">
+                    <div class="lobby-card-badge" style="background:#1e293b; color:#94a3b8;">🛡️ LOCAL TRAINING</div>
+                    <h3>4. Local Practice Arena</h3>
+                    <p>Test archetypes, combos, and armor configurations locally on a single device without networking.</p>
+                    <button type="button" class="btn-sm btn-action" style="width:100%; margin-top:auto; padding:10px;" onclick="MultiplayerManager.role='LOCAL'; switchAppMode('DUEL')">🤖 Launch Local Practice</button>
+                </div>
+            </div>
+        </section>
 
         <!-- ======================================================== -->
         <!-- PRE-DUEL LOADOUT & DECK SELECTION SCREEN                -->
@@ -275,25 +338,8 @@
     <script>
         function enterStage1Demo() {
             var welcomeSec = document.getElementById('welcome-section');
-            var setupSec   = document.getElementById('pre-duel-setup-section');
-            var duelSec    = document.getElementById('duel-section');
-            var betaSec    = document.getElementById('beta-signup-section');
-            var modeTabs   = document.getElementById('mode-tabs');
-            var tabDuel    = document.getElementById('tab-duel');
-            var tabBeta    = document.getElementById('tab-beta');
-
             if (welcomeSec) welcomeSec.classList.add('hidden');
-            if (betaSec)    betaSec.classList.add('hidden');
-            if (duelSec)    duelSec.classList.add('hidden');
-            if (modeTabs)   modeTabs.classList.remove('hidden');
-            if (tabDuel)    tabDuel.classList.add('active');
-            if (tabBeta)    tabBeta.classList.remove('active');
-
-            if (window.DuelEngine && typeof window.DuelEngine.openSetupScreen === 'function') {
-                window.DuelEngine.openSetupScreen();
-            } else if (setupSec) {
-                setupSec.classList.remove('hidden');
-            }
+            switchAppMode('DUEL');
             if (typeof logToTerminal === 'function') {
                 var callsignEl = document.getElementById('welcome-player-id');
                 var cs = (callsignEl && callsignEl.value) || 'PILGRIM-ALPHA';
@@ -304,26 +350,59 @@
 
         function enterBetaSignup() {
             var welcomeSec = document.getElementById('welcome-section');
-            var setupSec   = document.getElementById('pre-duel-setup-section');
-            var duelSec    = document.getElementById('duel-section');
-            var betaSec    = document.getElementById('beta-signup-section');
-            var modeTabs   = document.getElementById('mode-tabs');
-            var tabDuel    = document.getElementById('tab-duel');
-            var tabBeta    = document.getElementById('tab-beta');
-
             if (welcomeSec) welcomeSec.classList.add('hidden');
-            if (setupSec)   setupSec.classList.add('hidden');
-            if (duelSec)    duelSec.classList.add('hidden');
-            if (betaSec)    betaSec.classList.remove('hidden');
-            if (modeTabs)   modeTabs.classList.remove('hidden');
-            if (tabBeta)    tabBeta.classList.add('active');
-            if (tabDuel)    tabDuel.classList.remove('active');
-
+            switchAppMode('BETA');
             if (typeof logToTerminal === 'function') {
                 logToTerminal('📝 [BETA PORTAL] Navigated to Closed Beta Application Form.');
             }
         }
+
+        function switchAppMode(mode) {
+            var welcomeSec = document.getElementById('welcome-section');
+            var lobbySec   = document.getElementById('training-lobby-section');
+            var setupSec   = document.getElementById('pre-duel-setup-section');
+            var duelSec    = document.getElementById('duel-section');
+            var betaSec    = document.getElementById('beta-signup-section');
+            var modeTabs   = document.getElementById('mode-tabs');
+            var tabLobby   = document.getElementById('tab-lobby');
+            var tabDuel    = document.getElementById('tab-duel');
+            var tabBeta    = document.getElementById('tab-beta');
+
+            if (welcomeSec) welcomeSec.classList.add('hidden');
+            if (modeTabs)   modeTabs.classList.remove('hidden');
+
+            if (tabLobby) tabLobby.classList.toggle('active', mode === 'LOBBY');
+            if (tabDuel)  tabDuel.classList.toggle('active', mode === 'DUEL');
+            if (tabBeta)  tabBeta.classList.toggle('active', mode === 'BETA' || mode === 'SOLO');
+
+            if (mode === 'LOBBY') {
+                if (setupSec) setupSec.classList.add('hidden');
+                if (duelSec)  duelSec.classList.add('hidden');
+                if (betaSec)  betaSec.classList.add('hidden');
+                if (lobbySec) lobbySec.classList.remove('hidden');
+            } else if (mode === 'DUEL') {
+                if (lobbySec) lobbySec.classList.add('hidden');
+                if (betaSec)  betaSec.classList.add('hidden');
+                if (window.DuelEngine && window.DuelEngine.isDuelActive) {
+                    if (setupSec) setupSec.classList.add('hidden');
+                    if (duelSec)  duelSec.classList.remove('hidden');
+                } else {
+                    if (window.DuelEngine && typeof window.DuelEngine.openSetupScreen === 'function') {
+                        window.DuelEngine.openSetupScreen();
+                    } else if (setupSec) {
+                        setupSec.classList.remove('hidden');
+                    }
+                    if (duelSec) duelSec.classList.add('hidden');
+                }
+            } else if (mode === 'BETA' || mode === 'SOLO') {
+                if (lobbySec) lobbySec.classList.add('hidden');
+                if (setupSec) setupSec.classList.add('hidden');
+                if (duelSec)  duelSec.classList.add('hidden');
+                if (betaSec)  betaSec.classList.remove('hidden');
+            }
+        }
     </script>
-    <script src="script.js?v=2.9.2"></script>
+    <script src="script.js?v=2.9.3"></script>
+    <script src="multiplayer.js?v=2.9.3"></script>
 </body>
 </html>

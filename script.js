@@ -1164,27 +1164,42 @@ const GameEngine = {
 
 function switchAppMode(mode) {
     currentAppMode = mode;
-    const setupSec = document.getElementById('pre-duel-setup-section');
-    const duelSec  = document.getElementById('duel-section');
-    const betaSec  = document.getElementById('beta-signup-section');
-    const tabDuel  = document.getElementById('tab-duel');
-    const tabBeta  = document.getElementById('tab-beta');
+    const welcomeSec = document.getElementById('welcome-section');
+    const lobbySec   = document.getElementById('training-lobby-section');
+    const setupSec   = document.getElementById('pre-duel-setup-section');
+    const duelSec    = document.getElementById('duel-section');
+    const betaSec    = document.getElementById('beta-signup-section');
+    const modeTabs   = document.getElementById('mode-tabs');
+    const tabLobby   = document.getElementById('tab-lobby');
+    const tabDuel    = document.getElementById('tab-duel');
+    const tabBeta    = document.getElementById('tab-beta');
     
-    if (tabDuel) tabDuel.classList.toggle('active', mode === "DUEL");
-    if (tabBeta) tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
+    if (welcomeSec) welcomeSec.classList.add('hidden');
+    if (modeTabs)   modeTabs.classList.remove('hidden');
+
+    if (tabLobby) tabLobby.classList.toggle('active', mode === "LOBBY");
+    if (tabDuel)  tabDuel.classList.toggle('active', mode === "DUEL");
+    if (tabBeta)  tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
     
-    if (mode === "DUEL") {
-        if (betaSec) betaSec.classList.add('hidden');
+    if (mode === "LOBBY") {
+        if (setupSec) setupSec.classList.add('hidden');
+        if (duelSec)  duelSec.classList.add('hidden');
+        if (betaSec)  betaSec.classList.add('hidden');
+        if (lobbySec) lobbySec.classList.remove('hidden');
+    } else if (mode === "DUEL") {
+        if (lobbySec) lobbySec.classList.add('hidden');
+        if (betaSec)  betaSec.classList.add('hidden');
         if (!DuelEngine.isDuelActive) {
             DuelEngine.openSetupScreen();
         } else {
             if (setupSec) setupSec.classList.add('hidden');
-            if (duelSec) duelSec.classList.remove('hidden');
+            if (duelSec)  duelSec.classList.remove('hidden');
         }
     } else {
+        if (lobbySec) lobbySec.classList.add('hidden');
         if (setupSec) setupSec.classList.add('hidden');
-        if (duelSec) duelSec.classList.add('hidden');
-        if (betaSec) betaSec.classList.remove('hidden');
+        if (duelSec)  duelSec.classList.add('hidden');
+        if (betaSec)  betaSec.classList.remove('hidden');
     }
 }
 
