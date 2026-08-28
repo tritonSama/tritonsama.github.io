@@ -40,6 +40,165 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .mode-tab-btn.active { background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(168,85,247,0.2)); border-color: #60a5fa; color: #60a5fa; box-shadow: 0 0 10px rgba(96,165,250,0.3); }
 
 /* ========================================================================== */
+/* Welcome to Stage 1 Demo Screen Styles                                      */
+/* ========================================================================== */
+.welcome-panel {
+    background: radial-gradient(circle at 50% 0%, rgba(37,99,235,0.15), rgba(15,23,42,0.95));
+    border: 1.5px solid #3b82f6;
+    box-shadow: 0 0 20px rgba(59,130,246,0.25);
+    padding: 20px;
+    text-align: center;
+}
+.welcome-badge {
+    display: inline-block;
+    background: #1e3a8a;
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid #3b82f6;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+.welcome-panel h2 {
+    color: #f8fafc;
+    font-size: 20px;
+    margin: 4px 0 8px 0;
+    letter-spacing: 0.5px;
+}
+.welcome-subtitle {
+    color: #cbd5e1;
+    font-size: 13px;
+    max-width: 650px;
+    margin: 0 auto 16px auto;
+    line-height: 1.45;
+}
+.welcome-features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+    text-align: left;
+}
+@media (max-width: 700px) {
+    .welcome-features-grid { grid-template-columns: 1fr; }
+}
+.feature-card {
+    background: #090e1a;
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    padding: 10px;
+}
+.feature-icon { font-size: 20px; margin-bottom: 4px; }
+.feature-title { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 2px; }
+.feature-desc { font-size: 11px; color: #94a3b8; line-height: 1.35; }
+
+.welcome-input-row {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.welcome-cta-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.btn-welcome-enter {
+    flex: 1.2;
+    min-width: 200px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border-color: #60a5fa;
+    color: #fff;
+    font-size: 13px;
+    padding: 10px;
+    box-shadow: 0 0 12px rgba(59,130,246,0.4);
+}
+.btn-welcome-enter:hover {
+    background: linear-gradient(135deg, #1d4ed8, #6d28d9);
+    box-shadow: 0 0 16px rgba(96,165,250,0.6);
+}
+.btn-welcome-beta {
+    flex: 1;
+    min-width: 170px;
+    background: #0f172a;
+    border-color: #a855f7;
+    color: #d8b4fe;
+    font-size: 12px;
+    padding: 10px;
+}
+.btn-welcome-beta:hover {
+    background: #1e1b4b;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(168,85,247,0.4);
+}
+
+/* ========================================================================== */
+/* Beta Tester Sign-Up Form Styles                                            */
+/* ========================================================================== */
+.beta-form-container {
+    background: #090e1a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 16px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+.beta-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+@media (max-width: 650px) {
+    .beta-form-grid { grid-template-columns: 1fr; }
+}
+.beta-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.beta-field-group label {
+    font-size: 11px;
+    color: #38bdf8;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.req-star { color: #f43f5e; font-weight: bold; }
+.beta-submit-row {
+    text-align: center;
+    margin-top: 10px;
+}
+.form-status-msg {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: none;
+    line-height: 1.4;
+}
+.form-status-msg.success {
+    display: block;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid #22c55e;
+    color: #4ade80;
+}
+.form-status-msg.error {
+    display: block;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid #ef4444;
+    color: #fca5a5;
+}
+.form-status-msg.pending {
+    display: block;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid #3b82f6;
+    color: #93c5fd;
+}
+
+/* ========================================================================== */
 /* Pre-Duel Setup Screen Styles                                               */
 /* ========================================================================== */
 .setup-header { text-align: center; margin-bottom: 12px; }

@@ -13,19 +13,45 @@
             <p>Operation: Severed Grid | Operative Armor Duel Arena | Pilgrim Protocol v2.9</p>
         </header>
 
-        <!-- Auth -->
-        <section id="auth-section" class="panel">
-            <h2>Operative Authentication & Synaptic Calibration</h2>
-            <p>Enter your operative handle and clearance timestamp to calibrate tactical link.</p>
-            <input type="text" id="player-id" placeholder="Enter Operative Handle (e.g. ALPHA-7)">
-            <input type="date" id="player-birthday" title="Clearance Timestamp">
-            <button onclick="initializeOperative()">Initialize Grid Link</button>
+        <!-- ======================================================== -->
+        <!-- WELCOME TO STAGE 1 OF THE DEMO WELCOME SCREEN             -->
+        <!-- ======================================================== -->
+        <section id="welcome-section" class="panel welcome-panel">
+            <div class="welcome-badge">🚀 STAGE 1: TACTICAL COMBAT GRID & CLOSED BETA PROTOTYPE</div>
+            <h2>WELCOME TO STAGE 1 OF THE DEMO</h2>
+            <p class="welcome-subtitle">Experience the tactical <strong>Operative Armor Card Duel Engine</strong> — equip elemental exosuits across 5 body slots, cast reactive Spells & Traps, and resolve complex LIFO chains.</p>
+            
+            <div class="welcome-features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚔️</div>
+                    <div class="feature-title">2-Player Armor Duels</div>
+                    <div class="feature-desc">4 competitive archetypes (WATER, FIRE, WIND, EARTH) with 25+ card tactical decks.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⛓️</div>
+                    <div class="feature-title">6-Phase Turn Machine</div>
+                    <div class="feature-desc">Draw, Standby, Main 1, Battle, Main 2, and End Phase with fast-effect chain windows.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-title">Closed Beta Access</div>
+                    <div class="feature-desc">Sign up to test upcoming MMO-Verse world features, Solana asset integration, and live PvP.</div>
+                </div>
+            </div>
+
+            <div class="welcome-input-row">
+                <input type="text" id="welcome-player-id" placeholder="Enter Operative Callsign (e.g. ALPHA-7)" value="PILGRIM-ALPHA">
+                <div class="welcome-cta-group">
+                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" onclick="enterStage1Demo()">⚔️ ENTER STAGE 1 DEMO & COMBAT ARENA</button>
+                    <button type="button" id="btn-welcome-beta" class="btn-welcome-beta" onclick="enterBetaSignup()">📝 SIGN UP TO BE A BETA TESTER</button>
+                </div>
+            </div>
         </section>
 
         <!-- Mode Tabs -->
         <nav id="mode-tabs" class="mode-tabs-bar hidden">
             <button id="tab-duel" class="mode-tab-btn active" onclick="switchAppMode('DUEL')">⚔️ 2-PLAYER ARMOR DUEL</button>
-            <button id="tab-solo" class="mode-tab-btn" onclick="switchAppMode('SOLO')">🛡️ SOLO ASCENT</button>
+            <button id="tab-beta" class="mode-tab-btn" onclick="switchAppMode('BETA')">📝 BETA TESTER SIGN-UP</button>
         </nav>
 
         <!-- ======================================================== -->
@@ -178,22 +204,61 @@
             </div>
         </section>
 
-        <!-- SOLO ASCENT -->
-        <section id="dashboard-section" class="panel hidden">
-            <div class="grid-stats">
-                <div class="card">
-                    <h3>Outie Sanctum (Base)</h3>
-                    <p>Synaptic Anchor: <strong id="anchor-display" style="color:#60a5fa;">--</strong></p>
-                    <p>Aether Shards: <strong id="shard-display" style="color:#fbbf24;">100</strong></p>
-                </div>
-                <div class="card">
-                    <h3>Rules Engine State</h3>
-                    <p>Toggle Mode: <strong id="toggle-status" style="color:#34d399;">AUTO</strong></p>
-                    <button onclick="toggleGameEngineMode()">Cycle Toggle (AUTO/ON/OFF)</button>
-                </div>
+        <!-- ======================================================== -->
+        <!-- BETA TESTER SIGN-UP SECTION                              -->
+        <!-- ======================================================== -->
+        <section id="beta-signup-section" class="panel hidden">
+            <div class="setup-header">
+                <h2>🛡️ PILGRIM PROTOCOL: CLOSED BETA REGISTRATION</h2>
+                <p>Register to become an official beta tester for upcoming MMO-Verse world builds, digital commerce nodes, and Solana asset integrations.</p>
             </div>
-            <div style="margin-top:12px;">
-                <button id="action-btn" onclick="executeTacticalAction()">Simulate Incursion Action (Vault Breach)</button>
+
+            <div class="beta-form-container">
+                <form id="betaSignupForm" onsubmit="submitBetaTesterForm(event)">
+                    <div class="beta-form-grid">
+                        <div class="beta-field-group">
+                            <label for="beta-name">Operative / Full Name <span class="req-star">*</span></label>
+                            <input type="text" id="beta-name" name="name" required placeholder="Your full name or operative handle">
+                        </div>
+
+                        <div class="beta-field-group">
+                            <label for="beta-email">Email Address <span class="req-star">*</span></label>
+                            <input type="email" id="beta-email" name="email" required placeholder="you@example.com">
+                        </div>
+
+                        <div class="beta-field-group">
+                            <label for="beta-guild-class">Guild Class / Archetype <span class="req-star">*</span></label>
+                            <select id="beta-guild-class" name="guildClass" required>
+                                <option value="Abyssal Vanguard (WATER)">🔱 Abyssal Vanguard (WATER Combo / Disruption)</option>
+                                <option value="Infernal Juggernaut (FIRE)">🔥 Infernal Juggernaut (FIRE Burn / Attrition)</option>
+                                <option value="Zephyr Scout (WIND)">🌪️ Zephyr Scout (WIND Chain-Equip / Control)</option>
+                                <option value="Terra Bastion (EARTH)">🪨 Terra Bastion (EARTH Excavate / Resonance)</option>
+                                <option value="Aether Cyber-Mage">⚡ Aether Cyber-Mage (Grid Special Ops)</option>
+                                <option value="Seraphim Mystic">🔮 Seraphim Mystic (Celestial Protocol)</option>
+                            </select>
+                        </div>
+
+                        <div class="beta-field-group">
+                            <label for="beta-phone">Phone Number</label>
+                            <input type="tel" id="beta-phone" name="phone" placeholder="(555) 000-0000">
+                        </div>
+
+                        <div class="beta-field-group">
+                            <label for="beta-birthdate">Birth Date <span class="req-star">*</span></label>
+                            <input type="date" id="beta-birthdate" name="birthDate" required>
+                        </div>
+
+                        <div class="beta-field-group">
+                            <label for="beta-birthtime">Birth Time <span class="req-star">*</span></label>
+                            <input type="time" id="beta-birthtime" name="birthTime" required>
+                        </div>
+                    </div>
+
+                    <div class="beta-submit-row">
+                        <button type="submit" id="beta-submit-btn" class="btn-start-duel">🚀 TRANSMIT BETA APPLICATION TO GOOGLE SHEETS</button>
+                    </div>
+                </form>
+                <div id="beta-form-status" class="form-status-msg"></div>
             </div>
         </section>
 
@@ -205,6 +270,60 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Inline Immediate Fallback Handlers for Guaranteed Button Execution -->
+    <script>
+        function enterStage1Demo() {
+            var welcomeSec = document.getElementById('welcome-section');
+            var setupSec   = document.getElementById('pre-duel-setup-section');
+            var duelSec    = document.getElementById('duel-section');
+            var betaSec    = document.getElementById('beta-signup-section');
+            var modeTabs   = document.getElementById('mode-tabs');
+            var tabDuel    = document.getElementById('tab-duel');
+            var tabBeta    = document.getElementById('tab-beta');
+
+            if (welcomeSec) welcomeSec.classList.add('hidden');
+            if (betaSec)    betaSec.classList.add('hidden');
+            if (duelSec)    duelSec.classList.add('hidden');
+            if (modeTabs)   modeTabs.classList.remove('hidden');
+            if (tabDuel)    tabDuel.classList.add('active');
+            if (tabBeta)    tabBeta.classList.remove('active');
+
+            if (window.DuelEngine && typeof window.DuelEngine.openSetupScreen === 'function') {
+                window.DuelEngine.openSetupScreen();
+            } else if (setupSec) {
+                setupSec.classList.remove('hidden');
+            }
+            if (typeof logToTerminal === 'function') {
+                var callsignEl = document.getElementById('welcome-player-id');
+                var cs = (callsignEl && callsignEl.value) || 'PILGRIM-ALPHA';
+                logToTerminal('🚀 [STAGE 1 DEMO] Grid Link Initialized for Operative: ' + cs);
+                logToTerminal('⚔️ Welcome to Stage 1: Operative Armor Card Duel Arena.');
+            }
+        }
+
+        function enterBetaSignup() {
+            var welcomeSec = document.getElementById('welcome-section');
+            var setupSec   = document.getElementById('pre-duel-setup-section');
+            var duelSec    = document.getElementById('duel-section');
+            var betaSec    = document.getElementById('beta-signup-section');
+            var modeTabs   = document.getElementById('mode-tabs');
+            var tabDuel    = document.getElementById('tab-duel');
+            var tabBeta    = document.getElementById('tab-beta');
+
+            if (welcomeSec) welcomeSec.classList.add('hidden');
+            if (setupSec)   setupSec.classList.add('hidden');
+            if (duelSec)    duelSec.classList.add('hidden');
+            if (betaSec)    betaSec.classList.remove('hidden');
+            if (modeTabs)   modeTabs.classList.remove('hidden');
+            if (tabBeta)    tabBeta.classList.add('active');
+            if (tabDuel)    tabDuel.classList.remove('active');
+
+            if (typeof logToTerminal === 'function') {
+                logToTerminal('📝 [BETA PORTAL] Navigated to Closed Beta Application Form.');
+            }
+        }
+    </script>
+    <script src="script.js?v=2.9.2"></script>
 </body>
 </html>

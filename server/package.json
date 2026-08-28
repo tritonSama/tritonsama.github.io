@@ -1,0 +1,24 @@
+{
+  "name": "heavenlybound-duel-server",
+  "version": "1.0.0",
+  "description": "Authoritative multiplayer duel server for HeavenlyBound (Operative Armor Duel Arena)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "@colyseus/core": "^0.15.39",
+    "@colyseus/monitor": "^0.15.6",
+    "colyseus": "^0.15.36",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

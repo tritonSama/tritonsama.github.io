@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL"; // Replace after deployment
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec";
 
 // Global State
 let aetherShards = 100;
@@ -71,7 +71,7 @@ fetch('decks.json')
             data.decks.forEach(d => {
                 archetypeDecks[d.id] = d;
             });
-            if (DuelEngine.p1SelectedDeck === "ABYSSAL_TIDE" && archetypeDecks["ABYSSAL_TIDE"]) {
+            if (typeof DuelEngine !== 'undefined' && DuelEngine.p1SelectedDeck === "ABYSSAL_TIDE" && archetypeDecks["ABYSSAL_TIDE"]) {
                 allCardsPool = [...archetypeDecks["ABYSSAL_TIDE"].cards, ...DEFAULT_CARDS];
             }
         }
@@ -176,12 +176,17 @@ const DuelEngine = {
 
     openSetupScreen() {
         this.isDuelActive = false;
-        const setupSec = document.getElementById('pre-duel-setup-section');
-        const duelSec = document.getElementById('duel-section');
-        const soloSec = document.getElementById('dashboard-section');
-        if (setupSec) setupSec.classList.remove('hidden');
-        if (duelSec) duelSec.classList.add('hidden');
-        if (soloSec) soloSec.classList.add('hidden');
+        const welcomeSec = document.getElementById('welcome-section');
+        const setupSec   = document.getElementById('pre-duel-setup-section');
+        const duelSec    = document.getElementById('duel-section');
+        const betaSec    = document.getElementById('beta-signup-section');
+        const modeTabs   = document.getElementById('mode-tabs');
+        
+        if (welcomeSec) welcomeSec.classList.add('hidden');
+        if (betaSec)    betaSec.classList.add('hidden');
+        if (duelSec)    duelSec.classList.add('hidden');
+        if (setupSec)   setupSec.classList.remove('hidden');
+        if (modeTabs)   modeTabs.classList.remove('hidden');
 
         // Sync dropdowns
         const p1Sel = document.getElementById('setup-p1-deck');
@@ -1161,23 +1166,133 @@ function switchAppMode(mode) {
     currentAppMode = mode;
     const setupSec = document.getElementById('pre-duel-setup-section');
     const duelSec  = document.getElementById('duel-section');
-    const soloSec  = document.getElementById('dashboard-section');
+    const betaSec  = document.getElementById('beta-signup-section');
+    const tabDuel  = document.getElementById('tab-duel');
+    const tabBeta  = document.getElementById('tab-beta');
     
-    document.getElementById('tab-duel').classList.toggle('active', mode === "DUEL");
-    document.getElementById('tab-solo').classList.toggle('active', mode === "SOLO");
+    if (tabDuel) tabDuel.classList.toggle('active', mode === "DUEL");
+    if (tabBeta) tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
     
     if (mode === "DUEL") {
-        soloSec.classList.add('hidden');
+        if (betaSec) betaSec.classList.add('hidden');
         if (!DuelEngine.isDuelActive) {
             DuelEngine.openSetupScreen();
         } else {
-            setupSec.classList.add('hidden');
-            duelSec.classList.remove('hidden');
+            if (setupSec) setupSec.classList.add('hidden');
+            if (duelSec) duelSec.classList.remove('hidden');
         }
     } else {
         if (setupSec) setupSec.classList.add('hidden');
         if (duelSec) duelSec.classList.add('hidden');
-        if (soloSec) soloSec.classList.remove('hidden');
+        if (betaSec) betaSec.classList.remove('hidden');
+    }
+}
+
+function enterStage1Demo() {
+    const callsignInput = document.getElementById('welcome-player-id');
+    const callsign = (callsignInput && callsignInput.value.trim()) || "PILGRIM-ALPHA";
+    
+    const welcomeSec = document.getElementById('welcome-section');
+    const modeTabs = document.getElementById('mode-tabs');
+    
+    if (welcomeSec) welcomeSec.classList.add('hidden');
+    if (modeTabs) modeTabs.classList.remove('hidden');
+    
+    switchAppMode("DUEL");
+    logToTerminal(`🚀 [STAGE 1 DEMO] Grid Link Initialized for Operative: ${callsign}`);
+    logToTerminal(`⚔️ Welcome to Stage 1: Operative Armor Card Duel Arena.`);
+    logToTerminal(`🛡️ Configure P1 & P2 Combat Archetypes below to engage.`);
+    
+    syncWithBackend({ player_id: callsign, action: 'stage1_demo_enter' });
+}
+
+function enterBetaSignup() {
+    const welcomeSec = document.getElementById('welcome-section');
+    const modeTabs = document.getElementById('mode-tabs');
+    
+    if (welcomeSec) welcomeSec.classList.add('hidden');
+    if (modeTabs) modeTabs.classList.remove('hidden');
+    
+    switchAppMode("BETA");
+    logToTerminal(`📝 [BETA PORTAL] Navigated to Closed Beta Application Form.`);
+}
+
+async function submitBetaTesterForm(event) {
+    if (event) event.preventDefault();
+    
+    const nameEl = document.getElementById('beta-name');
+    const emailEl = document.getElementById('beta-email');
+    const classEl = document.getElementById('beta-guild-class');
+    const phoneEl = document.getElementById('beta-phone');
+    const birthDateEl = document.getElementById('beta-birthdate');
+    const birthTimeEl = document.getElementById('beta-birthtime');
+    const submitBtn = document.getElementById('beta-submit-btn');
+    const statusEl = document.getElementById('beta-form-status');
+    
+    const name = nameEl ? nameEl.value.trim() : "";
+    const email = emailEl ? emailEl.value.trim() : "";
+    const guildClass = classEl ? classEl.value : "Tactical Operative";
+    const phone = phoneEl ? phoneEl.value.trim() : "";
+    const birthDate = birthDateEl ? birthDateEl.value : "";
+    const birthTime = birthTimeEl ? birthTimeEl.value : "";
+    
+    if (!name || !email) {
+        if (statusEl) {
+            statusEl.className = "form-status-msg error";
+            statusEl.innerText = "⚠️ Please provide your Name and Email address.";
+        }
+        return;
+    }
+    
+    const payload = {
+        timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
+        name,
+        email,
+        guildClass,
+        birthDate,
+        birthTime,
+        phone,
+        action: "beta_signup"
+    };
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "⏳ TRANSMITTING APPLICATION TO GOOGLE SHEETS...";
+    }
+    if (statusEl) {
+        statusEl.className = "form-status-msg pending";
+        statusEl.innerText = "📡 Transmitting telemetry to Google Sheets...";
+    }
+    
+    try {
+        // text/plain avoids CORS preflight restrictions on Google Apps Script
+        await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        });
+        
+        if (statusEl) {
+            statusEl.className = "form-status-msg success";
+            statusEl.innerHTML = `✅ <strong>BETA APPLICATION RECORDED!</strong><br>Welcome to the Pilgrim Protocol, Operative <strong>${name}</strong> (${guildClass}). Your record has been transmitted to Google Sheets.`;
+        }
+        
+        logToTerminal(`✅ [BETA APPLICATION SUBMITTED] Operative: ${name} | Class: ${guildClass} | Transmitted to Google Sheets.`);
+        
+        const form = document.getElementById('betaSignupForm');
+        if (form) form.reset();
+    } catch (err) {
+        if (statusEl) {
+            statusEl.className = "form-status-msg error";
+            statusEl.innerText = `⚠️ Transmission failed: ${err.message || 'Check your connection.'}`;
+        }
+        logToTerminal(`⚠️ [BETA SIGNUP ERROR] ${err.message}`);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "🚀 TRANSMIT BETA APPLICATION TO GOOGLE SHEETS";
+        }
     }
 }
 
@@ -1199,69 +1314,45 @@ function updateShardDisplay() {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function toggleGameEngineMode() {
-    if (GameEngine.toggleState === "AUTO") GameEngine.setToggle("ON");
-    else if (GameEngine.toggleState === "ON") GameEngine.setToggle("OFF");
-    else GameEngine.setToggle("AUTO");
-}
-
-function initializeOperative() {
-    const playerId = document.getElementById('player-id').value;
-    const clearanceDate = document.getElementById('player-birthday').value;
-    if (!playerId || !clearanceDate) { alert("Please provide handle and clearance timestamp."); return; }
-
-    const date = new Date(clearanceDate);
-    const hiddenVector = computeHiddenTemporalAnchor(date.getMonth() + 1, date.getDate());
-    const anchorEl = document.getElementById('anchor-display');
-    if (anchorEl) anchorEl.innerText = hiddenVector.code;
-
-    updateShardDisplay();
-    document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('mode-tabs').classList.remove('hidden');
-    
-    // Always land on pre-duel selection screen first
-    switchAppMode("DUEL");
-
-    logToTerminal(`[AUTH] Operative Link Established: ${playerId}`);
-    logToTerminal(`[SYSTEM] Synaptic Anchor Calibrated: ${hiddenVector.code}`);
-    syncWithBackend({ player_id: playerId, zodiac: hiddenVector.raw, anchor_code: hiddenVector.code, action: 'initialize' });
-}
-
-function computeHiddenTemporalAnchor(month, day) {
-    let raw = "Capricorn", code = "SYN-CAP-10";
-    if ((month==1&&day>=20)||(month==2&&day<=18))  { raw="Aquarius";    code="SYN-AQU-11"; }
-    else if ((month==2&&day>=19)||(month==3&&day<=20)) { raw="Pisces";  code="SYN-PSC-12"; }
-    else if ((month==3&&day>=21)||(month==4&&day<=19)) { raw="Aries";   code="SYN-ARI-01"; }
-    else if ((month==4&&day>=20)||(month==5&&day<=20)) { raw="Taurus";  code="SYN-TAU-02"; }
-    else if ((month==5&&day>=21)||(month==6&&day<=20)) { raw="Gemini";  code="SYN-GEM-03"; }
-    else if ((month==6&&day>=21)||(month==7&&day<=22)) { raw="Cancer";  code="SYN-CAN-04"; }
-    else if ((month==7&&day>=23)||(month==8&&day<=22)) { raw="Leo";     code="SYN-LEO-05"; }
-    else if ((month==8&&day>=23)||(month==9&&day<=22)) { raw="Virgo";   code="SYN-VIR-06"; }
-    else if ((month==9&&day>=23)||(month==10&&day<=22)){ raw="Libra";   code="SYN-LIB-07"; }
-    else if ((month==10&&day>=23)||(month==11&&day<=21)){ raw="Scorpio";code="SYN-SCO-08"; }
-    else if ((month==11&&day>=22)||(month==12&&day<=21)){ raw="Sagittarius"; code="SYN-SAG-09"; }
-    return { raw, code };
-}
-
-async function executeTacticalAction() {
-    if (GameEngine.isExecuting) return;
-    GameEngine.isExecuting = true;
-    const actionBtn = document.getElementById('action-btn');
-    if (actionBtn) { actionBtn.disabled = true; actionBtn.innerText = "⚡ Resolving..."; }
-
-    const roll = Math.floor(Math.random() * 20) + 1;
-    const card = allCardsPool[Math.floor(Math.random() * allCardsPool.length)] || allCardsPool[0];
-    logToTerminal(`🎲 [INCURSION] d20 → ${roll} + 3 = ${roll+3}. Vault breached!`);
-    await sleep(350);
-    await GameEngine.triggerEvent("VAULT_BREACH", card);
-    syncWithBackend({ action: 'vault_breach', card: card.name, result: roll + 3 });
-
-    if (actionBtn) { actionBtn.disabled = false; actionBtn.innerText = "Simulate Incursion Action (Vault Breach)"; }
-    GameEngine.isExecuting = false;
-}
-
 function syncWithBackend(payload) {
-    if (APPS_SCRIPT_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) return;
-    fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
-        .catch(err => console.error("Sync error:", err));
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) return;
+    fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+    }).catch(err => console.error("Sync error:", err));
 }
+
+// Explicit global exports for HTML button handlers
+window.enterStage1Demo = enterStage1Demo;
+window.enterBetaSignup = enterBetaSignup;
+window.switchAppMode = switchAppMode;
+window.submitBetaTesterForm = submitBetaTesterForm;
+window.DuelEngine = DuelEngine;
+
+// Wire up event listeners
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWelcomeButtons);
+} else {
+    initWelcomeButtons();
+}
+
+function initWelcomeButtons() {
+    const btnEnter = document.getElementById('btn-welcome-enter');
+    const btnBeta = document.getElementById('btn-welcome-beta');
+    if (btnEnter) {
+        btnEnter.addEventListener('click', (e) => {
+            e.preventDefault();
+            enterStage1Demo();
+        });
+    }
+    if (btnBeta) {
+        btnBeta.addEventListener('click', (e) => {
+            e.preventDefault();
+            enterBetaSignup();
+        });
+    }
+}
+
+

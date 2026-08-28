@@ -3,9 +3,10 @@
  * Seraphim Unbound / HeavenlyBound - Google Apps Script Database Bridge
  * ============================================================================
  * Sheets:
- *   1. Pilgrims    -> [player_id, zodiac_sign, action_type, result, timestamp]
- *   2. Users       -> [GitHubID, Username, CreatedAt, ResourceCredits, BaseLevel, LastSeen]
- *   3. GameStates  -> [GitHubID, SaveDataJSON, LastUpdated, HighScore]
+ *   1. BetaTesters -> [timestamp, name, email, guildClass, birthDate, birthTime, phone]
+ *   2. Pilgrims    -> [player_id, zodiac_sign, action_type, result, timestamp]
+ *   3. Users       -> [GitHubID, Username, CreatedAt, ResourceCredits, BaseLevel, LastSeen]
+ *   4. GameStates  -> [GitHubID, SaveDataJSON, LastUpdated, HighScore]
  * 
  * Deployment: Deploy as Web App -> Execute as: Me -> Who has access: Anyone
  * ============================================================================
@@ -14,7 +15,16 @@
 function setupDatabase() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // 1. Ensure 'Pilgrims' sheet
+  // 1. Ensure 'BetaTesters' sheet (Matches Image 3 Column Schema)
+  var betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
+  if (!betaSheet || betaSheet.getLastRow() === 0) {
+    if (!betaSheet) betaSheet = ss.insertSheet("BetaTesters");
+    betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "birthTime", "phone"]);
+    betaSheet.getRange("A1:G1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
+    betaSheet.setFrozenRows(1);
+  }
+
+  // 2. Ensure 'Pilgrims' sheet
   var pilgrimsSheet = ss.getSheetByName("Pilgrims");
   if (!pilgrimsSheet) {
     pilgrimsSheet = ss.insertSheet("Pilgrims");
@@ -23,7 +33,7 @@ function setupDatabase() {
     pilgrimsSheet.setFrozenRows(1);
   }
 
-  // 2. Ensure 'Users' sheet
+  // 3. Ensure 'Users' sheet
   var usersSheet = ss.getSheetByName("Users");
   if (!usersSheet) {
     usersSheet = ss.insertSheet("Users");
@@ -32,7 +42,7 @@ function setupDatabase() {
     usersSheet.setFrozenRows(1);
   }
 
-  // 3. Ensure 'GameStates' sheet
+  // 4. Ensure 'GameStates' sheet
   var statesSheet = ss.getSheetByName("GameStates");
   if (!statesSheet) {
     statesSheet = ss.insertSheet("GameStates");
@@ -45,7 +55,7 @@ function setupDatabase() {
 }
 
 /**
- * Handle GET requests (Health check, Ping, Get Pilgrims, etc.)
+ * Handle GET requests (Health check, Ping, Get Beta Testers, Get Pilgrims)
  */
 function doGet(e) {
   var params = e ? e.parameter : {};
@@ -56,10 +66,28 @@ function doGet(e) {
     if (action === "ping") {
       return jsonResponse({
         status: "success",
-        system: "Seraphim Unbound Core API",
+        system: "HeavenlyBound Core API",
         timestamp: new Date().toISOString(),
-        message: "Pilgrim Tactical Protocol Operational."
+        message: "Pilgrim Tactical Protocol & Beta Portal Operational."
       });
+    }
+
+    if (action === "getBetaTesters") {
+      var sheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
+      var data = sheet.getDataRange().getValues();
+      var testers = [];
+      for (var i = 1; i < data.length; i++) {
+        testers.push({
+          timestamp: data[i][0],
+          name: data[i][1],
+          email: data[i][2],
+          guildClass: data[i][3],
+          birthDate: data[i][4],
+          birthTime: data[i][5],
+          phone: data[i][6]
+        });
+      }
+      return jsonResponse({ status: "success", count: testers.length, testers: testers });
     }
 
     if (action === "getPilgrims") {
@@ -86,7 +114,7 @@ function doGet(e) {
 }
 
 /**
- * Handle POST requests (Pilgrim Sync, Vault Breach, State Saves)
+ * Handle POST requests (Beta Tester Registration, Pilgrim Sync, State Saves)
  */
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -110,13 +138,47 @@ function doPost(e) {
       payload = e.parameter;
     }
 
+    var ts = payload.timestamp || new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+
+    // Check if this is a Beta Tester Sign-up (name + email or guildClass)
+    if (payload.email || payload.name || payload.guildClass || payload.birthDate || payload.action === "beta_signup") {
+      var betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
+      if (!betaSheet) {
+        setupDatabase();
+        betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
+      }
+
+      // Check header row
+      if (betaSheet.getLastRow() === 0) {
+        betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "birthTime", "phone"]);
+      }
+
+      // Append row matching exact schema: [timestamp, name, email, guildClass, birthDate, birthTime, phone]
+      betaSheet.appendRow([
+        ts,
+        payload.name || payload.fullName || "Operative",
+        payload.email || "",
+        payload.guildClass || payload.class || payload.archetype || "Tactical Operative",
+        payload.birthDate || payload.birthdate || "",
+        payload.birthTime || payload.birthtime || "",
+        payload.phone || payload.phoneNumber || ""
+      ]);
+
+      return jsonResponse({
+        result: "success",
+        status: "success",
+        message: "Beta tester registration recorded successfully.",
+        timestamp: ts
+      });
+    }
+
+    // Default Pilgrim action logging
     var sheet = ss.getSheetByName("Pilgrims");
     if (!sheet) {
       setupDatabase();
       sheet = ss.getSheetByName("Pilgrims");
     }
 
-    // Append to Pilgrims Table
     sheet.appendRow([
       payload.player_id || payload.playerId || "Anonymous",
       payload.zodiac || payload.zodiac_sign || "N/A",
@@ -125,7 +187,7 @@ function doPost(e) {
       new Date().toISOString()
     ]);
 
-    var response = { status: "success", shards: 120, timestamp: new Date().toISOString() };
+    var response = { result: "success", status: "success", shards: 120, timestamp: new Date().toISOString() };
     return jsonResponse(response);
 
   } catch (err) {
@@ -141,6 +203,6 @@ function jsonResponse(data) {
 }
 
 function jsonError(msg) {
-  return ContentService.createTextOutput(JSON.stringify({ status: "error", error: msg }))
+  return ContentService.createTextOutput(JSON.stringify({ result: "error", status: "error", error: msg }))
     .setMimeType(ContentService.MimeType.JSON);
 }
