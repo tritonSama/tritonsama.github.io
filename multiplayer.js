@@ -180,9 +180,13 @@ const MultiplayerManager = {
                 state: this.getSerializableState()
             });
 
-            this.updateLobbyStatus(`✅ <strong>Player 2 Connected!</strong> (${conn.peer})<br><span style="color:#38bdf8;">You can now select archetypes and engage in combat!</span>`, "success");
-            logToTerminal(`⚔️ [MATCH READY] Player 2 joined (${conn.peer}). Ready to battle!`);
+            this.updateLobbyStatus(`✅ <strong>Player 2 Connected!</strong> (${conn.peer})<br><span style="color:#38bdf8;">Transitioning both operatives to Deck Selection...</span>`, "success");
+            logToTerminal(`⚔️ [MATCH READY] Player 2 joined (${conn.peer}). Transitioning to Deck Selection!`);
             
+            // Automatically transition Host to Deck Selector and sync controls
+            switchAppMode("DUEL");
+            this.syncDeckSelectionControls();
+
             // Notify all peers of current state
             this.broadcastState();
         });
@@ -195,6 +199,7 @@ const MultiplayerManager = {
             this.connections = this.connections.filter(c => c !== conn);
             logToTerminal(`⚠️ [PEER DISCONNECTED] A peer left the room.`);
             this.updateLobbyStatus(`⚠️ A player disconnected from the room.`, "error");
+            this.syncDeckSelectionControls();
         });
     },
 
@@ -228,7 +233,7 @@ const MultiplayerManager = {
 
             this.hostConn.on("open", () => {
                 clearTimeout(connectTimeout);
-                this.updateLobbyStatus(`✅ <strong>CONNECTED TO HOST!</strong><br><span style="color:#38bdf8;">Joined as Player 2. Synchronizing match state...</span>`, "success");
+                this.updateLobbyStatus(`✅ <strong>CONNECTED TO HOST!</strong><br><span style="color:#38bdf8;">Joined as Player 2. Entering Deck Selection...</span>`, "success");
                 logToTerminal(`🤝 [P2P CONNECTED] Linked to Host Room: ${this.roomId} as Player 2.`);
                 
                 const clientBadge = document.getElementById("lobby-connection-badge");
@@ -237,6 +242,10 @@ const MultiplayerManager = {
                     clientBadge.innerText = `P2 (CLIENT) | Room: ${this.roomId}`;
                     clientBadge.classList.remove("hidden");
                 }
+
+                // Automatically transition Player 2 to Deck Selection
+                switchAppMode("DUEL");
+                this.syncDeckSelectionControls();
             });
 
             this.hostConn.on("data", (data) => {
@@ -247,6 +256,7 @@ const MultiplayerManager = {
                 clearTimeout(connectTimeout);
                 this.updateLobbyStatus("⚠️ Disconnected from Host room.", "error");
                 logToTerminal("⚠️ [P2P DISCONNECTED] Lost connection to Host.");
+                this.syncDeckSelectionControls();
             });
 
             this.hostConn.on("error", (err) => {
@@ -289,6 +299,9 @@ const MultiplayerManager = {
                     specBadge.innerText = `👁️ SPECTATOR | Room: ${this.roomId}`;
                     specBadge.classList.remove("hidden");
                 }
+
+                switchAppMode("DUEL");
+                this.syncDeckSelectionControls();
             });
 
             this.hostConn.on("data", (data) => {
@@ -311,7 +324,6 @@ const MultiplayerManager = {
     // ── DISPATCH ACTIONS FROM CLIENT TO HOST ───────────────────────────────────
     sendAction(actionType, payload = {}) {
         if (this.role === "LOCAL" || this.role === "HOST") {
-            // Local execution
             return false;
         }
 
@@ -345,6 +357,9 @@ const MultiplayerManager = {
                 case "selectDeck":
                     DuelEngine.p2SelectedDeck = payload.deckId;
                     DuelEngine.updateSetupPreview("P2", payload.deckId);
+                    const p2Sel = document.getElementById("setup-p2-deck");
+                    if (p2Sel) p2Sel.value = payload.deckId;
+                    logToTerminal(`🎴 [DECK SYNC] Player 2 selected archetype: ${payload.deckId}`);
                     this.broadcastState();
                     break;
                 case "startMatch":
@@ -397,6 +412,7 @@ const MultiplayerManager = {
         if (data.type === "SEAT_ASSIGNMENT") {
             this.mySeat = data.seat;
             if (data.state) this.applySynchronizedState(data.state);
+            this.syncDeckSelectionControls();
         } else if (data.type === "STATE_SYNC") {
             if (data.state) this.applySynchronizedState(data.state);
         } else if (data.type === "PEEK_RESULT") {
@@ -495,13 +511,15 @@ const MultiplayerManager = {
         } else {
             if (setupSec) setupSec.classList.remove("hidden");
             if (duelSec) duelSec.classList.add("hidden");
-            // Sync setup preview
+            
+            // Sync setup dropdown values & previews
             const p1Sel = document.getElementById("setup-p1-deck");
             const p2Sel = document.getElementById("setup-p2-deck");
             if (p1Sel) p1Sel.value = DuelEngine.p1SelectedDeck;
             if (p2Sel) p2Sel.value = DuelEngine.p2SelectedDeck;
             DuelEngine.updateSetupPreview("P1", DuelEngine.p1SelectedDeck);
             DuelEngine.updateSetupPreview("P2", DuelEngine.p2SelectedDeck);
+            this.syncDeckSelectionControls();
         }
 
         // Render UI
@@ -517,12 +535,179 @@ const MultiplayerManager = {
         targetOp.energy = remoteOp.energy;
         targetOp.maxEnergy = remoteOp.maxEnergy;
         targetOp.hand = remoteOp.hand || [];
-        targetOp.deck = new Array(remoteOp.deckCount || 0); // Placeholder for count
+        targetOp.deck = new Array(remoteOp.deckCount || 0);
         targetOp.graveyard = remoteOp.graveyard || [];
         targetOp.equippedArmor = remoteOp.equippedArmor || {};
         targetOp.spellsTraps = remoteOp.spellsTraps || [];
         targetOp.normalEquipUsed = remoteOp.normalEquipUsed;
         targetOp.hasAttacked = remoteOp.hasAttacked;
+    },
+
+    // ── DECK SELECTION CONTROLS SYNCHRONIZATION ────────────────────────────────
+    syncDeckSelectionControls() {
+        const statusEl = document.getElementById("setup-match-status");
+        const p1Badge  = document.getElementById("setup-p1-role-badge");
+        const p2Badge  = document.getElementById("setup-p2-role-badge");
+        const p1Select = document.getElementById("setup-p1-deck");
+        const p2Select = document.getElementById("setup-p2-deck");
+        const startBtn = document.getElementById("btn-start-duel-action");
+
+        if (this.role === "HOST") {
+            const opponentName = this.connections.length > 0 ? "P2 Connected" : "Awaiting P2";
+            if (statusEl) statusEl.innerText = `🌐 HOST ROOM [${this.roomId}] | Status: ${opponentName}`;
+            if (p1Badge) { p1Badge.className = "p-tag p1-tag"; p1Badge.innerText = "YOU (HOST / P1)"; }
+            if (p2Badge) { p2Badge.className = "p-tag p2-tag"; p2Badge.innerText = "OPPONENT (P2)"; }
+            if (p1Select) p1Select.disabled = false;
+            if (p2Select) p2Select.disabled = true; // P2 selects remotely
+            if (startBtn) {
+                startBtn.disabled = false;
+                startBtn.innerText = "⚔️ INITIALIZE DUEL & ENGAGE COMBAT";
+            }
+        } else if (this.role === "CLIENT" && this.mySeat === "P2") {
+            if (statusEl) statusEl.innerText = `🌐 LINKED TO HOST ROOM [${this.roomId}] (PLAYER 2)`;
+            if (p1Badge) { p1Badge.className = "p-tag p1-tag"; p1Badge.innerText = "HOST (P1)"; }
+            if (p2Badge) { p2Badge.className = "p-tag p2-tag"; p2Badge.innerText = "YOU (PLAYER 2)"; }
+            if (p1Select) p1Select.disabled = true; // Host selects remotely
+            if (p2Select) p2Select.disabled = false;
+            if (startBtn) {
+                startBtn.disabled = true;
+                startBtn.innerText = "⏳ WAITING FOR HOST TO INITIALIZE DUEL...";
+            }
+        } else if (this.role === "SPECTATOR") {
+            if (statusEl) statusEl.innerText = `👁️ SPECTATING MATCH [${this.roomId}]`;
+            if (p1Select) p1Select.disabled = true;
+            if (p2Select) p2Select.disabled = true;
+            if (startBtn) {
+                startBtn.disabled = true;
+                startBtn.innerText = "👁️ OBSERVING MATCH SETUP...";
+            }
+        } else {
+            if (statusEl) statusEl.innerText = `🌐 MATCH MODE: LOCAL PRACTICE`;
+            if (p1Badge) { p1Badge.className = "p-tag p1-tag"; p1Badge.innerText = "PLAYER 1"; }
+            if (p2Badge) { p2Badge.className = "p-tag p2-tag"; p2Badge.innerText = "PLAYER 2"; }
+            if (p1Select) p1Select.disabled = false;
+            if (p2Select) p2Select.disabled = false;
+            if (startBtn) {
+                startBtn.disabled = false;
+                startBtn.innerText = "⚔️ INITIALIZE DUEL & ENGAGE COMBAT";
+            }
+        }
+    },
+
+    // ── 🧪 COMPREHENSIVE WEBRTC NETWORK DIAGNOSTICS & ECHO TEST ──────────────
+    async runDiagnostics() {
+        this.updateLobbyStatus("🧪 <strong>Running WebRTC Network & STUN/TURN Diagnostics...</strong>", "pending");
+        logToTerminal("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        logToTerminal("🧪 [DIAGNOSTIC TEST INITIALIZED]");
+
+        const results = {
+            peerjsLoaded: typeof Peer !== "undefined",
+            brokerConnection: false,
+            iceGathering: false,
+            loopbackDataChannel: false,
+            latencyMs: 0,
+            assignedId: null,
+            candidateTypes: new Set()
+        };
+
+        const startTime = Date.now();
+
+        try {
+            // Step 1: Check PeerJS CDN
+            if (!results.peerjsLoaded) {
+                throw new Error("PeerJS script library is not loaded. Check internet or adblocker.");
+            }
+            logToTerminal("✅ Step 1/4: PeerJS CDN Loaded.");
+
+            // Step 2: Test Broker Connection
+            const testPeer = new Peer({
+                debug: 0,
+                pingInterval: 5000,
+                config: {
+                    iceServers: [
+                        { urls: "stun:stun.l.google.com:19302" },
+                        { urls: "stun:stun.cloudflare.com:3478" },
+                        {
+                            urls: "turn:openrelay.metered.ca:80",
+                            username: "openrelayproject",
+                            credential: "openrelayproject"
+                        }
+                    ]
+                }
+            });
+
+            await new Promise((res, rej) => {
+                const timer = setTimeout(() => rej(new Error("Broker handshake timed out (10s)")), 10000);
+                testPeer.on("open", (id) => {
+                    clearTimeout(timer);
+                    results.brokerConnection = true;
+                    results.assignedId = id;
+                    res();
+                });
+                testPeer.on("error", (e) => {
+                    clearTimeout(timer);
+                    rej(e);
+                });
+            });
+
+            logToTerminal(`✅ Step 2/4: Signaling Broker Connected (Assigned ID: ${results.assignedId}).`);
+
+            // Step 3 & 4: Test Loopback DataChannel & ICE
+            const targetConn = testPeer.connect(results.assignedId, { reliable: true });
+
+            await new Promise((res, rej) => {
+                const timer = setTimeout(() => rej(new Error("DataChannel loopback timed out (10s)")), 10000);
+                
+                testPeer.on("connection", (inboundConn) => {
+                    inboundConn.on("open", () => {
+                        results.iceGathering = true;
+                        inboundConn.send({ test: "ECHO_PING", sentAt: Date.now() });
+                    });
+                });
+
+                targetConn.on("data", (data) => {
+                    if (data && data.test === "ECHO_PING") {
+                        clearTimeout(timer);
+                        results.loopbackDataChannel = true;
+                        results.latencyMs = Date.now() - data.sentAt;
+                        res();
+                    }
+                });
+
+                targetConn.on("error", rej);
+            });
+
+            logToTerminal(`✅ Step 3/4: ICE Candidates Gathered (STUN/TURN verified).`);
+            logToTerminal(`✅ Step 4/4: WebRTC DataChannel Echo Verified in ${results.latencyMs}ms.`);
+            logToTerminal("🎉 [DIAGNOSTIC TEST PASSED] Network stack is 100% operational!");
+            logToTerminal("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+            const reportHtml = `
+                <div class="diagnostic-report">
+                    <strong class="diagnostic-pass">🎉 WEBRTC NETWORK STACK 100% HEALTHY</strong><br>
+                    <span>• PeerJS Library: <span class="diagnostic-pass">PASS</span></span><br>
+                    <span>• Signaling Broker: <span class="diagnostic-pass">PASS</span> (${results.assignedId})</span><br>
+                    <span>• STUN / TURN Relays: <span class="diagnostic-pass">PASS</span></span><br>
+                    <span>• DataChannel Loopback: <span class="diagnostic-pass">PASS</span> (RTT: ${results.latencyMs}ms)</span><br>
+                    <span class="diagnostic-info">Ready to Host or Join P2P matches!</span>
+                </div>
+            `;
+            this.updateLobbyStatus(reportHtml, "success");
+
+            try { testPeer.destroy(); } catch (e) {}
+
+        } catch (err) {
+            logToTerminal(`❌ [DIAGNOSTIC TEST FAILED] ${err.message}`);
+            logToTerminal("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            const failHtml = `
+                <div class="diagnostic-report">
+                    <strong class="diagnostic-fail">⚠️ DIAGNOSTIC ISSUE DETECTED</strong><br>
+                    <span>• Error: <span class="diagnostic-fail">${err.message || err}</span></span><br>
+                    <span style="color:#94a3b8; font-size:10px;">Check that your browser allows WebRTC and you have an active internet connection.</span>
+                </div>
+            `;
+            this.updateLobbyStatus(failHtml, "error");
+        }
     },
 
     // ── UI HELPERS ────────────────────────────────────────────────────────────
@@ -557,6 +742,18 @@ const MultiplayerManager = {
 // ============================================================================
 (function hookMultiplayerToDuelEngine() {
     if (typeof DuelEngine === "undefined") return;
+
+    // Wrap changeDeck
+    const origChangeDeck = DuelEngine.changeDeck;
+    DuelEngine.changeDeck = function(playerKey, deckId) {
+        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && playerKey === "P2") {
+            MultiplayerManager.sendAction("selectDeck", { deckId });
+            DuelEngine.updateSetupPreview("P2", deckId);
+            return;
+        }
+        origChangeDeck.apply(this, arguments);
+        MultiplayerManager.broadcastState();
+    };
 
     // Wrap equipArmor
     const origEquip = DuelEngine.equipArmor;

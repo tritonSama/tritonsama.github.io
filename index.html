@@ -113,6 +113,7 @@
                     <h3>4. Local Practice Arena</h3>
                     <p>Test archetypes, combos, and armor configurations locally on a single device without networking.</p>
                     <button type="button" class="btn-sm btn-action" style="width:100%; margin-top:auto; padding:10px;" onclick="MultiplayerManager.role='LOCAL'; switchAppMode('DUEL')">🤖 Launch Local Practice</button>
+                    <button type="button" id="btn-run-diagnostics" class="btn-sm btn-phase" style="width:100%; margin-top:6px; padding:7px; font-size:11px;" onclick="MultiplayerManager.runDiagnostics()">🧪 Run WebRTC Network Diagnostic Test</button>
                 </div>
             </div>
         </section>
@@ -124,14 +125,18 @@
             <div class="setup-header">
                 <h2>⚡ OPERATIVE TACTICAL DECK SELECTION</h2>
                 <p>Configure archetypes and loadout profiles before entering the combat grid.</p>
+                <div id="setup-match-status" class="setup-status-banner">🌐 MATCH MODE: LOCAL PRACTICE</div>
             </div>
 
             <div class="pre-duel-grid">
                 <!-- P1 Configuration Card -->
                 <div class="setup-player-card p1-setup-border">
-                    <div class="setup-card-title">🔱 OPERATIVE 1 (ALPHA)</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <div class="setup-card-title">🔱 OPERATIVE 1 (ALPHA)</div>
+                        <span id="setup-p1-role-badge" class="p-tag p1-tag">PLAYER 1</span>
+                    </div>
                     <label for="setup-p1-deck">Select Combat Archetype:</label>
-                    <select id="setup-p1-deck" onchange="DuelEngine.updateSetupPreview('P1', this.value)">
+                    <select id="setup-p1-deck" onchange="DuelEngine.changeDeck('P1', this.value)">
                         <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
                         <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
                         <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
@@ -147,9 +152,12 @@
 
                 <!-- P2 Configuration Card -->
                 <div class="setup-player-card p2-setup-border">
-                    <div class="setup-card-title">🔥 OPERATIVE 2 (OMEGA)</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <div class="setup-card-title">🔥 OPERATIVE 2 (OMEGA)</div>
+                        <span id="setup-p2-role-badge" class="p-tag p2-tag">PLAYER 2</span>
+                    </div>
                     <label for="setup-p2-deck">Select Combat Archetype:</label>
-                    <select id="setup-p2-deck" onchange="DuelEngine.updateSetupPreview('P2', this.value)">
+                    <select id="setup-p2-deck" onchange="DuelEngine.changeDeck('P2', this.value)">
                         <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
                         <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
                         <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
@@ -165,7 +173,7 @@
             </div>
 
             <div class="setup-action-row">
-                <button class="btn-start-duel" onclick="DuelEngine.startConfiguredMatch()">⚔️ INITIALIZE DUEL & ENGAGE COMBAT</button>
+                <button type="button" id="btn-start-duel-action" class="btn-start-duel" onclick="DuelEngine.startConfiguredMatch()">⚔️ INITIALIZE DUEL & ENGAGE COMBAT</button>
             </div>
         </section>
 

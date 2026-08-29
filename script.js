@@ -196,6 +196,10 @@ const DuelEngine = {
         this.updateSetupPreview('P1', this.p1SelectedDeck);
         this.updateSetupPreview('P2', this.p2SelectedDeck);
 
+        if (window.MultiplayerManager && typeof window.MultiplayerManager.syncDeckSelectionControls === 'function') {
+            window.MultiplayerManager.syncDeckSelectionControls();
+        }
+
         logToTerminal(`⚙️ [PRE-DUEL SETUP] Choose P1 and P2 archetypes before engaging.`);
     },
 
