@@ -171,13 +171,14 @@ const MultiplayerManager = {
             logToTerminal(`🤝 [PEER CONNECTED] Incoming connection: ${conn.peer}`);
 
             // First peer is P2, others are spectators
-            const assignedRole = this.connections.length === 1 ? "P2" : "SPEC";
+            const assignedRole = this.connections.indexOf(conn) === 0 ? "P2" : "SPEC";
+            conn.assignedSeat = assignedRole;
             
             conn.send({
                 type: "SEAT_ASSIGNMENT",
                 seat: assignedRole,
                 roomId: this.roomId,
-                state: this.getSerializableState()
+                state: this.getSanitizedStateForSeat(assignedRole)
             });
 
             this.updateLobbyStatus(`✅ <strong>Player 2 Connected!</strong> (${conn.peer})<br><span style="color:#38bdf8;">Transitioning both operatives to Deck Selection...</span>`, "success");
@@ -393,9 +394,17 @@ const MultiplayerManager = {
                     DuelEngine.startEndPhase();
                     break;
                 case "peekFaceDown":
-                    const peekData = DuelEngine.peekFaceDown(playerKey, payload.fieldIndex);
-                    if (peekData) {
-                        conn.send({ type: "PEEK_RESULT", card: peekData });
+                    // Authoritative peek: only send face-down data back to the actual owner
+                    if (playerKey === "P2" && DuelEngine.p2.spellsTraps[payload.fieldIndex]) {
+                        const slot = DuelEngine.p2.spellsTraps[payload.fieldIndex];
+                        if (slot && slot.isSet) {
+                            conn.send({
+                                type: "PEEK_RESULT",
+                                card: slot.card,
+                                fieldIndex: payload.fieldIndex,
+                                playerKey: "P2"
+                            });
+                        }
                     }
                     break;
                 default:
@@ -418,12 +427,16 @@ const MultiplayerManager = {
         } else if (data.type === "PEEK_RESULT") {
             if (data.card) {
                 logToTerminal(`👁️ [PEEK TELEMETRY] You inspected: [${data.card.name}] (${data.card.type}) - ${data.card.resolution_payload}`);
+                DuelEngine.openCardInspector(data.card, `👁️ YOUR FACE-DOWN CARD • ${data.playerKey || 'P2'}`);
             }
         }
     },
 
-    // ── STATE SERIALIZATION & BROADCAST (HOST) ─────────────────────────────────
-    getSerializableState() {
+    // ── STRICT SECURITY / FOG-OF-WAR STATE SERIALIZATION ───────────────────────
+    getSanitizedStateForSeat(targetSeat) {
+        const isP2 = targetSeat === "P2";
+        const isHost = targetSeat === "P1";
+
         return {
             isDuelActive: DuelEngine.isDuelActive,
             activeTurn: DuelEngine.activeTurn,
@@ -436,13 +449,43 @@ const MultiplayerManager = {
             pendingAttack: DuelEngine.pendingAttack,
             p1SelectedDeck: DuelEngine.p1SelectedDeck,
             p2SelectedDeck: DuelEngine.p2SelectedDeck,
-            p1: this.serializeOperative(DuelEngine.p1),
-            p2: this.serializeOperative(DuelEngine.p2)
+            // P1 hand and face-downs are ONLY unmasked for Host (P1)
+            p1: this.serializeOperative(DuelEngine.p1, isHost),
+            // P2 hand and face-downs are ONLY unmasked for Client (P2)
+            p2: this.serializeOperative(DuelEngine.p2, isP2)
         };
     },
 
-    serializeOperative(op) {
+    serializeOperative(op, isOwner) {
         if (!op) return null;
+
+        // Security: Mask opponent hand completely on the wire
+        const handData = isOwner
+            ? (op.hand || [])
+            : (op.hand || []).map((_, i) => ({
+                isClassified: true,
+                id: `classified-hand-${i}`,
+                name: "Classified Hand Card",
+                type: "Classified",
+                resolution_payload: "[CLASSIFIED INTEL - OPPONENT HAND]"
+            }));
+
+        // Security: Mask face-down trap cards on the wire if not owner
+        const spellsTrapsData = (op.spellsTraps || []).map((st) => {
+            if (st.isSet && !isOwner) {
+                return {
+                    isSet: true,
+                    card: {
+                        isClassified: true,
+                        name: "Face-Down Card",
+                        type: "Set Spell/Trap",
+                        resolution_payload: "[CLASSIFIED INTEL - FACE-DOWN CARD]"
+                    }
+                };
+            }
+            return st;
+        });
+
         return {
             id: op.id,
             name: op.name,
@@ -453,11 +496,11 @@ const MultiplayerManager = {
             baseDef: op.baseDef,
             energy: op.energy,
             maxEnergy: op.maxEnergy,
-            hand: op.hand || [],
+            hand: handData,
             deckCount: (op.deck && op.deck.length) || 0,
             graveyard: op.graveyard || [],
-            equippedArmor: op.equippedArmor || {},
-            spellsTraps: op.spellsTraps || [],
+            equippedArmor: op.equippedArmor || {}, // Public on the grid
+            spellsTraps: spellsTrapsData,
             normalEquipUsed: op.normalEquipUsed,
             hasAttacked: op.hasAttacked,
             totalAtk: op.totalAtk,
@@ -468,10 +511,11 @@ const MultiplayerManager = {
 
     broadcastState() {
         if (this.role !== "HOST" || this.connections.length === 0) return;
-        const state = this.getSerializableState();
         this.connections.forEach(conn => {
             if (conn.open) {
-                conn.send({ type: "STATE_SYNC", state });
+                const targetSeat = conn.assignedSeat || "P2";
+                const sanitizedState = this.getSanitizedStateForSeat(targetSeat);
+                conn.send({ type: "STATE_SYNC", state: sanitizedState });
             }
         });
     },
