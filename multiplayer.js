@@ -27,9 +27,14 @@ const MultiplayerManager = {
     // ── INITIALIZE PEER ───────────────────────────────────────────────────────
     initPeer(customId = null) {
         return new Promise((resolve, reject) => {
-            if (this.peer && !this.peer.destroyed) {
+            // If existing peer is active and open, reuse it
+            if (this.peer && !this.peer.destroyed && !this.peer.disconnected) {
                 resolve(this.peer);
                 return;
+            }
+
+            if (this.peer && !this.peer.destroyed) {
+                try { this.peer.destroy(); } catch (e) {}
             }
 
             if (typeof Peer === "undefined") {
@@ -38,30 +43,75 @@ const MultiplayerManager = {
                 return;
             }
 
-            const id = customId || this.generateRoomId();
-            this.peer = new Peer(id, {
+            // Enhanced STUN + Free Metered TURN Relays for mobile/NAT compatibility
+            const peerOptions = {
                 debug: 1,
                 config: {
                     iceServers: [
                         { urls: "stun:stun.l.google.com:19302" },
-                        { urls: "stun:global.stun.twilio.com:3478" }
+                        { urls: "stun:stun1.l.google.com:19302" },
+                        { urls: "stun:stun2.l.google.com:19302" },
+                        { urls: "stun:stun.cloudflare.com:3478" },
+                        { urls: "stun:global.stun.twilio.com:3478" },
+                        {
+                            urls: "turn:openrelay.metered.ca:80",
+                            username: "openrelayproject",
+                            credential: "openrelayproject"
+                        },
+                        {
+                            urls: "turn:openrelay.metered.ca:443",
+                            username: "openrelayproject",
+                            credential: "openrelayproject"
+                        },
+                        {
+                            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+                            username: "openrelayproject",
+                            credential: "openrelayproject"
+                        }
                     ]
                 }
-            });
+            };
+
+            // If customId provided (Host), use it. Otherwise, let PeerJS auto-generate client ID.
+            this.peer = customId ? new Peer(customId, peerOptions) : new Peer(peerOptions);
 
             this.peer.on("open", (assignedId) => {
-                this.roomId = assignedId;
+                if (this.role === "HOST") {
+                    this.roomId = assignedId;
+                }
                 resolve(this.peer);
             });
 
             this.peer.on("error", (err) => {
-                console.error("[Multiplayer] PeerJS Error:", err);
-                if (err.type === "unavailable-id") {
-                    // ID taken, retry with automatic ID
-                    this.peer.destroy();
-                    this.initPeer(null).then(resolve).catch(reject);
-                } else {
-                    this.updateLobbyStatus(`⚠️ Connection Error: ${err.message || err.type}`, "error");
+                console.warn("[Multiplayer] PeerJS Warning/Error:", err);
+                let friendlyMsg = "";
+                switch (err.type) {
+                    case "peer-unavailable":
+                        friendlyMsg = `⚠️ Host Room <strong>${this.roomId || ''}</strong> was not found. Please confirm the Room ID and ensure the Host is online.`;
+                        break;
+                    case "unavailable-id":
+                        friendlyMsg = "⚠️ Room ID is already taken. Generating a new unique room...";
+                        if (this.role === "HOST") {
+                            this.peer.destroy();
+                            this.initPeer(this.generateRoomId()).then(resolve).catch(reject);
+                            return;
+                        }
+                        break;
+                    case "webrtc":
+                        friendlyMsg = "⚠️ WebRTC NAT/Firewall handshake timed out. Retrying with TURN relay...";
+                        break;
+                    case "network":
+                        friendlyMsg = "⚠️ Lost connection to signaling broker. Check your internet connection.";
+                        break;
+                    case "disconnected":
+                        friendlyMsg = "⚠️ Disconnected from match server.";
+                        break;
+                    default:
+                        friendlyMsg = `⚠️ Connection notice: ${err.message || err.type || 'Handshake in progress'}`;
+                }
+                this.updateLobbyStatus(friendlyMsg, "error");
+                // Don't immediately reject if it's a recoverable WebRTC event
+                if (err.type !== "webrtc") {
                     reject(err);
                 }
             });
@@ -77,7 +127,8 @@ const MultiplayerManager = {
         this.updateLobbyStatus("⏳ Initializing WebRTC Host Room...", "pending");
 
         try {
-            await this.initPeer();
+            const desiredRoomId = this.generateRoomId();
+            await this.initPeer(desiredRoomId);
             this.updateLobbyStatus(`🎮 HOSTING ROOM: <strong>${this.roomId}</strong><br><span style="color:#94a3b8; font-size:11px;">Share Room ID with Player 2 or Spectators. Waiting for connection...</span>`, "success");
             
             // Show room code box
@@ -104,8 +155,8 @@ const MultiplayerManager = {
             });
 
         } catch (err) {
-            this.updateLobbyStatus(`⚠️ Failed to create host room: ${err.message}`, "error");
-            logToTerminal(`⚠️ [P2P ERROR] Host creation failed: ${err.message}`);
+            this.updateLobbyStatus(`⚠️ Failed to create host room: ${err.message || 'Check connection'}`, "error");
+            logToTerminal(`⚠️ [P2P ERROR] Host creation failed: ${err.message || err}`);
         }
     },
 
@@ -155,12 +206,19 @@ const MultiplayerManager = {
         this.updateLobbyStatus(`⏳ Connecting to Host Room <strong>${this.roomId}</strong>...`, "pending");
 
         try {
-            await this.initPeer();
+            await this.initPeer(null); // Anonymous peer ID for client
             logToTerminal(`📡 [P2P CLIENT] Connecting to Host [${this.roomId}]...`);
 
             this.hostConn = this.peer.connect(this.roomId, { reliable: true });
 
+            const connectTimeout = setTimeout(() => {
+                if (!this.hostConn || !this.hostConn.open) {
+                    this.updateLobbyStatus(`⚠️ Connection timeout reaching Host Room <strong>${this.roomId}</strong>.<br><span style="color:#cbd5e1; font-size:11px;">Make sure the host has generated the room and remains active in the Training Area.</span>`, "error");
+                }
+            }, 12000);
+
             this.hostConn.on("open", () => {
+                clearTimeout(connectTimeout);
                 this.updateLobbyStatus(`✅ <strong>CONNECTED TO HOST!</strong><br><span style="color:#38bdf8;">Joined as Player 2. Synchronizing match state...</span>`, "success");
                 logToTerminal(`🤝 [P2P CONNECTED] Linked to Host Room: ${this.roomId} as Player 2.`);
                 
@@ -177,17 +235,19 @@ const MultiplayerManager = {
             });
 
             this.hostConn.on("close", () => {
+                clearTimeout(connectTimeout);
                 this.updateLobbyStatus("⚠️ Disconnected from Host room.", "error");
                 logToTerminal("⚠️ [P2P DISCONNECTED] Lost connection to Host.");
             });
 
             this.hostConn.on("error", (err) => {
-                this.updateLobbyStatus(`⚠️ Connection error: ${err.message || err}`, "error");
+                clearTimeout(connectTimeout);
+                this.updateLobbyStatus(`⚠️ Connection notice: ${err.message || err.type || err}`, "error");
             });
 
         } catch (err) {
-            this.updateLobbyStatus(`⚠️ Could not connect to host: ${err.message}`, "error");
-            logToTerminal(`⚠️ [P2P ERROR] Join failed: ${err.message}`);
+            this.updateLobbyStatus(`⚠️ Could not connect to host: ${err.message || err}`, "error");
+            logToTerminal(`⚠️ [P2P ERROR] Join failed: ${err.message || err}`);
         }
     },
 
@@ -204,7 +264,7 @@ const MultiplayerManager = {
         this.updateLobbyStatus(`⏳ Connecting to Match <strong>${this.roomId}</strong> as Spectator...`, "pending");
 
         try {
-            await this.initPeer();
+            await this.initPeer(null);
             logToTerminal(`📡 [P2P SPECTATOR] Connecting to Match [${this.roomId}]...`);
 
             this.hostConn = this.peer.connect(this.roomId, { reliable: true });
@@ -230,8 +290,12 @@ const MultiplayerManager = {
                 this.updateLobbyStatus("⚠️ Match ended or Host disconnected.", "error");
             });
 
+            this.hostConn.on("error", (err) => {
+                this.updateLobbyStatus(`⚠️ Connection notice: ${err.message || err.type || err}`, "error");
+            });
+
         } catch (err) {
-            this.updateLobbyStatus(`⚠️ Could not spectate: ${err.message}`, "error");
+            this.updateLobbyStatus(`⚠️ Could not spectate: ${err.message || err}`, "error");
         }
     },
 
