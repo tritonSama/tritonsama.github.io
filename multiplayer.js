@@ -46,6 +46,7 @@ const MultiplayerManager = {
             // Enhanced STUN + Free Metered TURN Relays for mobile/NAT compatibility
             const peerOptions = {
                 debug: 1,
+                pingInterval: 5000,
                 config: {
                     iceServers: [
                         { urls: "stun:stun.l.google.com:19302" },
@@ -75,6 +76,13 @@ const MultiplayerManager = {
             // If customId provided (Host), use it. Otherwise, let PeerJS auto-generate client ID.
             this.peer = customId ? new Peer(customId, peerOptions) : new Peer(peerOptions);
 
+            // Hook connection handler immediately
+            this.peer.on("connection", (conn) => {
+                if (this.role === "HOST") {
+                    this.handleIncomingConnection(conn);
+                }
+            });
+
             this.peer.on("open", (assignedId) => {
                 if (this.role === "HOST") {
                     this.roomId = assignedId;
@@ -87,7 +95,7 @@ const MultiplayerManager = {
                 let friendlyMsg = "";
                 switch (err.type) {
                     case "peer-unavailable":
-                        friendlyMsg = `⚠️ Host Room <strong>${this.roomId || ''}</strong> was not found. Please confirm the Room ID and ensure the Host is online.`;
+                        friendlyMsg = `⚠️ Host Room <strong>${this.roomId || ''}</strong> was not found on the network.<br><span style="color:#94a3b8; font-size:11px;">Make sure the host generated the room and has the browser tab open.</span> <button type="button" class="btn-sm btn-phase" style="margin-top:6px;" onclick="MultiplayerManager.joinMatch('${this.roomId}')">🔄 Retry Connection</button>`;
                         break;
                     case "unavailable-id":
                         friendlyMsg = "⚠️ Room ID is already taken. Generating a new unique room...";
@@ -98,7 +106,7 @@ const MultiplayerManager = {
                         }
                         break;
                     case "webrtc":
-                        friendlyMsg = "⚠️ WebRTC NAT/Firewall handshake timed out. Retrying with TURN relay...";
+                        friendlyMsg = `⚠️ WebRTC connection negotiation in progress... <button type="button" class="btn-sm btn-phase" style="margin-top:6px;" onclick="MultiplayerManager.joinMatch('${this.roomId}')">🔄 Reconnect</button>`;
                         break;
                     case "network":
                         friendlyMsg = "⚠️ Lost connection to signaling broker. Check your internet connection.";
@@ -107,10 +115,9 @@ const MultiplayerManager = {
                         friendlyMsg = "⚠️ Disconnected from match server.";
                         break;
                     default:
-                        friendlyMsg = `⚠️ Connection notice: ${err.message || err.type || 'Handshake in progress'}`;
+                        friendlyMsg = `⚠️ Connection status: ${err.message || err.type || 'Negotiating link'}`;
                 }
                 this.updateLobbyStatus(friendlyMsg, "error");
-                // Don't immediately reject if it's a recoverable WebRTC event
                 if (err.type !== "webrtc") {
                     reject(err);
                 }
@@ -129,7 +136,7 @@ const MultiplayerManager = {
         try {
             const desiredRoomId = this.generateRoomId();
             await this.initPeer(desiredRoomId);
-            this.updateLobbyStatus(`🎮 HOSTING ROOM: <strong>${this.roomId}</strong><br><span style="color:#94a3b8; font-size:11px;">Share Room ID with Player 2 or Spectators. Waiting for connection...</span>`, "success");
+            this.updateLobbyStatus(`🎮 HOSTING ROOM: <strong>${this.roomId}</strong><br><span style="color:#38bdf8; font-size:11px;">Room is LIVE and broadcasting. Waiting for Player 2 to join...</span>`, "success");
             
             // Show room code box
             const codeBox = document.getElementById("lobby-room-code-display");
@@ -146,13 +153,8 @@ const MultiplayerManager = {
                 hostStatusBadge.classList.remove("hidden");
             }
 
-            logToTerminal(`📡 [P2P HOST CREATED] Room Code: ${this.roomId}`);
+            logToTerminal(`📡 [P2P HOST READY] Room Code: ${this.roomId}`);
             logToTerminal(`⏳ Awaiting Player 2 to join via WebRTC DataChannel...`);
-
-            // Listen for incoming peer connections
-            this.peer.on("connection", (conn) => {
-                this.handleIncomingConnection(conn);
-            });
 
         } catch (err) {
             this.updateLobbyStatus(`⚠️ Failed to create host room: ${err.message || 'Check connection'}`, "error");
@@ -162,7 +164,10 @@ const MultiplayerManager = {
 
     handleIncomingConnection(conn) {
         conn.on("open", () => {
-            this.connections.push(conn);
+            // Avoid duplicate connection entries
+            if (!this.connections.includes(conn)) {
+                this.connections.push(conn);
+            }
             logToTerminal(`🤝 [PEER CONNECTED] Incoming connection: ${conn.peer}`);
 
             // First peer is P2, others are spectators
@@ -203,19 +208,23 @@ const MultiplayerManager = {
         this.role = "CLIENT";
         this.mySeat = "P2";
         this.roomId = targetRoomId.trim().toUpperCase();
-        this.updateLobbyStatus(`⏳ Connecting to Host Room <strong>${this.roomId}</strong>...`, "pending");
+        this.updateLobbyStatus(`⏳ Connecting to Host Room <strong>${this.roomId}</strong> via WebRTC...`, "pending");
 
         try {
             await this.initPeer(null); // Anonymous peer ID for client
             logToTerminal(`📡 [P2P CLIENT] Connecting to Host [${this.roomId}]...`);
 
+            if (this.hostConn) {
+                try { this.hostConn.close(); } catch (e) {}
+            }
+
             this.hostConn = this.peer.connect(this.roomId, { reliable: true });
 
             const connectTimeout = setTimeout(() => {
                 if (!this.hostConn || !this.hostConn.open) {
-                    this.updateLobbyStatus(`⚠️ Connection timeout reaching Host Room <strong>${this.roomId}</strong>.<br><span style="color:#cbd5e1; font-size:11px;">Make sure the host has generated the room and remains active in the Training Area.</span>`, "error");
+                    this.updateLobbyStatus(`⚠️ Connection timeout reaching Host Room <strong>${this.roomId}</strong>.<br><span style="color:#cbd5e1; font-size:11px;">Make sure the host is currently in the Training Area with room <strong>${this.roomId}</strong> open.</span> <button type="button" class="btn-sm btn-phase" style="margin-top:6px;" onclick="MultiplayerManager.joinMatch('${this.roomId}')">🔄 Retry Connection</button>`, "error");
                 }
-            }, 12000);
+            }, 15000);
 
             this.hostConn.on("open", () => {
                 clearTimeout(connectTimeout);
@@ -242,7 +251,7 @@ const MultiplayerManager = {
 
             this.hostConn.on("error", (err) => {
                 clearTimeout(connectTimeout);
-                this.updateLobbyStatus(`⚠️ Connection notice: ${err.message || err.type || err}`, "error");
+                this.updateLobbyStatus(`⚠️ Connection notice: ${err.message || err.type || err} <button type="button" class="btn-sm btn-phase" style="margin-top:6px;" onclick="MultiplayerManager.joinMatch('${this.roomId}')">🔄 Retry</button>`, "error");
             });
 
         } catch (err) {
