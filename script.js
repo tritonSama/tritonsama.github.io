@@ -883,6 +883,80 @@ const DuelEngine = {
         this.renderDuelUI();
     },
 
+    // ── CARD & ABILITY INTEL INSPECTOR ───────────────────────────────────────
+    inspectArmor(playerKey, slot) {
+        const player = playerKey === "P1" ? this.p1 : this.p2;
+        const piece = player.equippedArmor[slot];
+        if (!piece) return;
+
+        this.openCardInspector(piece, `${slot.toUpperCase()} SLOT • ${player.name}`);
+        logToTerminal(`🔍 [INTEL INSPECT] ${player.name}'s ${slot.toUpperCase()} Slot: [${piece.name}] - ${piece.resolution_payload}`);
+    },
+
+    inspectFieldCard(playerKey, idx) {
+        const player = playerKey === "P1" ? this.p1 : this.p2;
+        const slot = player.spellsTraps[idx];
+        if (!slot) return;
+
+        if (slot.isSet) {
+            // Face down can only be peeked by owner
+            const isMe = (window.MultiplayerManager && window.MultiplayerManager.role === "CLIENT") ? (playerKey === "P2") : (playerKey === "P1");
+            if (isMe || (window.MultiplayerManager && window.MultiplayerManager.role === "LOCAL")) {
+                this.peekFaceDown(playerKey, idx);
+            } else {
+                logToTerminal(`🔒 [INTEL LOCKED] Opponent's face-down card cannot be inspected until activated!`);
+            }
+            return;
+        }
+
+        this.openCardInspector(slot.card, `ACTIVE GRID RUNE • ${player.name}`);
+        logToTerminal(`🔍 [INTEL INSPECT] Active Rune [${slot.card.name}] (${slot.card.type}) - ${slot.card.resolution_payload}`);
+    },
+
+    openCardInspector(card, contextLabel = "CARD INTEL") {
+        const modal = document.getElementById("intel-inspector-modal");
+        const titleEl = document.getElementById("intel-modal-title");
+        const subtitleEl = document.getElementById("intel-modal-subtitle");
+        const tagEl = document.getElementById("intel-modal-tag");
+        const atkEl = document.getElementById("intel-stat-atk");
+        const defEl = document.getElementById("intel-stat-def");
+        const costEl = document.getElementById("intel-stat-cost");
+        const effectEl = document.getElementById("intel-modal-effect");
+        const statsRow = document.getElementById("intel-modal-stats-row");
+
+        if (!modal || !card) return;
+
+        if (titleEl) titleEl.innerText = card.name;
+        if (tagEl) tagEl.innerText = contextLabel;
+        if (subtitleEl) subtitleEl.innerText = `${card.type} • Tier ${card.tier || 1} ${card.spell_speed ? `(Speed ${card.spell_speed})` : ''}`;
+        
+        const isArmor = card.type === "Armor/Equipment";
+        if (statsRow) {
+            if (isArmor) {
+                statsRow.style.display = "flex";
+                if (atkEl) atkEl.innerText = `+${card.atkBonus || 0}`;
+                if (defEl) defEl.innerText = `+${card.defBonus || 0}`;
+            } else {
+                statsRow.style.display = "flex";
+                if (atkEl) atkEl.innerText = `N/A`;
+                if (defEl) defEl.innerText = `N/A`;
+            }
+            const energyCost = card.activation_cost ? card.activation_cost.energy : 20;
+            if (costEl) costEl.innerText = `${energyCost} Energy`;
+        }
+
+        if (effectEl) {
+            effectEl.innerHTML = `<strong>Ability Resolution:</strong><br>${card.resolution_payload || 'Standard deployment piece.'}`;
+        }
+
+        modal.classList.remove("hidden");
+    },
+
+    closeCardInspector() {
+        const modal = document.getElementById("intel-inspector-modal");
+        if (modal) modal.classList.add("hidden");
+    },
+
     // ── PEEK AT OWN FACE-DOWN CARD ────────────────────────────────────────────
     peekFaceDown(playerKey, fieldIndex) {
         const player = playerKey === "P1" ? this.p1 : this.p2;
@@ -897,6 +971,7 @@ const DuelEngine = {
         logToTerminal(`   📋 Type: ${card.type} (Speed ${card.spell_speed || 1})`);
         logToTerminal(`   📋 Cost: ${card.activation_cost ? card.activation_cost.energy : '?'} Energy`);
         logToTerminal(`   📋 Effect: ${card.resolution_payload}`);
+        this.openCardInspector(card, `👁️ YOUR FACE-DOWN CARD • ${player.name}`);
     },
 
     // ── UI RENDER ────────────────────────────────────────────────────────────
@@ -949,25 +1024,13 @@ const DuelEngine = {
         const container = document.getElementById(`${playerKey.toLowerCase()}-armor`);
         if (!container) return;
 
-        const isTurn = this.activeTurn === playerKey;
-        const isReact = this.waitingForReaction && this.reactionPlayer === playerKey;
-        const isHidden = !isTurn && !isReact;
-
         container.innerHTML = ARMOR_SLOTS.map(slot => {
             const piece = player.equippedArmor[slot];
             const slotIcon = { helm: "🪖", torso: "🛡️", arms: "⚔️", legs: "🦿", back: "🦅" }[slot] || "📦";
             if (piece) {
-                if (isHidden) {
-                    return `
-                        <div class="armor-slot equipped" style="opacity:0.6;">
-                            <div class="slot-label">${slotIcon} ${slot.toUpperCase()}</div>
-                            <div class="slot-name" style="color:#94a3b8;">🔒 EQUIPPED</div>
-                            <div class="slot-stats" style="color:#475569;">[INTEL LOCKED]</div>
-                        </div>`;
-                }
                 return `
-                    <div class="armor-slot equipped">
-                        <div class="slot-label">${slotIcon} ${slot.toUpperCase()}</div>
+                    <div class="armor-slot equipped" onclick="DuelEngine.inspectArmor('${playerKey}', '${slot}')" title="Click to inspect ${piece.name} ability">
+                        <div class="slot-label">${slotIcon} ${slot.toUpperCase()} 🔍</div>
                         <div class="slot-name">${piece.name}</div>
                         <div class="slot-stats">+${piece.atkBonus} ATK / +${piece.defBonus} DEF</div>
                     </div>`;
@@ -985,41 +1048,34 @@ const DuelEngine = {
         const container = document.getElementById(`${playerKey.toLowerCase()}-spells`);
         if (!container) return;
 
-        const isTurn = this.activeTurn === playerKey;
-        const isReact = this.waitingForReaction && this.reactionPlayer === playerKey;
-        const isOwner = isTurn || isReact;
-        const isHidden = !isOwner;
-
         if (player.spellsTraps.length === 0) {
             container.innerHTML = `<div class="empty-zone-slot">[No active Spells/Traps]</div>`;
             return;
         }
 
-        // If it's not this player's turn, hide their S/T zone details
-        if (isHidden) {
-            container.innerHTML = player.spellsTraps.map((st) => `
-                <div class="field-st-card" style="opacity:0.6;">
-                    <div style="font-size: 10px; font-weight: bold; color: #475569;">${st.isSet ? '🎴 Face-Down' : '🔒 Active Rune'}</div>
-                    <div style="font-size: 9px; color: #334155;">[INTEL LOCKED]</div>
-                </div>
-            `).join('');
-            return;
-        }
+        const isMe = (window.MultiplayerManager && window.MultiplayerManager.role === "CLIENT") ? (playerKey === "P2") : (window.MultiplayerManager && window.MultiplayerManager.role === "HOST") ? (playerKey === "P1") : true;
 
-        container.innerHTML = player.spellsTraps.map((st, idx) => `
-            <div class="field-st-card">
-                <div style="font-size: 10px; font-weight: bold; color: #67e8f9;">${st.isSet ? '🎴 Face-Down' : st.card.name}</div>
-                <div style="font-size: 9px; color: #94a3b8;">${st.isSet ? 'Set Card' : st.card.type}</div>
-                ${st.isSet ? `
-                    <div class="card-btn-row">
-                        <button class="btn-micro btn-phase" onclick="DuelEngine.peekFaceDown('${playerKey}', ${idx})" title="View your face-down card">👁️ Peek</button>
-                        ${this.waitingForReaction && this.reactionPlayer === playerKey && st.card.spell_speed >= 2 ? `
-                            <button class="btn-micro btn-react" onclick="DuelEngine.activateSetCard('${playerKey}', ${idx})">⚡ Flip!</button>
-                        ` : ''}
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
+        container.innerHTML = player.spellsTraps.map((st, idx) => {
+            if (st.isSet) {
+                return `
+                    <div class="field-st-card">
+                        <div style="font-size: 10px; font-weight: bold; color: #f59e0b;">🎴 Face-Down</div>
+                        <div style="font-size: 9px; color: #94a3b8;">Set Trap/Spell</div>
+                        <div class="card-btn-row">
+                            ${isMe ? `<button class="btn-micro btn-phase" onclick="DuelEngine.peekFaceDown('${playerKey}', ${idx})" title="Peek face-down card">👁️ Peek</button>` : ''}
+                            ${this.waitingForReaction && this.reactionPlayer === playerKey && st.card.spell_speed >= 2 ? `
+                                <button class="btn-micro btn-react" onclick="DuelEngine.activateSetCard('${playerKey}', ${idx})">⚡ Flip!</button>
+                            ` : ''}
+                        </div>
+                    </div>`;
+            } else {
+                return `
+                    <div class="field-st-card" onclick="DuelEngine.inspectFieldCard('${playerKey}', ${idx})" style="cursor:pointer;" title="Click to inspect card ability">
+                        <div style="font-size: 10px; font-weight: bold; color: #67e8f9;">${st.card.name} 🔍</div>
+                        <div style="font-size: 9px; color: #94a3b8;">${st.card.type}</div>
+                    </div>`;
+            }
+        }).join('');
     },
 
     renderHand(playerKey) {
@@ -1032,17 +1088,31 @@ const DuelEngine = {
         const isReact   = this.waitingForReaction && this.reactionPlayer === playerKey;
         const color     = playerKey === "P1" ? "#60a5fa" : "#c084fc";
 
-        // Hide hand if it's not this player's turn AND not their reaction window
-        const isHidden = !isTurn && !isReact;
+        // Determine if this hand belongs to the local screen viewer
+        const isMultiplayer = window.MultiplayerManager && (window.MultiplayerManager.role === "HOST" || window.MultiplayerManager.role === "CLIENT" || window.MultiplayerManager.role === "SPECTATOR");
+        
+        let isHidden = false;
+        if (isMultiplayer) {
+            if (window.MultiplayerManager.role === "HOST") {
+                isHidden = (playerKey !== "P1"); // Hide P2 hand on Host
+            } else if (window.MultiplayerManager.role === "CLIENT") {
+                isHidden = (playerKey !== "P2"); // Hide P1 hand on Client
+            } else if (window.MultiplayerManager.role === "SPECTATOR") {
+                isHidden = true; // Hide both in spectator
+            }
+        } else {
+            // Local hotseat: hide hand of player whose turn/reaction it is not
+            isHidden = !isTurn && !isReact;
+        }
 
         if (isHidden) {
             if (player.hand.length === 0) {
                 container.innerHTML = `<div class="empty-zone-slot">[No cards in hand]</div>`;
             } else {
-                container.innerHTML = player.hand.map(() => `
-                    <div class="duel-card disabled" style="text-align:center; justify-content:center; min-height:60px;">
-                        <div style="font-size:18px;">🂠</div>
-                        <div style="font-size:10px; color:#475569; font-weight:bold;">CLASSIFIED</div>
+                container.innerHTML = player.hand.map((_, i) => `
+                    <div class="duel-card disabled" style="text-align:center; justify-content:center; min-height:55px; background:#0f172a; border:1px solid #334155;">
+                        <div style="font-size:16px;">🂠</div>
+                        <div style="font-size:9px; color:#64748b; font-weight:bold;">CLASSIFIED (${i + 1}/${player.hand.length})</div>
                     </div>
                 `).join('');
             }
@@ -1071,7 +1141,10 @@ const DuelEngine = {
 
             return `
                 <div class="duel-card ${canAfford ? 'playable' : 'disabled'}">
-                    <div style="font-weight:bold; font-size:11px; color:${color};">${card.name}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-weight:bold; font-size:11px; color:${color};">${card.name}</div>
+                        <button class="btn-micro btn-phase" style="padding:1px 4px; font-size:9px;" onclick="DuelEngine.openCardInspector(DuelEngine.${playerKey.toLowerCase()}.hand[${idx}], 'HAND CARD INTEL')" title="Inspect Full Card Details">🔍</button>
+                    </div>
                     <div style="font-size:9px; color:#94a3b8;">${card.type}${isArmor ? ` [${(card.slot||card.effect?.equipSlot||'').toUpperCase()} SLOT]` : ` (Spd ${card.spell_speed||1})`}</div>
                     ${isArmor ? `<div style="font-size:10px; color:#fde047;">+${card.atkBonus} ATK / +${card.defBonus} DEF</div>` : ''}
                     <div style="font-size:9px; color:#cbd5e1; line-height:1.2; margin-top:2px;">${card.resolution_payload}</div>

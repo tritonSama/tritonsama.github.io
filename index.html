@@ -276,6 +276,37 @@
         </section>
 
         <!-- ======================================================== -->
+        <!-- ABILITY & ARMOR INTEL INSPECTOR MODAL                    -->
+        <!-- ======================================================== -->
+        <div id="intel-inspector-modal" class="intel-modal-overlay hidden" onclick="if(event.target===this)DuelEngine.closeCardInspector()">
+            <div class="intel-modal-box">
+                <div class="intel-modal-header">
+                    <span id="intel-modal-tag" class="p-tag p1-tag">🧥 ARMOR INTEL</span>
+                    <button type="button" class="intel-modal-close" onclick="DuelEngine.closeCardInspector()">✖</button>
+                </div>
+                <h3 id="intel-modal-title">Card Name</h3>
+                <div id="intel-modal-subtitle" class="intel-modal-subtitle">Slot / Type</div>
+                
+                <div id="intel-modal-stats-row" class="intel-modal-stats-row">
+                    <span>⚔️ ATK: <strong id="intel-stat-atk" style="color:#ef4444;">+0</strong></span>
+                    <span>🛡️ DEF: <strong id="intel-stat-def" style="color:#38bdf8;">+0</strong></span>
+                    <span>⚡ Cost: <strong id="intel-stat-cost" style="color:#fbbf24;">0 Energy</strong></span>
+                </div>
+
+                <div class="intel-modal-body">
+                    <div style="font-size:11px; font-weight:bold; color:#cbd5e1; margin-bottom:4px;">📜 Effect / Passive Ability:</div>
+                    <div id="intel-modal-effect" class="intel-modal-effect-box">
+                        Ability telemetry text.
+                    </div>
+                </div>
+
+                <div class="intel-modal-footer">
+                    <button type="button" class="btn-sm btn-phase" style="width:100%;" onclick="DuelEngine.closeCardInspector()">Close Intel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
         <!-- BETA TESTER SIGN-UP SECTION                              -->
         <!-- ======================================================== -->
         <section id="beta-signup-section" class="panel hidden">
