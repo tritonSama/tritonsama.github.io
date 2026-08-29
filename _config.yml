@@ -1,0 +1,13 @@
+# Jekyll Configuration for GitHub Pages
+# Explicitly exclude non-site folders, backend code, and documentation from processing
+exclude:
+  - server/
+  - server/node_modules/
+  - node_modules/
+  - docs/
+  - google-apps-script/
+  - package.json
+  - package-lock.json
+  - .gitignore
+  - README.md
+  - SETUP.md
