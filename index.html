@@ -116,6 +116,32 @@
                     <button type="button" id="btn-run-diagnostics" class="btn-sm btn-phase" style="width:100%; margin-top:6px; padding:7px; font-size:11px;" onclick="MultiplayerManager.runDiagnostics()">🧪 Run WebRTC Network Diagnostic Test</button>
                 </div>
             </div>
+
+            <!-- ======================================================== -->
+            <!-- REAL-TIME OPEN MATCHES LOBBY FEED                        -->
+            <!-- ======================================================== -->
+            <div class="lobby-feed-container">
+                <div class="lobby-feed-header">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:16px;">🌐</span>
+                        <h3 style="margin:0; font-size:14px; color:#f8fafc; letter-spacing:0.5px;">LIVE PUBLIC MATCHES (REAL-TIME LOBBY FEED)</h3>
+                        <span id="lobby-rooms-count-badge" class="p-tag p1-tag">0 OPEN GAMES</span>
+                    </div>
+                    <div class="lobby-feed-controls">
+                        <button type="button" class="btn-micro btn-phase" onclick="MultiplayerManager.fetchOpenRooms(true)">🔄 Refresh Feed</button>
+                        <button type="button" class="btn-micro btn-action" onclick="MultiplayerManager.hostMatch()">➕ Host Public Match</button>
+                    </div>
+                </div>
+                <p style="font-size:11px; color:#94a3b8; margin:4px 0 10px 0;">Live feed of open duels awaiting Player 2. Click <strong>"⚔️ 1-Click Join"</strong> to connect instantly. Strict 2-player capacity is atomically enforced.</p>
+                
+                <div id="lobby-rooms-list" class="lobby-rooms-grid">
+                    <div class="lobby-feed-empty">
+                        <div style="font-size:22px; margin-bottom:4px;">📡</div>
+                        <div style="font-weight:bold; color:#cbd5e1;">Scanning live tactical frequencies...</div>
+                        <div style="font-size:11px; color:#64748b; margin-top:3px;">No open public matches waiting right now. Click "Create Match" above to host the first room!</div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- ======================================================== -->
@@ -419,6 +445,9 @@
                 if (duelSec)  duelSec.classList.add('hidden');
                 if (betaSec)  betaSec.classList.add('hidden');
                 if (lobbySec) lobbySec.classList.remove('hidden');
+                if (window.LobbyFeedManager && typeof window.LobbyFeedManager.renderLobbyFeed === 'function') {
+                    window.LobbyFeedManager.renderLobbyFeed();
+                }
             } else if (mode === 'DUEL') {
                 if (lobbySec) lobbySec.classList.add('hidden');
                 if (betaSec)  betaSec.classList.add('hidden');
@@ -441,7 +470,7 @@
             }
         }
     </script>
-    <script src="script.js?v=2.9.3"></script>
-    <script src="multiplayer.js?v=2.9.3"></script>
+    <script src="script.js?v=2.9.4"></script>
+    <script src="multiplayer.js?v=2.9.4"></script>
 </body>
 </html>

@@ -90,6 +90,35 @@ function doGet(e) {
       return jsonResponse({ status: "success", count: testers.length, testers: testers });
     }
 
+    if (action === "getOpenRooms") {
+      var roomsSheet = ss.getSheetByName("ActiveRooms");
+      if (!roomsSheet) { setupDatabase(); roomsSheet = ss.getSheetByName("ActiveRooms"); }
+      var data = roomsSheet.getDataRange().getValues();
+      var openRooms = [];
+      var now = Date.now();
+      for (var i = 1; i < data.length; i++) {
+        var rId = data[i][0];
+        var host = data[i][1];
+        var archetype = data[i][2];
+        var status = data[i][3];
+        var p1 = data[i][4];
+        var p2 = data[i][5];
+        var updated = data[i][6];
+        if (status === "waiting" && (!p2 || p2 === "")) {
+          openRooms.push({
+            id: rId,
+            hostName: host,
+            archetype: archetype,
+            status: "waiting",
+            players: [p1],
+            maxPlayers: 2,
+            updatedAt: updated
+          });
+        }
+      }
+      return jsonResponse({ status: "success", count: openRooms.length, rooms: openRooms });
+    }
+
     if (action === "getPilgrims") {
       var sheet = ss.getSheetByName("Pilgrims");
       if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("Pilgrims"); }
@@ -114,7 +143,7 @@ function doGet(e) {
 }
 
 /**
- * Handle POST requests (Beta Tester Registration, Pilgrim Sync, State Saves)
+ * Handle POST requests (Beta Tester Registration, Pilgrim Sync, State Saves, Room Locking)
  */
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -139,6 +168,77 @@ function doPost(e) {
     }
 
     var ts = payload.timestamp || new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+
+    // Matchmaking Room Actions (Atomic Registration & Capacity Locking)
+    if (payload.action === "register_room") {
+      var rSheet = ss.getSheetByName("ActiveRooms");
+      if (!rSheet) {
+        rSheet = ss.insertSheet("ActiveRooms");
+        rSheet.appendRow(["RoomID", "HostName", "Archetype", "Status", "Player1", "Player2", "UpdatedAt"]);
+      }
+      var rData = rSheet.getDataRange().getValues();
+      var found = false;
+      for (var r = 1; r < rData.length; r++) {
+        if (rData[r][0] === payload.roomId) {
+          rSheet.getRange(r + 1, 2, 1, 6).setValues([[
+            payload.hostName || "Operative Alpha",
+            payload.archetype || "ABYSSAL_TIDE",
+            payload.status || "waiting",
+            payload.player1 || "P1",
+            payload.player2 || "",
+            Date.now()
+          ]]);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        rSheet.appendRow([
+          payload.roomId,
+          payload.hostName || "Operative Alpha",
+          payload.archetype || "ABYSSAL_TIDE",
+          payload.status || "waiting",
+          payload.player1 || "P1",
+          payload.player2 || "",
+          Date.now()
+        ]);
+      }
+      return jsonResponse({ result: "success", status: "success", roomId: payload.roomId });
+    }
+
+    if (payload.action === "join_room") {
+      var rSheet = ss.getSheetByName("ActiveRooms");
+      if (!rSheet) return jsonError("No active rooms sheet found.");
+      var rData = rSheet.getDataRange().getValues();
+      for (var r = 1; r < rData.length; r++) {
+        if (rData[r][0] === payload.roomId) {
+          var currentStatus = rData[r][3];
+          var currentP2 = rData[r][5];
+          // Atomic Server Check: Reject if already locked/full
+          if (currentStatus !== "waiting" || (currentP2 && currentP2 !== "")) {
+            return jsonError("Room is full (2/2 players). Match already in progress.");
+          }
+          // Lock slot atomically
+          rSheet.getRange(r + 1, 4, 1, 4).setValues([["in_progress", rData[r][4], payload.player2Id || "P2", Date.now()]]);
+          return jsonResponse({ result: "success", status: "success", roomId: payload.roomId, seat: "P2" });
+        }
+      }
+      return jsonError("Room not found.");
+    }
+
+    if (payload.action === "close_room") {
+      var rSheet = ss.getSheetByName("ActiveRooms");
+      if (rSheet) {
+        var rData = rSheet.getDataRange().getValues();
+        for (var r = 1; r < rData.length; r++) {
+          if (rData[r][0] === payload.roomId) {
+            rSheet.getRange(r + 1, 4).setValue("completed");
+            break;
+          }
+        }
+      }
+      return jsonResponse({ result: "success", status: "success" });
+    }
 
     // Check if this is a Beta Tester Sign-up (name + email or guildClass)
     if (payload.email || payload.name || payload.guildClass || payload.birthDate || payload.action === "beta_signup") {

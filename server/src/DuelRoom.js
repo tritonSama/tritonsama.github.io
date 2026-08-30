@@ -99,14 +99,30 @@ class DuelRoom extends Room {
     const seat = this.clients.length === 1 ? "P1" : "P2";
     this.seatAssignments[client.sessionId] = seat;
     client.send("seat-assigned", { seat });
+
+    if (this.clients.length === 2) {
+      // Atomic Lock: Enforce strict 2-player capacity so a third player cannot enter
+      this.lock();
+      this.setMetadata({ status: "in_progress", players: 2 });
+    } else {
+      this.setMetadata({
+        status: "waiting",
+        players: 1,
+        hostName: options.username || "Operative Alpha",
+        archetype: options.archetype || "ABYSSAL_TIDE"
+      });
+    }
+
     // Let both clients know current state (covers reconnect / late join before match start)
     client.send("state", this.engine.getPublicState());
   }
 
   onLeave(client, consented) {
     delete this.seatAssignments[client.sessionId];
-    // TODO: grace period + reconnection token here (see Colyseus `allowReconnection`)
-    // rather than immediately treating a disconnect as a forfeit.
+    if (this.clients.length < 2) {
+      this.unlock();
+      this.setMetadata({ status: "waiting", players: this.clients.length });
+    }
     this.broadcast("player-left", { sessionId: client.sessionId });
   }
 

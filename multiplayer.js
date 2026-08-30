@@ -1,22 +1,210 @@
 /**
  * ============================================================================
- * HeavenlyBound - WebRTC P2P Multiplayer Engine (PeerJS)
+ * HeavenlyBound - WebRTC P2P Multiplayer Engine & Real-Time Lobby
  * ============================================================================
  * Enables direct browser-to-browser P2P multiplayer dueling:
  *  - HOST (P1): Authoritative logic runner (DuelEngine), broadcasts state to peers.
  *  - CLIENT (P2): Controller for Player 2, sends actions to Host, renders synced state.
  *  - SPECTATOR: Observes active match in real-time.
+ *  - LOBBY FEED: Real-time public matchmaker with atomic 2-player capacity locking.
  * ============================================================================
  */
 
+// ============================================================================
+// 1. REAL-TIME PUBLIC LOBBY FEED MANAGER (MATCHMAKING & ATOMIC ROOM REGISTRY)
+// ============================================================================
+const LobbyFeedManager = {
+    storageKey: "HB_OPEN_ROOMS_FEED",
+    pollTimer: null,
+    broadcastChannel: (typeof BroadcastChannel !== "undefined") ? new BroadcastChannel("hb_lobby_channel") : null,
+
+    init() {
+        if (this.broadcastChannel) {
+            this.broadcastChannel.onmessage = (event) => {
+                if (event && event.data) {
+                    this.renderLobbyFeed();
+                }
+            };
+        }
+        window.addEventListener("storage", (e) => {
+            if (e.key === this.storageKey) {
+                this.renderLobbyFeed();
+            }
+        });
+        this.renderLobbyFeed();
+        this.startPolling();
+    },
+
+    getRoomsStore() {
+        try {
+            const raw = localStorage.getItem(this.storageKey);
+            return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            return {};
+        }
+    },
+
+    saveRoomsStore(store) {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(store));
+            if (this.broadcastChannel) {
+                this.broadcastChannel.postMessage({ type: "ROOMS_UPDATED", timestamp: Date.now() });
+            }
+        } catch (e) {}
+    },
+
+    // Register / update a room in the feed
+    publishRoom(roomObj) {
+        const store = this.getRoomsStore();
+        store[roomObj.id] = {
+            id: roomObj.id,
+            hostName: roomObj.hostName || "Operative Alpha",
+            archetype: roomObj.archetype || "ABYSSAL_TIDE",
+            status: roomObj.status || "waiting", // "waiting" | "in_progress" | "completed"
+            players: roomObj.players || ["P1"],
+            maxPlayers: 2,
+            createdAt: roomObj.createdAt || Date.now(),
+            updatedAt: Date.now()
+        };
+        this.saveRoomsStore(store);
+        this.renderLobbyFeed();
+    },
+
+    updateRoomStatus(roomId, newStatus, playersCount = 1) {
+        const store = this.getRoomsStore();
+        if (store[roomId]) {
+            store[roomId].status = newStatus;
+            store[roomId].players = new Array(playersCount).fill("P");
+            store[roomId].updatedAt = Date.now();
+            this.saveRoomsStore(store);
+            this.renderLobbyFeed();
+        }
+    },
+
+    removeRoom(roomId) {
+        const store = this.getRoomsStore();
+        if (store[roomId]) {
+            delete store[roomId];
+            this.saveRoomsStore(store);
+            this.renderLobbyFeed();
+        }
+    },
+
+    // Query active open rooms (status === "waiting" and players.length === 1)
+    getOpenRooms() {
+        const store = this.getRoomsStore();
+        const now = Date.now();
+        const openRooms = [];
+
+        Object.keys(store).forEach(id => {
+            const r = store[id];
+            // Expire rooms older than 60s without heartbeat
+            if (now - r.updatedAt > 60000 || r.status === "completed") {
+                delete store[id];
+                return;
+            }
+            openRooms.push(r);
+        });
+
+        this.saveRoomsStore(store);
+        return openRooms;
+    },
+
+    renderLobbyFeed(manual = false) {
+        const listEl = document.getElementById("lobby-rooms-list");
+        const countBadge = document.getElementById("lobby-rooms-count-badge");
+        if (!listEl) return;
+
+        const allRooms = this.getOpenRooms();
+        const waitingRooms = allRooms.filter(r => r.status === "waiting" && (!r.players || r.players.length === 1));
+
+        if (countBadge) {
+            countBadge.innerText = `${waitingRooms.length} OPEN GAME${waitingRooms.length === 1 ? '' : 'S'}`;
+            countBadge.className = waitingRooms.length > 0 ? "p-tag p1-tag" : "p-tag";
+        }
+
+        if (waitingRooms.length === 0) {
+            listEl.innerHTML = `
+                <div class="lobby-feed-empty">
+                    <div style="font-size:22px; margin-bottom:4px;">📡</div>
+                    <div style="font-weight:bold; color:#cbd5e1;">Scanning live tactical frequencies...</div>
+                    <div style="font-size:11px; color:#64748b; margin-top:3px;">No open public matches waiting right now. Be the first to create one!</div>
+                    <button type="button" class="btn-sm btn-action" style="margin-top:10px;" onclick="MultiplayerManager.hostMatch()">➕ Host Public Match</button>
+                </div>
+            `;
+            if (manual) {
+                logToTerminal("ℹ️ [LOBBY FEED] Refreshed. No open games waiting at this moment.");
+            }
+            return;
+        }
+
+        listEl.innerHTML = waitingRooms.map(room => {
+            const isWaiting = room.status === "waiting";
+            const playerCount = (room.players && room.players.length) || 1;
+            const archetypeLabel = room.archetype ? room.archetype.replace(/_/g, ' ') : "TACTICAL HYBRID";
+            
+            return `
+                <div class="lobby-room-card ${!isWaiting ? 'locked' : ''}">
+                    <div class="lobby-room-card-top">
+                        <span class="lobby-room-code">${room.id}</span>
+                        <span class="lobby-room-status-badge ${isWaiting ? 'status-waiting' : 'status-in_progress'}">
+                            ${isWaiting ? `🟢 WAITING (${playerCount}/2)` : `🔴 LOCKED (${playerCount}/2)`}
+                        </span>
+                    </div>
+
+                    <div class="lobby-room-details">
+                        <div>👤 <strong>Host:</strong> ${room.hostName || 'Operative Alpha'}</div>
+                        <div style="color:#38bdf8; font-size:10px; margin-top:2px;">🎴 <strong>Archetype:</strong> ${archetypeLabel}</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                        <span style="font-size:10px; color:#64748b;">Capacity: 2 Players Max</span>
+                        ${isWaiting ? `
+                            <button type="button" class="btn-start-duel" style="margin:0; padding:6px 14px; font-size:11px; width:auto;" onclick="MultiplayerManager.joinMatch('${room.id}')">⚔️ 1-Click Join</button>
+                        ` : `
+                            <button type="button" class="btn-sm btn-warn" style="margin:0; padding:6px 12px; font-size:11px; opacity:0.6;" disabled>🔒 Full (2/2)</button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        if (manual) {
+            logToTerminal(`📡 [LOBBY FEED] Updated: Found ${waitingRooms.length} open combat room(s).`);
+        }
+    },
+
+    startPolling() {
+        if (this.pollTimer) clearInterval(this.pollTimer);
+        this.pollTimer = setInterval(() => {
+            const lobbySec = document.getElementById("training-lobby-section");
+            if (lobbySec && !lobbySec.classList.contains("hidden")) {
+                this.renderLobbyFeed();
+            }
+        }, 3500);
+    },
+
+    stopPolling() {
+        if (this.pollTimer) {
+            clearInterval(this.pollTimer);
+            this.pollTimer = null;
+        }
+    }
+};
+
+// ============================================================================
+// 2. MULTIPLAYER MANAGER (P2P WEBRTC + ATOMIC LOCKING)
+// ============================================================================
 const MultiplayerManager = {
     role: "LOCAL", // "LOCAL" | "HOST" | "CLIENT" | "SPECTATOR"
     mySeat: "P1",  // "P1" | "P2" | "SPEC"
     peer: null,
     roomId: null,
-    connections: [], // Host stores all connected client/spectator connections
+    connections: [], // Host stores active connections
+    player2Conn: null, // Host stores authoritative P2 connection
     hostConn: null,  // Client/Spectator connection to Host
     isConnecting: false,
+    heartbeatInterval: null,
 
     // Generate readable random room code (e.g. "HB-7842")
     generateRoomId() {
@@ -27,7 +215,6 @@ const MultiplayerManager = {
     // ── INITIALIZE PEER ───────────────────────────────────────────────────────
     initPeer(customId = null) {
         return new Promise((resolve, reject) => {
-            // If existing peer is active and open, reuse it
             if (this.peer && !this.peer.destroyed && !this.peer.disconnected) {
                 resolve(this.peer);
                 return;
@@ -73,10 +260,8 @@ const MultiplayerManager = {
                 }
             };
 
-            // If customId provided (Host), use it. Otherwise, let PeerJS auto-generate client ID.
             this.peer = customId ? new Peer(customId, peerOptions) : new Peer(peerOptions);
 
-            // Hook connection handler immediately
             this.peer.on("connection", (conn) => {
                 if (this.role === "HOST") {
                     this.handleIncomingConnection(conn);
@@ -130,13 +315,14 @@ const MultiplayerManager = {
         this.role = "HOST";
         this.mySeat = "P1";
         this.connections = [];
+        this.player2Conn = null;
         this.isConnecting = true;
         this.updateLobbyStatus("⏳ Initializing WebRTC Host Room...", "pending");
 
         try {
             const desiredRoomId = this.generateRoomId();
             await this.initPeer(desiredRoomId);
-            this.updateLobbyStatus(`🎮 HOSTING ROOM: <strong>${this.roomId}</strong><br><span style="color:#38bdf8; font-size:11px;">Room is LIVE and broadcasting. Waiting for Player 2 to join...</span>`, "success");
+            this.updateLobbyStatus(`🎮 HOSTING ROOM: <strong>${this.roomId}</strong><br><span style="color:#38bdf8; font-size:11px;">Room is LIVE on public feed. Waiting for Player 2...</span>`, "success");
             
             // Show room code box
             const codeBox = document.getElementById("lobby-room-code-display");
@@ -153,8 +339,33 @@ const MultiplayerManager = {
                 hostStatusBadge.classList.remove("hidden");
             }
 
+            // Register in real-time public lobby feed
+            LobbyFeedManager.publishRoom({
+                id: this.roomId,
+                hostName: "Operative Alpha",
+                archetype: (typeof DuelEngine !== "undefined" && DuelEngine.p1SelectedDeck) || "ABYSSAL_TIDE",
+                status: "waiting",
+                players: ["P1"],
+                maxPlayers: 2
+            });
+
+            // Start heartbeat to keep room fresh in feed
+            if (this.heartbeatInterval) clearInterval(this.heartbeatInterval);
+            this.heartbeatInterval = setInterval(() => {
+                if (this.role === "HOST" && this.roomId) {
+                    LobbyFeedManager.publishRoom({
+                        id: this.roomId,
+                        hostName: "Operative Alpha",
+                        archetype: (typeof DuelEngine !== "undefined" && DuelEngine.p1SelectedDeck) || "ABYSSAL_TIDE",
+                        status: this.player2Conn ? "in_progress" : "waiting",
+                        players: this.player2Conn ? ["P1", "P2"] : ["P1"],
+                        maxPlayers: 2
+                    });
+                }
+            }, 10000);
+
             logToTerminal(`📡 [P2P HOST READY] Room Code: ${this.roomId}`);
-            logToTerminal(`⏳ Awaiting Player 2 to join via WebRTC DataChannel...`);
+            logToTerminal(`⏳ Room published to Live Lobby Feed. Waiting for Player 2...`);
 
         } catch (err) {
             this.updateLobbyStatus(`⚠️ Failed to create host room: ${err.message || 'Check connection'}`, "error");
@@ -162,26 +373,41 @@ const MultiplayerManager = {
         }
     },
 
+    // ── ATOMIC CAPACITY & ROOM LOCKING (HOST) ─────────────────────────────────
     handleIncomingConnection(conn) {
         conn.on("open", () => {
-            // Avoid duplicate connection entries
+            // STRICT SERVER/HOST CAPACITY CHECK: Prevent third player from joining
+            if (this.player2Conn && this.player2Conn.open && !this.player2Conn.destroyed) {
+                logToTerminal(`🚫 [STRICT LIMIT ENFORCED] Connection attempt from ${conn.peer} REJECTED: Room ${this.roomId} is FULL (2/2).`);
+                conn.send({
+                    type: "JOIN_REJECTED",
+                    reason: "ROOM_FULL",
+                    roomId: this.roomId,
+                    message: `Room ${this.roomId} is full (2/2 players). A challenger has already locked this slot.`
+                });
+                setTimeout(() => { try { conn.close(); } catch(e){} }, 400);
+                return;
+            }
+
+            // ATOMIC LOCK: First incoming peer takes Player 2 slot
+            this.player2Conn = conn;
             if (!this.connections.includes(conn)) {
                 this.connections.push(conn);
             }
-            logToTerminal(`🤝 [PEER CONNECTED] Incoming connection: ${conn.peer}`);
+            conn.assignedSeat = "P2";
+            logToTerminal(`🤝 [ATOMIC SLOT LOCKED] Player 2 connected: ${conn.peer}`);
 
-            // First peer is P2, others are spectators
-            const assignedRole = this.connections.indexOf(conn) === 0 ? "P2" : "SPEC";
-            conn.assignedSeat = assignedRole;
-            
+            // Broadcast room status update immediately to Lobby Feed
+            LobbyFeedManager.updateRoomStatus(this.roomId, "in_progress", 2);
+
             conn.send({
                 type: "SEAT_ASSIGNMENT",
-                seat: assignedRole,
+                seat: "P2",
                 roomId: this.roomId,
-                state: this.getSanitizedStateForSeat(assignedRole)
+                state: this.getSanitizedStateForSeat("P2")
             });
 
-            this.updateLobbyStatus(`✅ <strong>Player 2 Connected!</strong> (${conn.peer})<br><span style="color:#38bdf8;">Transitioning both operatives to Deck Selection...</span>`, "success");
+            this.updateLobbyStatus(`✅ <strong>Player 2 Connected!</strong> (${conn.peer})<br><span style="color:#38bdf8;">Room locked (2/2). Transitioning to Deck Selection...</span>`, "success");
             logToTerminal(`⚔️ [MATCH READY] Player 2 joined (${conn.peer}). Transitioning to Deck Selection!`);
             
             // Automatically transition Host to Deck Selector and sync controls
@@ -198,10 +424,18 @@ const MultiplayerManager = {
 
         conn.on("close", () => {
             this.connections = this.connections.filter(c => c !== conn);
-            logToTerminal(`⚠️ [PEER DISCONNECTED] A peer left the room.`);
-            this.updateLobbyStatus(`⚠️ A player disconnected from the room.`, "error");
+            if (this.player2Conn === conn) {
+                this.player2Conn = null;
+                logToTerminal(`⚠️ [PLAYER 2 LEFT] Room slot unlocked.`);
+                this.updateLobbyStatus(`⚠️ Player 2 disconnected. Room is open for a new challenger.`, "error");
+                LobbyFeedManager.updateRoomStatus(this.roomId, "waiting", 1);
+            }
             this.syncDeckSelectionControls();
         });
+    },
+
+    fetchOpenRooms(manual = false) {
+        LobbyFeedManager.renderLobbyFeed(manual);
     },
 
     // ── 2. JOIN MATCH AS PLAYER 2 (CLIENT) ────────────────────────────────────
@@ -417,6 +651,18 @@ const MultiplayerManager = {
     // ── CLIENT / SPECTATOR RECEIVES STATE FROM HOST ────────────────────────────
     handleClientReceivedData(data) {
         if (!data) return;
+
+        if (data.type === "JOIN_REJECTED") {
+            this.updateLobbyStatus(`🚫 <strong>MATCH FULL / LOCKED:</strong> ${data.message || 'Room has reached max capacity (2/2).'}<br><span style="color:#cbd5e1; font-size:11px;">Please choose another open room from the Live Lobby Feed below or host a new match.</span>`, "error");
+            logToTerminal(`🚫 [STRICT LIMIT] ${data.message || 'Room is full (2/2)'}`);
+            LobbyFeedManager.updateRoomStatus(data.roomId || this.roomId, "in_progress", 2);
+            LobbyFeedManager.renderLobbyFeed();
+            if (this.hostConn) {
+                try { this.hostConn.close(); } catch (e) {}
+                this.hostConn = null;
+            }
+            return;
+        }
 
         if (data.type === "SEAT_ASSIGNMENT") {
             this.mySeat = data.seat;
@@ -922,5 +1168,13 @@ const MultiplayerManager = {
     };
 })();
 
-// Expose MultiplayerManager globally
+// Expose MultiplayerManager and LobbyFeedManager globally
 window.MultiplayerManager = MultiplayerManager;
+window.LobbyFeedManager = LobbyFeedManager;
+
+// Initialize Lobby Feed when DOM is loaded
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => LobbyFeedManager.init());
+} else {
+    LobbyFeedManager.init();
+}
