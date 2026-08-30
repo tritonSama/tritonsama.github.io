@@ -15,7 +15,25 @@
 function setupDatabase() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // 1. Ensure 'BetaTesters' sheet (Matches Image 3 Column Schema)
+  // 1. Ensure 'Leaderboard' sheet (Matches SEVERANCE v2.4 Schema)
+  var lbSheet = ss.getSheetByName("Leaderboard");
+  if (!lbSheet) {
+    lbSheet = ss.insertSheet("Leaderboard");
+    lbSheet.appendRow(["OperativeID", "OperativeName", "BankedShards", "TitheRating", "LastActive"]);
+    lbSheet.getRange("A1:E1").setFontWeight("bold").setBackground("#07090e").setFontColor("#00f0ff");
+    lbSheet.setFrozenRows(1);
+  }
+
+  // 2. Ensure 'AuditLogs' sheet
+  var auditSheet = ss.getSheetByName("AuditLogs");
+  if (!auditSheet) {
+    auditSheet = ss.insertSheet("AuditLogs");
+    auditSheet.appendRow(["Timestamp", "OperativeID", "Action", "Payload"]);
+    auditSheet.getRange("A1:D1").setFontWeight("bold").setBackground("#07090e").setFontColor("#ff0055");
+    auditSheet.setFrozenRows(1);
+  }
+
+  // 3. Ensure 'BetaTesters' sheet
   var betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
   if (!betaSheet || betaSheet.getLastRow() === 0) {
     if (!betaSheet) betaSheet = ss.insertSheet("BetaTesters");
@@ -24,38 +42,20 @@ function setupDatabase() {
     betaSheet.setFrozenRows(1);
   }
 
-  // 2. Ensure 'Pilgrims' sheet
-  var pilgrimsSheet = ss.getSheetByName("Pilgrims");
-  if (!pilgrimsSheet) {
-    pilgrimsSheet = ss.insertSheet("Pilgrims");
-    pilgrimsSheet.appendRow(["player_id", "zodiac_sign", "action_type", "result", "timestamp"]);
-    pilgrimsSheet.getRange("A1:E1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
-    pilgrimsSheet.setFrozenRows(1);
-  }
-
-  // 3. Ensure 'Users' sheet
-  var usersSheet = ss.getSheetByName("Users");
-  if (!usersSheet) {
-    usersSheet = ss.insertSheet("Users");
-    usersSheet.appendRow(["GitHubID", "Username", "CreatedAt", "ResourceCredits", "BaseLevel", "LastSeen"]);
-    usersSheet.getRange("A1:F1").setFontWeight("bold").setBackground("#1a1f2c").setFontColor("#ffd700");
-    usersSheet.setFrozenRows(1);
-  }
-
-  // 4. Ensure 'GameStates' sheet
-  var statesSheet = ss.getSheetByName("GameStates");
-  if (!statesSheet) {
-    statesSheet = ss.insertSheet("GameStates");
-    statesSheet.appendRow(["GitHubID", "SaveDataJSON", "LastUpdated", "HighScore"]);
-    statesSheet.getRange("A1:D1").setFontWeight("bold").setBackground("#1a1f2c").setFontColor("#00f0ff");
-    statesSheet.setFrozenRows(1);
+  // 4. Ensure 'ActiveRooms' sheet
+  var roomsSheet = ss.getSheetByName("ActiveRooms");
+  if (!roomsSheet) {
+    roomsSheet = ss.insertSheet("ActiveRooms");
+    roomsSheet.appendRow(["RoomID", "HostName", "Archetype", "Status", "Player1", "Player2", "UpdatedAt"]);
+    roomsSheet.getRange("A1:G1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#38bdf8");
+    roomsSheet.setFrozenRows(1);
   }
 
   return "Database initialized successfully.";
 }
 
 /**
- * Handle GET requests (Health check, Ping, Get Beta Testers, Get Pilgrims)
+ * Handle GET requests (Health check, Ping, Get Leaderboard, Get Beta Testers, Get Open Rooms)
  */
 function doGet(e) {
   var params = e ? e.parameter : {};
@@ -66,10 +66,31 @@ function doGet(e) {
     if (action === "ping") {
       return jsonResponse({
         status: "success",
-        system: "HeavenlyBound Core API",
+        system: "🕊️ HEAVENLYBOUND: Operation: Severed Grid Tactical Core (Protocol: SEVERANCE v2.4)",
         timestamp: new Date().toISOString(),
-        message: "Pilgrim Tactical Protocol & Beta Portal Operational."
+        message: "Dual-Consciousness Outie Sanctum / Innie Ascent Core Operational."
       });
+    }
+
+    if (action === "getLeaderboard") {
+      var sheet = ss.getSheetByName("Leaderboard");
+      if (!sheet) { setupDatabase(); sheet = ss.getSheetByName("Leaderboard"); }
+      var data = sheet.getDataRange().getValues();
+      var leaderboard = [];
+      for (var i = 1; i < data.length; i++) {
+        if (data[i][0]) {
+          leaderboard.push({
+            operativeId: data[i][0],
+            name: data[i][1] || data[i][0],
+            bankedShards: Number(data[i][2]) || 0,
+            titheRating: Number(data[i][3]) || 0,
+            lastActive: data[i][4] || ""
+          });
+        }
+      }
+      // Sort descending by Banked Shards
+      leaderboard.sort(function(a, b) { return b.bankedShards - a.bankedShards; });
+      return jsonResponse({ status: "success", count: leaderboard.length, leaderboard: leaderboard });
     }
 
     if (action === "getBetaTesters") {
@@ -168,6 +189,54 @@ function doPost(e) {
     }
 
     var ts = payload.timestamp || new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+
+    // 1. Bank Extraction Action (Dual-Consciousness Shard Extraction)
+    if (payload.action === "bankExtraction" || payload.action === "bank_extraction") {
+      var lbSheet = ss.getSheetByName("Leaderboard");
+      if (!lbSheet) { setupDatabase(); lbSheet = ss.getSheetByName("Leaderboard"); }
+      var opId = payload.operativeId || payload.playerId || "ALPHA-PILGRIM";
+      var opName = payload.operativeName || payload.name || opId;
+      var shardsToAdd = Number(payload.shards) || 0;
+      var data = lbSheet.getDataRange().getValues();
+      var found = false;
+      var newTotal = shardsToAdd;
+      var newRating = Math.floor(newTotal * 12.5 + (payload.titheCredits || 0));
+
+      for (var i = 1; i < data.length; i++) {
+        if (data[i][0] === opId) {
+          newTotal = (Number(data[i][2]) || 0) + shardsToAdd;
+          newRating = Math.floor(newTotal * 12.5 + (payload.titheCredits || 0));
+          lbSheet.getRange(i + 1, 3, 1, 3).setValues([[newTotal, newRating, ts]]);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        lbSheet.appendRow([opId, opName, newTotal, newRating, ts]);
+      }
+
+      // Record in AuditLogs
+      var auditSheet = ss.getSheetByName("AuditLogs");
+      if (auditSheet) {
+        auditSheet.appendRow([ts, opId, "BANK_SHARDS", JSON.stringify({ added: shardsToAdd, total: newTotal, rating: newRating })]);
+      }
+
+      return jsonResponse({
+        result: "success",
+        status: "success",
+        bankedShards: newTotal,
+        titheRating: newRating,
+        message: "Extraction banked successfully to Sanctum."
+      });
+    }
+
+    // 2. Audit Log Action
+    if (payload.action === "auditLog" || payload.action === "audit_log") {
+      var aSheet = ss.getSheetByName("AuditLogs");
+      if (!aSheet) { setupDatabase(); aSheet = ss.getSheetByName("AuditLogs"); }
+      aSheet.appendRow([ts, payload.operativeId || "ALPHA", payload.logAction || "GENERIC", JSON.stringify(payload.payload || {})]);
+      return jsonResponse({ result: "success", status: "success" });
+    }
 
     // Matchmaking Room Actions (Atomic Registration & Capacity Locking)
     if (payload.action === "register_room") {

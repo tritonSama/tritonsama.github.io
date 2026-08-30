@@ -726,6 +726,363 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     color: #94a3b8;
 }
 
+/* ========================================================================== */
+/* SEVERANCE v2.4: Tactical Header & Solar Cyberpunk Light Theme              */
+/* ========================================================================== */
+.tactical-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #00f0ff;
+    margin-bottom: 16px;
+}
+
+.header-brand-block h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #00f0ff;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.header-brand-block p {
+    margin: 3px 0 0 0;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.header-controls-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Solar Cyberpunk Light Theme Override */
+body.theme-solar {
+    background-color: #e8ecf1;
+    color: #0f172a;
+    background-image: 
+        linear-gradient(rgba(0, 119, 182, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 119, 182, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+body.theme-solar .panel {
+    background: #ffffff;
+    border-color: #0077b6;
+    box-shadow: 0 4px 16px rgba(0, 119, 182, 0.15);
+}
+
+body.theme-solar .terminal-box {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+body.theme-solar .terminal-box div {
+    color: #0284c7;
+}
+
+/* ========================================================================== */
+/* Outie Sanctum & Synthesis Matrix Styles                                    */
+/* ========================================================================== */
+.sanctum-balances-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.balance-card {
+    background: #050a14;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-solar .balance-card {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.bal-label {
+    font-size: 10px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+}
+
+.bal-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #f8fafc;
+    margin: 6px 0;
+    font-family: monospace;
+}
+
+body.theme-solar .bal-value {
+    color: #0f172a;
+}
+
+.synthesis-matrix-container {
+    background: #050a14;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+body.theme-solar .synthesis-matrix-container {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.synthesis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.synth-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+body.theme-solar .synth-card {
+    background: #ffffff;
+    border-color: #94a3b8;
+}
+
+.synth-icon { font-size: 20px; }
+.synth-title { font-size: 13px; font-weight: bold; color: #38bdf8; }
+.synth-desc { font-size: 11px; color: #cbd5e1; line-height: 1.4; margin-bottom: 6px; }
+body.theme-solar .synth-desc { color: #475569; }
+
+/* ========================================================================== */
+/* Innie Ascent & Tabletop Hex Matrix Styles                                  */
+/* ========================================================================== */
+.decay-meter-container {
+    background: #050a14;
+    border: 1px solid #7f1d1d;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+}
+
+.decay-progress-bar-bg {
+    width: 100%;
+    height: 12px;
+    background: #1e1b4b;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #312e81;
+}
+
+.decay-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ef4444);
+    transition: width 0.3s ease;
+}
+
+.decay-progress.warning {
+    background: #f59e0b;
+}
+
+.decay-progress.danger {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+    animation: pulseDecay 1s infinite alternate;
+}
+
+@keyframes pulseDecay {
+    from { opacity: 0.8; }
+    to { opacity: 1.0; }
+}
+
+.incursion-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .incursion-layout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.incursion-grid-card, .incursion-combat-card {
+    background: #050a14;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+body.theme-solar .incursion-grid-card, body.theme-solar .incursion-combat-card {
+    background: #ffffff;
+    border-color: #cbd5e1;
+}
+
+.hex-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.hex-grid-row {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.hex-cell {
+    width: 48px;
+    height: 48px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.12s, border-color 0.12s, background-color 0.12s;
+    user-select: none;
+}
+
+.hex-cell:hover {
+    transform: scale(1.08);
+    border-color: #38bdf8;
+    background: #1e293b;
+}
+
+.hex-cell.player-here {
+    border-color: #00f0ff;
+    background: rgba(0, 240, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+}
+
+.hex-cell.daemon { border-color: #7f1d1d; }
+.hex-cell.shard { border-color: #0284c7; }
+.hex-cell.extraction { border-color: #059669; }
+
+.hex-icon { font-size: 14px; }
+.hex-title { font-size: 8px; color: #94a3b8; font-weight: bold; }
+
+.hex-move-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.daemon-stat-block {
+    background: #0f172a;
+    border: 1px solid #450a0a;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+body.theme-solar .daemon-stat-block {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.dice-roller-box {
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 6px;
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+body.theme-solar .dice-roller-box {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.dice-roller-box.crit {
+    border-color: #fcee0a;
+    box-shadow: 0 0 14px rgba(252, 238, 10, 0.6);
+    background: rgba(252, 238, 10, 0.1);
+}
+
+.dice-roller-box.fumble {
+    border-color: #ef4444;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.6);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.dice-actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ========================================================================== */
+/* Top Pilgrims Leaderboard Matrix Table                                      */
+/* ========================================================================== */
+.leaderboard-table-container {
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+}
+
+.leaderboard-table th {
+    background: #050a14;
+    color: #38bdf8;
+    padding: 10px 12px;
+    border-bottom: 2px solid #1e293b;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+body.theme-solar .leaderboard-table th {
+    background: #f1f5f9;
+    color: #0077b6;
+    border-color: #cbd5e1;
+}
+
+.leaderboard-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1e293b;
+    color: #cbd5e1;
+}
+
+body.theme-solar .leaderboard-table td {
+    border-color: #e2e8f0;
+    color: #0f172a;
+}
+
+.leaderboard-table tr.highlight-me {
+    background: rgba(56, 189, 248, 0.1);
+    border-left: 3px solid #38bdf8;
+}
+
+
 
 
 

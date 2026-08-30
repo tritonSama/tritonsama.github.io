@@ -3,60 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeavenlyBound | Operative Armor Duel Arena & Training Area</title>
+    <title>🕊️ HEAVENLYBOUND: Operation: Severed Grid Tactical Core (SEVERANCE v2.4)</title>
     <link rel="stylesheet" href="style.css">
     <!-- PeerJS WebRTC P2P Signaling CDN -->
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
 <body>
     <div class="terminal-container">
-        <header>
-            <h1>HEAVENLYBOUND</h1>
-            <p>Operation: Severed Grid | Operative Armor Duel Arena | Pilgrim Protocol v2.9</p>
+        <!-- Tactical Header -->
+        <header class="tactical-header">
+            <div class="header-brand-block">
+                <h1>🕊️ HEAVENLYBOUND</h1>
+                <p>Operation: Severed Grid Tactical Core | Protocol: SEVERANCE v2.4</p>
+            </div>
+            <div class="header-controls-block">
+                <span id="auth-operative-badge" class="p-tag p1-tag" onclick="SeveranceManager.openConfigModal()">🔑 PILGRIM-ALPHA (AUTHENTICATED)</span>
+                <button type="button" id="btn-theme-toggle" class="btn-micro btn-phase" onclick="SeveranceManager.toggleTheme()">☀️ Solar Light</button>
+                <button type="button" class="btn-micro btn-action" onclick="SeveranceManager.openConfigModal()">⚙️ Config</button>
+            </div>
         </header>
 
         <!-- ======================================================== -->
         <!-- WELCOME TO STAGE 1 OF THE DEMO WELCOME SCREEN             -->
         <!-- ======================================================== -->
         <section id="welcome-section" class="panel welcome-panel">
-            <div class="welcome-badge">🚀 STAGE 1: TACTICAL COMBAT GRID & CLOSED BETA PROTOTYPE</div>
-            <h2>WELCOME TO STAGE 1 OF THE DEMO</h2>
-            <p class="welcome-subtitle">Experience the tactical <strong>Operative Armor Card Duel Engine</strong> — equip elemental exosuits across 5 body slots, cast reactive Spells & Traps, and resolve complex LIFO chains.</p>
+            <div class="welcome-badge">🚀 SEVERANCE v2.4: DUAL-CONSCIOUSNESS TACTICAL CORE</div>
+            <h2>WELCOME TO OPERATION: SEVERED GRID</h2>
+            <p class="welcome-subtitle">Manage celestial infrastructure in the <strong>Outie Sanctum</strong>, dive into the <strong>Innie Ascent</strong> for d20 tabletop incursions, or battle in the <strong>Operative Armor Duel Arena</strong>.</p>
             
             <div class="welcome-features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🏟️</div>
-                    <div class="feature-title">P2P Training Area</div>
-                    <div class="feature-desc">Host matches, join as Player 2 over WebRTC, or spectate live matches in real time.</div>
+                    <div class="feature-icon">🏛️</div>
+                    <div class="feature-title">Outie Sanctum</div>
+                    <div class="feature-desc">Harvest Tithe Credits, synthesize passive modifiers, and bank unextracted Aether Shards.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌀</div>
+                    <div class="feature-title">Innie Ascent (5e)</div>
+                    <div class="feature-desc">Tabletop hex grid incursion, d20 + Mod daemon combat, and Synaptic Memory Decay extraction.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚔️</div>
-                    <div class="feature-title">2-Player Armor Duels</div>
-                    <div class="feature-desc">4 competitive archetypes (WATER, FIRE, WIND, EARTH) with 25+ card tactical decks.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🛡️</div>
-                    <div class="feature-title">Closed Beta Access</div>
-                    <div class="feature-desc">Sign up to test upcoming MMO-Verse world features, Solana asset integration, and live PvP.</div>
+                    <div class="feature-title">Armor Duel Arena</div>
+                    <div class="feature-desc">Real-time WebRTC P2P multiplayer duels with elemental archetypes and Fog-of-War wire masking.</div>
                 </div>
             </div>
 
             <div class="welcome-input-row">
                 <input type="text" id="welcome-player-id" placeholder="Enter Operative Callsign (e.g. ALPHA-7)" value="PILGRIM-ALPHA">
                 <div class="welcome-cta-group">
-                    <button type="button" id="btn-welcome-lobby" class="btn-welcome-enter" onclick="switchAppMode('LOBBY')">🏟️ ENTER TRAINING AREA & LOBBY</button>
-                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" style="background:linear-gradient(135deg, #1e3a8a, #4338ca);" onclick="enterStage1Demo()">⚔️ QUICK PLAY COMBAT ARENA</button>
-                    <button type="button" id="btn-welcome-beta" class="btn-welcome-beta" onclick="enterBetaSignup()">📝 SIGN UP TO BE A BETA TESTER</button>
+                    <button type="button" class="btn-welcome-enter" style="background:linear-gradient(135deg, #0284c7, #0369a1);" onclick="switchAppMode('OUTIE')">🏛️ OUTIE SANCTUM (BASE)</button>
+                    <button type="button" class="btn-welcome-enter" style="background:linear-gradient(135deg, #7c3aed, #4c1d95);" onclick="SeveranceManager.startIncursion()">🌀 INNIE ASCENT (5e INCURSION)</button>
+                    <button type="button" id="btn-welcome-lobby" class="btn-welcome-enter" onclick="switchAppMode('LOBBY')">🏟️ TRAINING LOBBY</button>
+                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" style="background:linear-gradient(135deg, #1e3a8a, #4338ca);" onclick="enterStage1Demo()">⚔️ COMBAT ARENA</button>
                 </div>
             </div>
         </section>
 
         <!-- Mode Tabs -->
         <nav id="mode-tabs" class="mode-tabs-bar hidden">
-            <button id="tab-lobby" class="mode-tab-btn" onclick="switchAppMode('LOBBY')">🏟️ TRAINING AREA / LOBBY</button>
-            <button id="tab-duel" class="mode-tab-btn active" onclick="switchAppMode('DUEL')">⚔️ ARMOR DUEL ARENA</button>
-            <button id="tab-beta" class="mode-tab-btn" onclick="switchAppMode('BETA')">📝 BETA TESTER SIGN-UP</button>
+            <button id="tab-outie" class="mode-tab-btn active" onclick="switchAppMode('OUTIE')">🏛️ OUTIE SANCTUM</button>
+            <button id="tab-innie" class="mode-tab-btn" onclick="switchAppMode('INNIE')">🌀 INNIE ASCENT (5e)</button>
+            <button id="tab-lobby" class="mode-tab-btn" onclick="switchAppMode('LOBBY')">🏟️ TRAINING LOBBY</button>
+            <button id="tab-duel" class="mode-tab-btn" onclick="switchAppMode('DUEL')">⚔️ ARMOR DUEL ARENA</button>
+            <button id="tab-leaderboard" class="mode-tab-btn" onclick="switchAppMode('LEADERBOARD')">🏆 LEADERBOARD</button>
+            <button id="tab-beta" class="mode-tab-btn" onclick="switchAppMode('BETA')">📝 BETA SIGN-UP</button>
         </nav>
+
+        <!-- ======================================================== -->
+        <!-- 1. THE OUTIE SANCTUM (C&C BASE GRID & SYNTHESIS MATRIX)  -->
+        <!-- ======================================================== -->
+        <section id="outie-sanctum-section" class="panel">
+            <div class="setup-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <div>
+                        <h2>🏛️ THE OUTIE SANCTUM (C&C BASE GRID)</h2>
+                        <p>Celestial Management & Synthesis Core • Protocol: SEVERANCE v2.4</p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-start-duel" style="margin:0; padding:8px 16px;" onclick="SeveranceManager.startIncursion()">🌀 DIVE INTO INNIE ASCENT</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balances Overview -->
+            <div class="sanctum-balances-grid">
+                <div class="balance-card">
+                    <div class="bal-label">🪙 CELESTIAL TITHE CREDITS</div>
+                    <div id="sanctum-tithes" class="bal-value">450 🪙</div>
+                    <button type="button" id="btn-harvest-tithes" class="btn-micro btn-action" style="margin-top:6px; width:100%;" onclick="SeveranceManager.harvestTithes()">🪙 HARVEST CELESTIAL TITHES</button>
+                </div>
+                <div class="balance-card">
+                    <div class="bal-label">💎 BANKED AETHER SHARDS</div>
+                    <div id="sanctum-banked-shards" class="bal-value" style="color:#38bdf8;">180 💎</div>
+                    <button type="button" class="btn-micro btn-phase" style="margin-top:6px; width:100%;" onclick="SeveranceManager.bankExtraction()">💎 BANK EXTRACTION SHARDS</button>
+                </div>
+                <div class="balance-card">
+                    <div class="bal-label">⭐ PILGRIM TITHE RATING</div>
+                    <div id="sanctum-tithe-rating" class="bal-value" style="color:#fcee0a;">2,450 ⭐</div>
+                    <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Rank Tier: ARCHON VANGUARD</div>
+                </div>
+            </div>
+
+            <!-- Passive Modifier Synthesis Matrix -->
+            <div class="synthesis-matrix-container">
+                <h3 style="font-size:13px; color:#38bdf8; margin:0 0 10px 0; letter-spacing:0.5px;">⚡ PASSIVE MODIFIER SYNTHESIS MATRIX</h3>
+                <div class="synthesis-grid">
+                    <div class="synth-card">
+                        <div class="synth-icon">🛡️</div>
+                        <div class="synth-title">Aether Shielding</div>
+                        <div class="synth-desc">+25% Defense vs Incursion Void Surges</div>
+                        <button type="button" id="mod-btn-aetherShield" class="btn-sm btn-action" onclick="SeveranceManager.synthesizeModifier('aetherShield', 100)">✅ ACTIVE</button>
+                    </div>
+                    <div class="synth-card">
+                        <div class="synth-icon">🔥</div>
+                        <div class="synth-title">Kinetic Overclock</div>
+                        <div class="synth-desc">+30% Strike Damage on d20 Weapon Attacks</div>
+                        <button type="button" id="mod-btn-kineticOverclock" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('kineticOverclock', 120)">⚡ SYNTHESIZE (120 🪙)</button>
+                    </div>
+                    <div class="synth-card">
+                        <div class="synth-icon">🧠</div>
+                        <div class="synth-title">Synaptic Anchor</div>
+                        <div class="synth-desc">-40% Synaptic Memory Decay Rate</div>
+                        <button type="button" id="mod-btn-synapticAnchor" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('synapticAnchor', 150)">⚡ SYNTHESIZE (150 🪙)</button>
+                    </div>
+                    <div class="synth-card">
+                        <div class="synth-icon">💎</div>
+                        <div class="synth-title">Shard Resonator</div>
+                        <div class="synth-desc">+2x Aether Shard Incursion Harvest Yield</div>
+                        <button type="button" id="mod-btn-shardResonator" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('shardResonator', 200)">⚡ SYNTHESIZE (200 🪙)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- 2. THE INNIE ASCENT (5e TABLETOP INCURSION & D20 ROLLER)  -->
+        <!-- ======================================================== -->
+        <section id="innie-ascent-section" class="panel hidden">
+            <div class="setup-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <div>
+                        <h2>🌀 THE INNIE ASCENT (5e TACTICAL INCURSION)</h2>
+                        <p>Tabletop Hex Incursion • d20 Combat Engine • Synaptic Memory Decay Active</p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-start-duel" style="margin:0; padding:8px 16px; background:linear-gradient(135deg, #10b981, #059669);" onclick="SeveranceManager.extractFromIncursion()">⚡ EXTRACT & ESCAPE TO SANCTUM</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Environmental Synaptic Memory Decay Meter -->
+            <div class="decay-meter-container">
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                    <span style="color:#ef4444; font-weight:bold;">⚠️ SYNAPTIC MEMORY DECAY: <span id="incursion-decay-text">0%</span></span>
+                    <span style="color:#38bdf8; font-weight:bold;">UNBANKED SHARDS AT RISK: <span id="incursion-bag-shards">0 💎</span></span>
+                </div>
+                <div class="decay-progress-bar-bg">
+                    <div id="incursion-decay-bar" class="decay-progress" style="width:0%;"></div>
+                </div>
+                <div style="font-size:10px; color:#94a3b8; margin-top:3px;">Warning: If decay reaches 100%, total Amnesia Wipe occurs and unbanked shards are lost!</div>
+            </div>
+
+            <div class="incursion-layout-grid">
+                <!-- 3D / Tabletop Hex Incursion Arena -->
+                <div class="incursion-grid-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:12px; font-weight:bold; color:#cbd5e1;">🗺️ TACTICAL HEX MATRIX (SECTOR 0-6)</span>
+                        <span style="font-size:11px; color:#38bdf8;">Click node or use controls to move</span>
+                    </div>
+                    <div id="incursion-hex-grid" class="hex-grid-container"></div>
+                    <div class="hex-move-controls">
+                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(-1, 0)">⬆️ North</button>
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(0, -1)">⬅️ West</button>
+                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(0, 1)">➡️ East</button>
+                        </div>
+                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(1, 0)">⬇️ South</button>
+                    </div>
+                </div>
+
+                <!-- D&D 5e Combat Dice Roller & Daemon Encounter -->
+                <div class="incursion-combat-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; font-weight:bold; color:#f87171;">⚔️ DAEMON BREACH ENCOUNTER</span>
+                        <span class="p-tag" style="background:#450a0a; color:#fca5a5; border:1px solid #dc2626;">THREAT: HOSTILE</span>
+                    </div>
+
+                    <div class="daemon-stat-block">
+                        <div id="daemon-name" style="font-weight:bold; font-size:13px; color:#f8fafc;">👾 Void-Corruptor Archon</div>
+                        <div style="font-size:11px; color:#94a3b8;">Armor Class (AC): <strong>13</strong> | Bounty: <strong>30 💎</strong></div>
+                        <div style="display:flex; justify-content:space-between; font-size:10px; margin-top:6px;">
+                            <span>DAEMON INTEGRITY</span>
+                            <span id="daemon-hp">40 / 40 HP</span>
+                        </div>
+                        <div class="decay-progress-bar-bg" style="height:6px; margin-top:2px;">
+                            <div id="daemon-hp-bar" class="decay-progress" style="width:100%; background:#ef4444;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Dice Roller Box -->
+                    <div id="dice-result-display" class="dice-roller-box normal">
+                        <div style="font-size:24px;">🎲 d20</div>
+                        <div style="font-size:11px; color:#94a3b8;">Select attack action below to roll D&D 5e combat check vs Daemon AC (13)</div>
+                    </div>
+
+                    <div class="dice-actions-row">
+                        <button type="button" class="btn-sm btn-start-duel" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('ATTACK')">⚔️ Weapon Strike (d20 + DEX)</button>
+                        <button type="button" class="btn-sm btn-phase" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('BREACH')">🧠 Cyber-Breach (d20 + INT)</button>
+                        <button type="button" class="btn-sm btn-phase" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('SAVE')">🛡️ Kinetic Shield (d20 + CON)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- ======================================================== -->
         <!-- TRAINING AREA & P2P MULTIPLAYER LOBBY                    -->
@@ -390,16 +549,79 @@
             </div>
         </section>
 
+        <!-- ======================================================== -->
+        <!-- TOP PILGRIMS MATRIX LEADERBOARD                          -->
+        <!-- ======================================================== -->
+        <section id="leaderboard-section" class="panel hidden">
+            <div class="setup-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <div>
+                        <h2>🏆 TOP PILGRIMS LEADERBOARD (SEVERED MATRIX)</h2>
+                        <p>Live rankings querying deployed Google Sheets database in real time.</p>
+                    </div>
+                    <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.fetchLeaderboard()">🔄 Refresh Matrix</button>
+                </div>
+            </div>
+
+            <div class="leaderboard-table-container">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>RANK</th>
+                            <th>OPERATIVE ID</th>
+                            <th>NAME / CALLSIGN</th>
+                            <th>BANKED SHARDS</th>
+                            <th>TITHE RATING</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-table-body">
+                        <!-- Populated by SeveranceManager.fetchLeaderboard() -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- System Configuration Modal -->
+        <div id="system-config-modal" class="intel-modal-overlay hidden">
+            <div class="intel-modal-box" style="max-width:520px;">
+                <div class="intel-modal-header">
+                    <h3>⚙️ SEVERED GRID SYSTEM CONFIGURATION</h3>
+                    <button type="button" class="intel-modal-close" onclick="SeveranceManager.closeConfigModal()">✕</button>
+                </div>
+                <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Configure your deployed Google Apps Script database endpoint and Operative credentials.</p>
+
+                <div class="beta-field-group">
+                    <label for="config-api-endpoint">Google Apps Script Web App URL (HeavenlyBound_GameDB):</label>
+                    <input type="url" id="config-api-endpoint" placeholder="https://script.google.com/macros/s/.../exec" value="https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec">
+                </div>
+
+                <div class="beta-field-group" style="margin-top:10px;">
+                    <label for="config-operative-id">Operative ID / Callsign:</label>
+                    <input type="text" id="config-operative-id" value="PILGRIM-ALPHA">
+                </div>
+
+                <div class="beta-field-group" style="margin-top:10px;">
+                    <label for="config-oauth-id">GitHub OAuth Client ID (Optional):</label>
+                    <input type="text" id="config-oauth-id" placeholder="Ov23li..." value="">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+                    <button type="button" class="btn-sm btn-phase" onclick="SeveranceManager.closeConfigModal()">Cancel</button>
+                    <button type="button" class="btn-sm btn-action" onclick="SeveranceManager.saveConfig()">💾 Save Configuration</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Shared Combat Log -->
         <div class="terminal-box">
-            <div style="font-size:11px; color:#22c55e; font-weight:bold; margin-bottom:6px; text-transform:uppercase;">📡 Tactical Combat Log</div>
+            <div style="font-size:11px; color:#22c55e; font-weight:bold; margin-bottom:6px; text-transform:uppercase;">📡 Tactical Communications Log</div>
             <div id="terminal-log">
-                <div>[SYSTEM] Awaiting operative command...</div>
+                <div>[SYSTEM] HeavenlyBound operational. Awaiting operative deployment.</div>
             </div>
         </div>
     </div>
 
-    <!-- Inline Immediate Fallback Handlers for Guaranteed Button Execution -->
+    <!-- Inline Fallback Handlers for Guaranteed Button Execution -->
     <script>
         function enterStage1Demo() {
             var welcomeSec = document.getElementById('welcome-section');
@@ -424,53 +646,80 @@
 
         function switchAppMode(mode) {
             var welcomeSec = document.getElementById('welcome-section');
+            var outieSec   = document.getElementById('outie-sanctum-section');
+            var innieSec   = document.getElementById('innie-ascent-section');
             var lobbySec   = document.getElementById('training-lobby-section');
             var setupSec   = document.getElementById('pre-duel-setup-section');
             var duelSec    = document.getElementById('duel-section');
+            var lbSec      = document.getElementById('leaderboard-section');
             var betaSec    = document.getElementById('beta-signup-section');
+            
             var modeTabs   = document.getElementById('mode-tabs');
+            var tabOutie   = document.getElementById('tab-outie');
+            var tabInnie   = document.getElementById('tab-innie');
             var tabLobby   = document.getElementById('tab-lobby');
             var tabDuel    = document.getElementById('tab-duel');
+            var tabLb      = document.getElementById('tab-leaderboard');
             var tabBeta    = document.getElementById('tab-beta');
 
             if (welcomeSec) welcomeSec.classList.add('hidden');
             if (modeTabs)   modeTabs.classList.remove('hidden');
 
+            // Toggle tab active state
+            if (tabOutie) tabOutie.classList.toggle('active', mode === 'OUTIE');
+            if (tabInnie) tabInnie.classList.toggle('active', mode === 'INNIE');
             if (tabLobby) tabLobby.classList.toggle('active', mode === 'LOBBY');
             if (tabDuel)  tabDuel.classList.toggle('active', mode === 'DUEL');
+            if (tabLb)    tabLb.classList.toggle('active', mode === 'LEADERBOARD');
             if (tabBeta)  tabBeta.classList.toggle('active', mode === 'BETA' || mode === 'SOLO');
 
-            if (mode === 'LOBBY') {
-                if (setupSec) setupSec.classList.add('hidden');
-                if (duelSec)  duelSec.classList.add('hidden');
-                if (betaSec)  betaSec.classList.add('hidden');
+            // Hide all by default
+            if (outieSec) outieSec.classList.add('hidden');
+            if (innieSec) innieSec.classList.add('hidden');
+            if (lobbySec) lobbySec.classList.add('hidden');
+            if (setupSec) setupSec.classList.add('hidden');
+            if (duelSec)  duelSec.classList.add('hidden');
+            if (lbSec)    lbSec.classList.add('hidden');
+            if (betaSec)  betaSec.classList.add('hidden');
+
+            if (mode === 'OUTIE') {
+                if (outieSec) outieSec.classList.remove('hidden');
+                if (window.SeveranceManager && typeof window.SeveranceManager.updateSanctumDisplay === 'function') {
+                    window.SeveranceManager.updateSanctumDisplay();
+                }
+            } else if (mode === 'INNIE') {
+                if (innieSec) innieSec.classList.remove('hidden');
+                if (window.SeveranceManager && typeof window.SeveranceManager.renderIncursionGrid === 'function') {
+                    window.SeveranceManager.renderIncursionGrid();
+                    window.SeveranceManager.updateIncursionDisplay();
+                }
+            } else if (mode === 'LOBBY') {
                 if (lobbySec) lobbySec.classList.remove('hidden');
                 if (window.LobbyFeedManager && typeof window.LobbyFeedManager.renderLobbyFeed === 'function') {
                     window.LobbyFeedManager.renderLobbyFeed();
                 }
             } else if (mode === 'DUEL') {
-                if (lobbySec) lobbySec.classList.add('hidden');
-                if (betaSec)  betaSec.classList.add('hidden');
                 if (window.DuelEngine && window.DuelEngine.isDuelActive) {
-                    if (setupSec) setupSec.classList.add('hidden');
-                    if (duelSec)  duelSec.classList.remove('hidden');
+                    if (duelSec) duelSec.classList.remove('hidden');
                 } else {
                     if (window.DuelEngine && typeof window.DuelEngine.openSetupScreen === 'function') {
                         window.DuelEngine.openSetupScreen();
                     } else if (setupSec) {
                         setupSec.classList.remove('hidden');
                     }
-                    if (duelSec) duelSec.classList.add('hidden');
+                }
+            } else if (mode === 'LEADERBOARD') {
+                if (lbSec) lbSec.classList.remove('hidden');
+                if (window.SeveranceManager && typeof window.SeveranceManager.fetchLeaderboard === 'function') {
+                    window.SeveranceManager.fetchLeaderboard();
                 }
             } else if (mode === 'BETA' || mode === 'SOLO') {
-                if (lobbySec) lobbySec.classList.add('hidden');
-                if (setupSec) setupSec.classList.add('hidden');
-                if (duelSec)  duelSec.classList.add('hidden');
-                if (betaSec)  betaSec.classList.remove('hidden');
+                if (betaSec) betaSec.classList.remove('hidden');
             }
         }
     </script>
-    <script src="script.js?v=2.9.4"></script>
-    <script src="multiplayer.js?v=2.9.4"></script>
+    <script src="script.js?v=2.9.5"></script>
+    <script src="multiplayer.js?v=2.9.5"></script>
+    <script src="severance.js?v=2.9.5"></script>
 </body>
 </html>
