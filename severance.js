@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * ??? HEAVENLYBOUND: Operation: Severed Grid Tactical Core
+ * 🕊️ HEAVENLYBOUND: Operation: Severed Grid Tactical Core
  * Protocol: SEVERANCE v2.4 (Dual-Consciousness Tactical Engine)
  * ============================================================================
  */
@@ -49,7 +49,7 @@
         // Current Daemon Encounter
         currentDaemon: {
             id: 'daemon-1',
-            name: '?? Void-Corruptor Archon',
+            name: '👾 Void-Corruptor Archon',
             type: 'Abyssal Void Cyber-Daemon',
             ac: 13,
             hp: 40,
@@ -75,7 +75,7 @@
             this.fetchLeaderboard();
             this.startPassiveTithes();
             if (typeof logToTerminal === 'function') {
-                logToTerminal('??? [SEVERANCE v2.4] Dual-Consciousness Tactical Grid Initialized.');
+                logToTerminal('🕊️ [SEVERANCE v2.4] Dual-Consciousness Tactical Grid Initialized.');
                 logToTerminal('   Outie Sanctum online. Innie Ascent Incursion Portal synchronized.');
             }
         },
@@ -85,23 +85,23 @@
         // ====================================================================
         harvestTithes() {
             if (this.harvestCooldown) {
-                if (typeof logToTerminal === 'function') logToTerminal('? [COOLDOWN] Celestial tithe capacitors are recharging...');
+                if (typeof logToTerminal === 'function') logToTerminal('⏳ [COOLDOWN] Celestial tithe capacitors are recharging...');
                 return;
             }
             const harvested = 35 + (this.modifiers.shardResonator ? 15 : 0);
             this.titheCredits += harvested;
             this.harvestCooldown = true;
             this.updateSanctumDisplay();
-            if (typeof logToTerminal === 'function') logToTerminal(`?? [TITHE HARVEST] Extracted +${harvested} Tithe Credits from Sanctum Core.`);
+            if (typeof logToTerminal === 'function') logToTerminal(`🪙 [TITHE HARVEST] Extracted +${harvested} Tithe Credits from Sanctum Core.`);
 
             const btn = document.getElementById('btn-harvest-tithes');
             if (btn) {
                 btn.disabled = true;
-                btn.innerText = '? RECHARGING (5s)...';
+                btn.innerText = '⏳ RECHARGING (5s)...';
                 setTimeout(() => {
                     this.harvestCooldown = false;
                     btn.disabled = false;
-                    btn.innerText = '?? HARVEST CELESTIAL TITHES';
+                    btn.innerText = '🪙 HARVEST CELESTIAL TITHES';
                 }, 5000);
             }
         },
@@ -115,23 +115,23 @@
 
         synthesizeModifier(modKey, cost) {
             if (this.modifiers[modKey]) {
-                if (typeof logToTerminal === 'function') logToTerminal(`?? [MODIFIER ACTIVE] Modifier [${modKey.toUpperCase()}] is already synthesized.`);
+                if (typeof logToTerminal === 'function') logToTerminal(`⚠️ [MODIFIER ACTIVE] Modifier [${modKey.toUpperCase()}] is already synthesized.`);
                 return;
             }
             if (this.titheCredits < cost) {
-                if (typeof logToTerminal === 'function') logToTerminal(`?? [INSUFFICIENT TITHES] Requires ${cost} Tithe Credits (Current: ${this.titheCredits}).`);
+                if (typeof logToTerminal === 'function') logToTerminal(`⚠️ [INSUFFICIENT TITHES] Requires ${cost} Tithe Credits (Current: ${this.titheCredits}).`);
                 return;
             }
 
             this.titheCredits -= cost;
             this.modifiers[modKey] = true;
             this.updateSanctumDisplay();
-            if (typeof logToTerminal === 'function') logToTerminal(`? [SYNTHESIS COMPLETE] Passive Modifier [${modKey.toUpperCase()}] mounted to Operative Matrix!`);
+            if (typeof logToTerminal === 'function') logToTerminal(`⚡ [SYNTHESIS COMPLETE] Passive Modifier [${modKey.toUpperCase()}] mounted to Operative Matrix!`);
         },
 
         bankExtraction() {
             if (this.unbankedShards <= 0) {
-                if (typeof logToTerminal === 'function') logToTerminal('?? [SANCTUM] No unbanked Aether Shards in incursion bag.');
+                if (typeof logToTerminal === 'function') logToTerminal('ℹ️ [SANCTUM] No unbanked Aether Shards in incursion bag.');
                 return;
             }
 
@@ -144,8 +144,8 @@
             this.updateIncursionDisplay();
 
             if (typeof logToTerminal === 'function') {
-                logToTerminal(`?? [EXTRACTION BANKED] Safely deposited +${banked} Aether Shards into Sanctum Vault!`);
-                logToTerminal(`   ? New Tithe Rating: ${this.titheRating}`);
+                logToTerminal(`💎 [EXTRACTION BANKED] Safely deposited +${banked} Aether Shards into Sanctum Vault!`);
+                logToTerminal(`   ⭐ New Tithe Rating: ${this.titheRating}`);
             }
 
             // Sync with backend
@@ -177,9 +177,9 @@
             const titheEl = document.getElementById('sanctum-tithes');
             const bankedEl = document.getElementById('sanctum-banked-shards');
             const ratingEl = document.getElementById('sanctum-tithe-rating');
-            if (titheEl) titheEl.innerText = `${this.titheCredits} ??`;
-            if (bankedEl) bankedEl.innerText = `${this.bankedShards} ??`;
-            if (ratingEl) ratingEl.innerText = `${this.titheRating} ?`;
+            if (titheEl) titheEl.innerText = `${this.titheCredits} 🪙`;
+            if (bankedEl) bankedEl.innerText = `${this.bankedShards} 💎`;
+            if (ratingEl) ratingEl.innerText = `${this.titheRating} ⭐`;
 
             // Update modifier buttons/badges
             ['aetherShield', 'kineticOverclock', 'synapticAnchor', 'shardResonator'].forEach(mod => {
@@ -187,7 +187,7 @@
                 if (btn) {
                     if (this.modifiers[mod]) {
                         btn.className = 'btn-sm btn-action';
-                        btn.innerText = '? ACTIVE';
+                        btn.innerText = '✅ ACTIVE';
                     }
                 }
             });
@@ -202,14 +202,14 @@
                 const row = [];
                 for (let c = 0; c < this.gridSize; c++) {
                     if (r === 0 && c === 0) {
-                        row.push({ type: 'START', label: '?? Insertion' });
+                        row.push({ type: 'START', label: '🚀 Insertion' });
                     } else if (r === this.gridSize - 1 && c === this.gridSize - 1) {
-                        row.push({ type: 'EXTRACTION', label: '? Gate' });
+                        row.push({ type: 'EXTRACTION', label: '⚡ Gate' });
                     } else {
                         const rand = Math.random();
-                        if (rand < 0.25) row.push({ type: 'DAEMON', label: '?? Daemon' });
-                        else if (rand < 0.50) row.push({ type: 'SHARD', label: '?? Shards' });
-                        else row.push({ type: 'EMPTY', label: '? Path' });
+                        if (rand < 0.25) row.push({ type: 'DAEMON', label: '👾 Daemon' });
+                        else if (rand < 0.50) row.push({ type: 'SHARD', label: '💎 Shards' });
+                        else row.push({ type: 'EMPTY', label: '◽ Path' });
                     }
                 }
                 this.gridNodes.push(row);
@@ -231,7 +231,7 @@
                     const cell = document.createElement('div');
                     cell.className = `hex-cell ${node.type.toLowerCase()} ${isPlayer ? 'player-here' : ''}`;
                     cell.innerHTML = `
-                        <div class="hex-icon">${isPlayer ? '???' : (node.type === 'DAEMON' ? '??' : node.type === 'SHARD' ? '??' : node.type === 'EXTRACTION' ? '?' : '?')}</div>
+                        <div class="hex-icon">${isPlayer ? '🕊️' : (node.type === 'DAEMON' ? '👾' : node.type === 'SHARD' ? '💎' : node.type === 'EXTRACTION' ? '⚡' : '◽')}</div>
                         <div class="hex-title">${isPlayer ? 'YOU' : node.label}</div>
                     `;
                     cell.onclick = () => this.teleportToNode(r, c);
@@ -252,22 +252,22 @@
             this.renderIncursionGrid();
 
             const node = this.gridNodes[r][c];
-            if (typeof logToTerminal === 'function') logToTerminal(`?? [SECTOR TRAVERSAL] Moved to Sector [${r}, ${c}]: ${node.label}`);
+            if (typeof logToTerminal === 'function') logToTerminal(`🧭 [SECTOR TRAVERSAL] Moved to Sector [${r}, ${c}]: ${node.label}`);
 
             if (node.type === 'DAEMON') {
                 this.currentDaemon.hp = this.currentDaemon.maxHp;
-                if (typeof logToTerminal === 'function') logToTerminal(`?? [DAEMON BREACH] ${this.currentDaemon.name} engaged! Armor Class: ${this.currentDaemon.ac}`);
+                if (typeof logToTerminal === 'function') logToTerminal(`🚨 [DAEMON BREACH] ${this.currentDaemon.name} engaged! Armor Class: ${this.currentDaemon.ac}`);
                 this.updateDaemonDisplay();
             } else if (node.type === 'SHARD') {
                 const found = 15 + (this.modifiers.shardResonator ? 15 : 0);
                 this.unbankedShards += found;
                 node.type = 'EMPTY';
-                node.label = '? Cleared';
+                node.label = '◽ Cleared';
                 this.renderIncursionGrid();
                 this.updateIncursionDisplay();
-                if (typeof logToTerminal === 'function') logToTerminal(`?? [SHARDS HARVESTED] Siphoned +${found} Aether Shards into incursion bag!`);
+                if (typeof logToTerminal === 'function') logToTerminal(`💎 [SHARDS HARVESTED] Siphoned +${found} Aether Shards into incursion bag!`);
             } else if (node.type === 'EXTRACTION') {
-                if (typeof logToTerminal === 'function') logToTerminal(`? [EXTRACTION GATE REACHED] Ready to extract and bank ${this.unbankedShards} Shards!`);
+                if (typeof logToTerminal === 'function') logToTerminal(`⚡ [EXTRACTION GATE REACHED] Ready to extract and bank ${this.unbankedShards} Shards!`);
             }
         },
 
@@ -284,8 +284,8 @@
             this.decayTimer = setInterval(() => this.tickDecay(), 3000);
 
             if (typeof logToTerminal === 'function') {
-                logToTerminal('?? [INNIE ASCENT] Operative consciousness severed into tactical incursion plane.');
-                logToTerminal('?? Environmental Synaptic Memory Decay is active! Extract before 100% amnesia wipe.');
+                logToTerminal('🌀 [INNIE ASCENT] Operative consciousness severed into tactical incursion plane.');
+                logToTerminal('⚠️ Environmental Synaptic Memory Decay is active! Extract before 100% amnesia wipe.');
             }
         },
 
@@ -298,7 +298,7 @@
             if (this.memoryDecay >= 100) {
                 this.triggerAmnesiaWipe();
             } else if (this.memoryDecay >= 75) {
-                if (typeof logToTerminal === 'function') logToTerminal(`?? [SYNAPTIC WARNING] Memory Decay at ${Math.round(this.memoryDecay)}%! Extract immediately!`);
+                if (typeof logToTerminal === 'function') logToTerminal(`⚠️ [SYNAPTIC WARNING] Memory Decay at ${Math.round(this.memoryDecay)}%! Extract immediately!`);
             }
         },
 
@@ -312,10 +312,10 @@
             this.updateSanctumDisplay();
 
             if (typeof logToTerminal === 'function') {
-                logToTerminal('?? ==============================================');
-                logToTerminal(`?? [SYNAPTIC AMNESIA WIPE] Memory Decay reached 100%!`);
-                logToTerminal(`?? Consciousness collapsed. Lost ${lost} unbanked Aether Shards.`);
-                logToTerminal('?? ==============================================');
+                logToTerminal('💀 ==============================================');
+                logToTerminal(`💀 [SYNAPTIC AMNESIA WIPE] Memory Decay reached 100%!`);
+                logToTerminal(`💀 Consciousness collapsed. Lost ${lost} unbanked Aether Shards.`);
+                logToTerminal('💀 ==============================================');
             }
 
             switchAppMode('OUTIE');
@@ -330,10 +330,10 @@
             this.bankExtraction();
 
             if (typeof logToTerminal === 'function') {
-                logToTerminal('?? ==============================================');
-                logToTerminal(`?? [EXTRACTION SUCCESSFUL] Operative returned to Outie Sanctum!`);
-                logToTerminal(`?? Successfully banked +${harvested} Shards. Synaptic integrity restored.`);
-                logToTerminal('?? ==============================================');
+                logToTerminal('🎉 ==============================================');
+                logToTerminal(`🎉 [EXTRACTION SUCCESSFUL] Operative returned to Outie Sanctum!`);
+                logToTerminal(`🎉 Successfully banked +${harvested} Shards. Synaptic integrity restored.`);
+                logToTerminal('🎉 ==============================================');
             }
 
             switchAppMode('OUTIE');
@@ -365,10 +365,10 @@
             if (resultBox) {
                 resultBox.className = `dice-roller-box ${isCrit ? 'crit' : isFumble ? 'fumble' : 'normal'}`;
                 resultBox.innerHTML = `
-                    <div style="font-size:26px;">?? ${rawD20}</div>
+                    <div style="font-size:26px;">🎲 ${rawD20}</div>
                     <div style="font-size:12px; margin-top:2px;">
                         d20 (${rawD20}) + ${statName} (${statMod >= 0 ? '+' + statMod : statMod}) = <strong style="font-size:16px; color:#38bdf8;">${total}</strong>
-                        ${isCrit ? ' ?? CRITICAL HIT!' : isFumble ? ' ?? CRITICAL FUMBLE!' : ''}
+                        ${isCrit ? ' 💥 CRITICAL HIT!' : isFumble ? ' 💀 CRITICAL FUMBLE!' : ''}
                     </div>
                 `;
             }
@@ -379,7 +379,7 @@
                     const dmg = (isCrit ? 24 : 12) + (this.modifiers.kineticOverclock ? 6 : 0);
                     this.currentDaemon.hp = Math.max(0, this.currentDaemon.hp - dmg);
                     if (typeof logToTerminal === 'function') {
-                        logToTerminal(`?? [D20 ROLL: ${total}] Hit! ${this.operativeName} strikes ${this.currentDaemon.name} for ${dmg} damage! (Daemon HP: ${this.currentDaemon.hp})`);
+                        logToTerminal(`⚔️ [D20 ROLL: ${total}] Hit! ${this.operativeName} strikes ${this.currentDaemon.name} for ${dmg} damage! (Daemon HP: ${this.currentDaemon.hp})`);
                     }
 
                     if (this.currentDaemon.hp <= 0) {
@@ -387,12 +387,12 @@
                         this.unbankedShards += bounty;
                         this.titheCredits += this.currentDaemon.titheBounty;
                         if (typeof logToTerminal === 'function') {
-                            logToTerminal(`?? [DAEMON VANQUISHED] ${this.currentDaemon.name} slain! Harvested +${bounty} Aether Shards!`);
+                            logToTerminal(`🏆 [DAEMON VANQUISHED] ${this.currentDaemon.name} slain! Harvested +${bounty} Aether Shards!`);
                         }
                     }
                 } else {
                     if (typeof logToTerminal === 'function') {
-                        logToTerminal(`??? [D20 ROLL: ${total}] Miss! Attack deflected by ${this.currentDaemon.name}'s Armor Class (${this.currentDaemon.ac}).`);
+                        logToTerminal(`🛡️ [D20 ROLL: ${total}] Miss! Attack deflected by ${this.currentDaemon.name}'s Armor Class (${this.currentDaemon.ac}).`);
                     }
                 }
                 this.updateDaemonDisplay();
@@ -411,7 +411,7 @@
                 decayBar.className = `decay-progress ${this.memoryDecay > 75 ? 'danger' : this.memoryDecay > 40 ? 'warning' : ''}`;
             }
             if (decayText) decayText.innerText = `${Math.round(this.memoryDecay)}%`;
-            if (bagShards) bagShards.innerText = `${this.unbankedShards} ??`;
+            if (bagShards) bagShards.innerText = `${this.unbankedShards} 💎`;
         },
 
         updateDaemonDisplay() {
@@ -430,7 +430,7 @@
             const tableBody = document.getElementById('leaderboard-table-body');
             if (!tableBody) return;
 
-            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">? Querying Live Pilgrim Matrix...</td></tr>`;
+            tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8;">⏳ Querying Live Pilgrim Matrix...</td></tr>';
 
             try {
                 const res = await fetch(`${this.apiEndpoint}?action=getLeaderboard`);
@@ -461,12 +461,12 @@
             tableBody.innerHTML = records.map((rec, idx) => `
                 <tr class="${rec.operativeId === this.operativeId ? 'highlight-me' : ''}">
                     <td style="font-weight:bold; color:${idx === 0 ? '#fcee0a' : idx === 1 ? '#cbd5e1' : idx === 2 ? '#f97316' : '#94a3b8'};">
-                        ${idx === 0 ? '?? #1' : `#${idx + 1}`}
+                        ${idx === 0 ? '👑 #1' : '#' + (idx + 1)}
                     </td>
                     <td style="font-family:monospace; color:#38bdf8;">${rec.operativeId}</td>
                     <td><strong>${rec.name}</strong></td>
-                    <td style="color:#4ade80; font-weight:bold;">${rec.bankedShards} ??</td>
-                    <td style="color:#fcee0a; font-weight:bold;">${rec.titheRating} ?</td>
+                    <td style="color:#4ade80; font-weight:bold;">${rec.bankedShards} 💎</td>
+                    <td style="color:#fcee0a; font-weight:bold;">${rec.titheRating} ⭐</td>
                 </tr>
             `).join('');
         },
@@ -487,13 +487,13 @@
                 document.body.classList.remove('theme-solar');
             }
             const btn = document.getElementById('btn-theme-toggle');
-            if (btn) btn.innerText = theme === 'solar' ? '?? Dark Obsidian' : '?? Solar Light';
+            if (btn) btn.innerText = theme === 'solar' ? '🌙 Dark Obsidian' : '☀️ Solar Light';
         },
 
         updateHeaderBadge() {
             const badge = document.getElementById('auth-operative-badge');
             if (badge) {
-                badge.innerText = `?? ${this.operativeId} (AUTHENTICATED)`;
+                badge.innerText = `🔑 ${this.operativeId} (AUTHENTICATED)`;
             }
         },
 
@@ -520,7 +520,7 @@
             }
             this.updateHeaderBadge();
             this.closeConfigModal();
-            if (typeof logToTerminal === 'function') logToTerminal('?? [CONFIG SAVED] System endpoint and Operative callsign updated.');
+            if (typeof logToTerminal === 'function') logToTerminal('⚙️ [CONFIG SAVED] System endpoint and Operative callsign updated.');
         }
     };
 

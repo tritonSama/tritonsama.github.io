@@ -1242,41 +1242,70 @@ const GameEngine = {
 function switchAppMode(mode) {
     currentAppMode = mode;
     const welcomeSec = document.getElementById('welcome-section');
+    const outieSec   = document.getElementById('outie-sanctum-section');
+    const innieSec   = document.getElementById('innie-ascent-section');
     const lobbySec   = document.getElementById('training-lobby-section');
     const setupSec   = document.getElementById('pre-duel-setup-section');
     const duelSec    = document.getElementById('duel-section');
+    const lbSec      = document.getElementById('leaderboard-section');
     const betaSec    = document.getElementById('beta-signup-section');
+    
     const modeTabs   = document.getElementById('mode-tabs');
+    const tabOutie   = document.getElementById('tab-outie');
+    const tabInnie   = document.getElementById('tab-innie');
     const tabLobby   = document.getElementById('tab-lobby');
     const tabDuel    = document.getElementById('tab-duel');
+    const tabLb      = document.getElementById('tab-leaderboard');
     const tabBeta    = document.getElementById('tab-beta');
     
     if (welcomeSec) welcomeSec.classList.add('hidden');
     if (modeTabs)   modeTabs.classList.remove('hidden');
 
+    if (tabOutie) tabOutie.classList.toggle('active', mode === "OUTIE");
+    if (tabInnie) tabInnie.classList.toggle('active', mode === "INNIE");
     if (tabLobby) tabLobby.classList.toggle('active', mode === "LOBBY");
     if (tabDuel)  tabDuel.classList.toggle('active', mode === "DUEL");
+    if (tabLb)    tabLb.classList.toggle('active', mode === "LEADERBOARD");
     if (tabBeta)  tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
     
-    if (mode === "LOBBY") {
-        if (setupSec) setupSec.classList.add('hidden');
-        if (duelSec)  duelSec.classList.add('hidden');
-        if (betaSec)  betaSec.classList.add('hidden');
+    // Hide all sections first
+    if (outieSec) outieSec.classList.add('hidden');
+    if (innieSec) innieSec.classList.add('hidden');
+    if (lobbySec) lobbySec.classList.add('hidden');
+    if (setupSec) setupSec.classList.add('hidden');
+    if (duelSec)  duelSec.classList.add('hidden');
+    if (lbSec)    lbSec.classList.add('hidden');
+    if (betaSec)  betaSec.classList.add('hidden');
+
+    if (mode === "OUTIE") {
+        if (outieSec) outieSec.classList.remove('hidden');
+        if (window.SeveranceManager && typeof window.SeveranceManager.updateSanctumDisplay === 'function') {
+            window.SeveranceManager.updateSanctumDisplay();
+        }
+    } else if (mode === "INNIE") {
+        if (innieSec) innieSec.classList.remove('hidden');
+        if (window.SeveranceManager && typeof window.SeveranceManager.renderIncursionGrid === 'function') {
+            window.SeveranceManager.renderIncursionGrid();
+            window.SeveranceManager.updateIncursionDisplay();
+        }
+    } else if (mode === "LOBBY") {
         if (lobbySec) lobbySec.classList.remove('hidden');
+        if (window.LobbyFeedManager && typeof window.LobbyFeedManager.renderLobbyFeed === 'function') {
+            window.LobbyFeedManager.renderLobbyFeed();
+        }
     } else if (mode === "DUEL") {
-        if (lobbySec) lobbySec.classList.add('hidden');
-        if (betaSec)  betaSec.classList.add('hidden');
         if (!DuelEngine.isDuelActive) {
             DuelEngine.openSetupScreen();
         } else {
-            if (setupSec) setupSec.classList.add('hidden');
-            if (duelSec)  duelSec.classList.remove('hidden');
+            if (duelSec) duelSec.classList.remove('hidden');
         }
-    } else {
-        if (lobbySec) lobbySec.classList.add('hidden');
-        if (setupSec) setupSec.classList.add('hidden');
-        if (duelSec)  duelSec.classList.add('hidden');
-        if (betaSec)  betaSec.classList.remove('hidden');
+    } else if (mode === "LEADERBOARD") {
+        if (lbSec) lbSec.classList.remove('hidden');
+        if (window.SeveranceManager && typeof window.SeveranceManager.fetchLeaderboard === 'function') {
+            window.SeveranceManager.fetchLeaderboard();
+        }
+    } else if (mode === "BETA" || mode === "SOLO") {
+        if (betaSec) betaSec.classList.remove('hidden');
     }
 }
 
