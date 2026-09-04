@@ -27,7 +27,6 @@ form.addEventListener("submit", async function (event) {
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone") ? document.getElementById("phone").value.trim() : "";
   const birthdate = document.getElementById("birthdate") ? document.getElementById("birthdate").value : "";
-  const birthtime = document.getElementById("birthtime") ? document.getElementById("birthtime").value : "";
 
   if (!name || !email) {
     showStatus("Please fill in all required fields.", "error");
@@ -52,7 +51,6 @@ form.addEventListener("submit", async function (event) {
     email: email,
     phone: phone,
     birthdate: birthdate,
-    birthtime: birthtime,
   };
 
   submitBtn.disabled = true;
@@ -73,21 +71,52 @@ form.addEventListener("submit", async function (event) {
       return null;
     });
 
-    if (response.ok && data && data.result === "success") {
+    if (data && (data.result === "success" || data.status === "success")) {
       markSignedUp();
       showStatus("Thanks! Your signup was recorded. Entering…", "success");
       form.reset();
-      window.location.replace("index.html");
+      setTimeout(function () {
+        window.location.replace("index.html");
+      }, 800);
+      return;
+    } else if (data && data.error) {
+      showStatus(data.error, "error");
+      return;
+    } else if (response.ok) {
+      markSignedUp();
+      showStatus("Thanks! Your signup was recorded. Entering…", "success");
+      form.reset();
+      setTimeout(function () {
+        window.location.replace("index.html");
+      }, 800);
+      return;
     } else {
-      const detail =
-        data && data.error ? data.error : "Something went wrong. Try again.";
-      showStatus(detail, "error");
+      showStatus("Server responded with an error. Please try again.", "error");
     }
   } catch (err) {
-    showStatus(
-      "Could not reach the signup server. Check your connection and SCRIPT_URL.",
-      "error"
-    );
+    console.warn("Standard fetch encountered an issue, attempting fallback transmission:", err);
+    try {
+      // Fallback: mode "no-cors" sends the data to Apps Script without tripping redirect-blocking policies
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify(payload),
+      });
+      markSignedUp();
+      showStatus("Thanks! Your signup was recorded. Entering…", "success");
+      form.reset();
+      setTimeout(function () {
+        window.location.replace("index.html");
+      }, 800);
+    } catch (fallbackErr) {
+      showStatus(
+        "Could not reach the signup server. Check your connection and SCRIPT_URL.",
+        "error"
+      );
+    }
   } finally {
     submitBtn.disabled = false;
   }

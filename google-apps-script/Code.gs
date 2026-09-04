@@ -3,7 +3,7 @@
  * Seraphim Unbound / HeavenlyBound - Google Apps Script Database Bridge
  * ============================================================================
  * Sheets:
- *   1. BetaTesters -> [timestamp, name, email, guildClass, birthDate, birthTime, phone]
+ *   1. BetaTesters -> [timestamp, name, email, guildClass, birthDate, phone]
  *   2. Pilgrims    -> [player_id, zodiac_sign, action_type, result, timestamp]
  *   3. Users       -> [GitHubID, Username, CreatedAt, ResourceCredits, BaseLevel, LastSeen]
  *   4. GameStates  -> [GitHubID, SaveDataJSON, LastUpdated, HighScore]
@@ -37,8 +37,8 @@ function setupDatabase() {
   var betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
   if (!betaSheet || betaSheet.getLastRow() === 0) {
     if (!betaSheet) betaSheet = ss.insertSheet("BetaTesters");
-    betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "birthTime", "phone"]);
-    betaSheet.getRange("A1:G1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
+    betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "phone"]);
+    betaSheet.getRange("A1:F1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
     betaSheet.setFrozenRows(1);
   }
 
@@ -104,8 +104,7 @@ function doGet(e) {
           email: data[i][2],
           guildClass: data[i][3],
           birthDate: data[i][4],
-          birthTime: data[i][5],
-          phone: data[i][6]
+          phone: data[i][5]
         });
       }
       return jsonResponse({ status: "success", count: testers.length, testers: testers });
@@ -319,17 +318,16 @@ function doPost(e) {
 
       // Check header row
       if (betaSheet.getLastRow() === 0) {
-        betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "birthTime", "phone"]);
+        betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "phone"]);
       }
 
-      // Append row matching exact schema: [timestamp, name, email, guildClass, birthDate, birthTime, phone]
+      // Append row matching exact schema: [timestamp, name, email, guildClass, birthDate, phone]
       betaSheet.appendRow([
         ts,
         payload.name || payload.fullName || "Operative",
         payload.email || "",
         payload.guildClass || payload.class || payload.archetype || "Tactical Operative",
         payload.birthDate || payload.birthdate || "",
-        payload.birthTime || payload.birthtime || "",
         payload.phone || payload.phoneNumber || ""
       ]);
 
