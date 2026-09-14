@@ -1346,6 +1346,7 @@ async function submitBetaTesterForm(event) {
     const classEl = document.getElementById('beta-guild-class');
     const phoneEl = document.getElementById('beta-phone');
     const birthDateEl = document.getElementById('beta-birthdate');
+    const birthTimeEl = document.getElementById('beta-birthtime');
     const submitBtn = document.getElementById('beta-submit-btn');
     const statusEl = document.getElementById('beta-form-status');
     
@@ -1354,6 +1355,7 @@ async function submitBetaTesterForm(event) {
     const guildClass = classEl ? classEl.value : "Tactical Operative";
     const phone = phoneEl ? phoneEl.value.trim() : "";
     const birthDate = birthDateEl ? birthDateEl.value : "";
+    const birthTime = birthTimeEl ? birthTimeEl.value : "12:00";
     
     if (!name || !email) {
         if (statusEl) {
@@ -1369,6 +1371,7 @@ async function submitBetaTesterForm(event) {
         email,
         guildClass,
         birthDate,
+        birthTime,
         phone,
         action: "beta_signup"
     };

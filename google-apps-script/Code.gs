@@ -37,8 +37,8 @@ function setupDatabase() {
   var betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
   if (!betaSheet || betaSheet.getLastRow() === 0) {
     if (!betaSheet) betaSheet = ss.insertSheet("BetaTesters");
-    betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "phone"]);
-    betaSheet.getRange("A1:F1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
+    betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "birthTime", "phone"]);
+    betaSheet.getRange("A1:G1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
     betaSheet.setFrozenRows(1);
   }
 
@@ -51,11 +51,20 @@ function setupDatabase() {
     roomsSheet.setFrozenRows(1);
   }
 
+  // 5. Ensure 'Characters' sheet (Look & Fight Cloud Vault)
+  var charSheet = ss.getSheetByName("Characters");
+  if (!charSheet) {
+    charSheet = ss.insertSheet("Characters");
+    charSheet.appendRow(["OperativeID", "Name", "GuildClass", "CombatPower", "LookParametersJSON", "FightParametersJSON", "LastSynced", "FullProfileJSON"]);
+    charSheet.getRange("A1:H1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#38bdf8");
+    charSheet.setFrozenRows(1);
+  }
+
   return "Database initialized successfully.";
 }
 
 /**
- * Handle GET requests (Health check, Ping, Get Leaderboard, Get Beta Testers, Get Open Rooms)
+ * Handle GET requests (Health check, Ping, Get Leaderboard, Get Beta Testers, Get Open Rooms, Get Character Profile)
  */
 function doGet(e) {
   var params = e ? e.parameter : {};
@@ -70,6 +79,65 @@ function doGet(e) {
         timestamp: new Date().toISOString(),
         message: "Dual-Consciousness Outie Sanctum / Innie Ascent Core Operational."
       });
+    }
+
+    if (action === "get_character" || action === "getCharacterProfile") {
+      var charSheet = ss.getSheetByName("Characters");
+      if (!charSheet) {
+        return jsonResponse({ status: "error", message: "Characters sheet not found in cloud." });
+      }
+      var targetId = params.operativeId || "tritonSama";
+      var data = charSheet.getDataRange().getValues();
+      for (var row = 1; row < data.length; row++) {
+        if (data[row][0] == targetId) {
+          var fullProfile = {};
+          try {
+            fullProfile = JSON.parse(data[row][7]);
+          } catch(e) {
+            fullProfile = {
+              operativeId: data[row][0],
+              name: data[row][1],
+              guildClass: data[row][2],
+              combatPower: data[row][3],
+              look: JSON.parse(data[row][4] || "{}"),
+              fight: JSON.parse(data[row][5] || "{}"),
+              lastSynced: data[row][6]
+            };
+          }
+          return jsonResponse({
+            status: "success",
+            result: "success",
+            operativeId: data[row][0],
+            name: data[row][1],
+            guildClass: data[row][2],
+            combatPower: data[row][3],
+            look: JSON.parse(data[row][4] || "{}"),
+            fight: JSON.parse(data[row][5] || "{}"),
+            lastSynced: data[row][6],
+            profile: fullProfile
+          });
+        }
+      }
+      return jsonResponse({ status: "not_found", message: "Operative profile not found in cloud." });
+    }
+
+    if (action === "list_characters") {
+      var charSheet = ss.getSheetByName("Characters");
+      if (!charSheet) return jsonResponse({ status: "success", count: 0, characters: [] });
+      var data = charSheet.getDataRange().getValues();
+      var chars = [];
+      for (var row = 1; row < data.length; row++) {
+        if (data[row][0]) {
+          chars.push({
+            operativeId: data[row][0],
+            name: data[row][1],
+            guildClass: data[row][2],
+            combatPower: data[row][3],
+            lastSynced: data[row][6]
+          });
+        }
+      }
+      return jsonResponse({ status: "success", count: chars.length, characters: chars });
     }
 
     if (action === "getLeaderboard") {
@@ -104,7 +172,8 @@ function doGet(e) {
           email: data[i][2],
           guildClass: data[i][3],
           birthDate: data[i][4],
-          phone: data[i][5]
+          birthTime: data[i][5] || "",
+          phone: data[i][6] || ""
         });
       }
       return jsonResponse({ status: "success", count: testers.length, testers: testers });
@@ -237,6 +306,49 @@ function doPost(e) {
       return jsonResponse({ result: "success", status: "success" });
     }
 
+    // 3. Character Profile Cloud Save (Look & Fight Parameters)
+    if (payload.action === "save_character" || payload.action === "saveCharacterProfile") {
+      var charSheet = ss.getSheetByName("Characters");
+      var defaultHeaders = ["OperativeID", "Name", "GuildClass", "CombatPower", "LookParametersJSON", "FightParametersJSON", "LastSynced", "FullProfileJSON"];
+      if (!charSheet) {
+        charSheet = ss.insertSheet("Characters");
+        charSheet.appendRow(defaultHeaders);
+        charSheet.getRange("A1:H1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#38bdf8");
+        charSheet.setFrozenRows(1);
+      }
+      var opId = payload.operativeId || payload.id || "tritonSama";
+      var opName = payload.name || "tritonSama";
+      var guildClass = payload.guildClass || (payload.fight && payload.fight.guildClass) || "Abyssal Vanguard (WATER)";
+      var combatPower = Number(payload.combatPower || (payload.fight && payload.fight.stats && payload.fight.stats.combatPower) || 53310);
+      var lookJson = JSON.stringify(payload.look || payload.lookParameters || {});
+      var fightJson = JSON.stringify(payload.fight || payload.fightParameters || {});
+      var fullJson = JSON.stringify(payload);
+
+      var data = charSheet.getDataRange().getValues();
+      var foundIndex = -1;
+      for (var row = 1; row < data.length; row++) {
+        if (data[row][0] == opId) {
+          foundIndex = row + 1;
+          break;
+        }
+      }
+
+      var rowValues = [opId, opName, guildClass, combatPower, lookJson, fightJson, ts, fullJson];
+      if (foundIndex > 0) {
+        charSheet.getRange(foundIndex, 1, 1, 8).setValues([rowValues]);
+      } else {
+        charSheet.appendRow(rowValues);
+      }
+
+      return jsonResponse({
+        result: "success",
+        status: "success",
+        operativeId: opId,
+        message: "Character Look & Fight parameters saved to cloud vault.",
+        timestamp: ts
+      });
+    }
+
     // Matchmaking Room Actions (Atomic Registration & Capacity Locking)
     if (payload.action === "register_room") {
       var rSheet = ss.getSheetByName("ActiveRooms");
@@ -308,28 +420,61 @@ function doPost(e) {
       return jsonResponse({ result: "success", status: "success" });
     }
 
-    // Check if this is a Beta Tester Sign-up (name + email or guildClass)
-    if (payload.email || payload.name || payload.guildClass || payload.birthDate || payload.action === "beta_signup") {
+    // Check if this is a Beta Tester Sign-up (name + email or guildClass or explicit action)
+    if (payload.email || payload.name || payload.guildClass || payload.birthDate || payload.birthdate || payload.action === "beta_signup") {
       var betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
       if (!betaSheet) {
         setupDatabase();
         betaSheet = ss.getSheetByName("BetaTesters") || ss.getActiveSheet();
       }
 
-      // Check header row
-      if (betaSheet.getLastRow() === 0) {
-        betaSheet.appendRow(["timestamp", "name", "email", "guildClass", "birthDate", "phone"]);
+      // Read existing headers from Row 1
+      var lastCol = Math.max(betaSheet.getLastColumn(), 1);
+      var headerRange = betaSheet.getRange(1, 1, 1, lastCol);
+      var headers = headerRange.getValues()[0];
+
+      // If empty sheet or missing headers, initialize canonical 7 columns
+      if (betaSheet.getLastRow() === 0 || !headers[0] || headers[0] === "") {
+        var defaultHeaders = ["timestamp", "name", "email", "guildClass", "birthDate", "birthTime", "phone"];
+        betaSheet.clear();
+        betaSheet.appendRow(defaultHeaders);
+        betaSheet.getRange("A1:G1").setFontWeight("bold").setBackground("#0f172a").setFontColor("#60a5fa");
+        betaSheet.setFrozenRows(1);
+        headers = defaultHeaders;
       }
 
-      // Append row matching exact schema: [timestamp, name, email, guildClass, birthDate, phone]
-      betaSheet.appendRow([
-        ts,
-        payload.name || payload.fullName || "Operative",
-        payload.email || "",
-        payload.guildClass || payload.class || payload.archetype || "Tactical Operative",
-        payload.birthDate || payload.birthdate || "",
-        payload.phone || payload.phoneNumber || ""
-      ]);
+      // Dynamic header mapping: place each field in the exact matching column
+      var rowData = [];
+      for (var col = 0; col < headers.length; col++) {
+        var colName = String(headers[col] || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (colName.indexOf("birth") !== -1 && (colName.indexOf("time") !== -1 || colName.indexOf("tob") !== -1)) {
+          // birthTime column
+          rowData.push(payload.birthTime || payload.birthtime || "12:00");
+        } else if (colName.indexOf("birth") !== -1 || colName.indexOf("dob") !== -1) {
+          // birthDate column
+          rowData.push(payload.birthDate || payload.birthdate || "");
+        } else if (colName.indexOf("guild") !== -1 || colName === "class" || colName === "archetype") {
+          // guildClass column
+          rowData.push(payload.guildClass || payload.class || payload.archetype || "Tactical Operative");
+        } else if (colName.indexOf("phone") !== -1 || colName.indexOf("tel") !== -1 || colName.indexOf("mobile") !== -1) {
+          // phone column
+          rowData.push(payload.phone || payload.phoneNumber || "");
+        } else if (colName.indexOf("mail") !== -1) {
+          // email column
+          rowData.push(payload.email || "");
+        } else if (colName.indexOf("name") !== -1 || colName.indexOf("operative") !== -1 || colName.indexOf("callsign") !== -1) {
+          // name column
+          rowData.push(payload.name || payload.fullName || payload.callsign || "Operative");
+        } else if (colName.indexOf("time") !== -1 || colName.indexOf("date") !== -1) {
+          // timestamp column
+          rowData.push(ts);
+        } else {
+          // fallback to direct key lookup or blank
+          rowData.push(payload[headers[col]] || "");
+        }
+      }
+
+      betaSheet.appendRow(rowData);
 
       return jsonResponse({
         result: "success",

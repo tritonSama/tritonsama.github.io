@@ -25,8 +25,10 @@ form.addEventListener("submit", async function (event) {
 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone") ? document.getElementById("phone").value.trim() : "";
+  const guildClass = document.getElementById("guildClass") ? document.getElementById("guildClass").value : "Tactical Operative";
   const birthdate = document.getElementById("birthdate") ? document.getElementById("birthdate").value : "";
+  const birthtime = document.getElementById("birthtime") ? document.getElementById("birthtime").value : "12:00";
+  const phone = document.getElementById("phone") ? document.getElementById("phone").value.trim() : "";
 
   if (!name || !email) {
     showStatus("Please fill in all required fields.", "error");
@@ -47,10 +49,16 @@ form.addEventListener("submit", async function (event) {
   }
 
   const payload = {
+    action: "beta_signup",
     name: name,
     email: email,
-    phone: phone,
+    guildClass: guildClass,
+    birthDate: birthdate,
     birthdate: birthdate,
+    birthTime: birthtime,
+    birthtime: birthtime,
+    phone: phone,
+    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
   };
 
   submitBtn.disabled = true;

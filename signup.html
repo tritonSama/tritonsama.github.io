@@ -108,7 +108,8 @@
         input[type="email"],
         input[type="tel"],
         input[type="date"],
-        input[type="time"] {
+        input[type="time"],
+        select {
             padding: 12px;
             margin: 0 0 10px 0;
             width: 100%;
@@ -223,17 +224,35 @@
 
         <div class="form-container">
             <form id="signupForm" novalidate>
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required placeholder="Your name" autocomplete="name">
+                <label for="name">Name <span style="color:#00ffff;">*</span></label>
+                <input type="text" id="name" name="name" required placeholder="Your full name or operative handle" autocomplete="name">
 
-                <label for="email">Email</label>
+                <label for="email">Email <span style="color:#00ffff;">*</span></label>
                 <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+
+                <label for="guildClass">Guild Class / Archetype <span style="color:#00ffff;">*</span></label>
+                <select id="guildClass" name="guildClass" required>
+                    <option value="Abyssal Vanguard (WATER)">🔱 Abyssal Vanguard (WATER Combo / Disruption)</option>
+                    <option value="Infernal Juggernaut (FIRE)">🔥 Infernal Juggernaut (FIRE Burn / Attrition)</option>
+                    <option value="Zephyr Scout (WIND)">🌪️ Zephyr Scout (WIND Chain-Equip / Control)</option>
+                    <option value="Terra Bastion (EARTH)">🪨 Terra Bastion (EARTH Excavate / Resonance)</option>
+                    <option value="Aether Cyber-Mage">⚡ Aether Cyber-Mage (Grid Special Ops)</option>
+                    <option value="Seraphim Mystic">🔮 Seraphim Mystic (Celestial Protocol)</option>
+                </select>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label for="birthdate">Birth Date <span style="color:#00ffff;">*</span></label>
+                        <input type="date" id="birthdate" name="birthdate" required>
+                    </div>
+                    <div>
+                        <label for="birthtime">Birth Time (Zodiac) <span style="color:#00ffff;">*</span></label>
+                        <input type="time" id="birthtime" name="birthtime" value="12:00" required>
+                    </div>
+                </div>
 
                 <label for="phone">Phone Number</label>
                 <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
-
-                <label for="birthdate">Birthdate</label>
-                <input type="date" id="birthdate" name="birthdate" required>
 
                 <button type="submit" id="submitBtn">Submit</button>
             </form>
