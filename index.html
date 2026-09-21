@@ -17,7 +17,7 @@
                 <p>Operation: Severed Grid Tactical Core | Protocol: SEVERANCE v2.4</p>
             </div>
             <div class="header-controls-block">
-                <span id="auth-operative-badge" class="p-tag p1-tag" onclick="SeveranceManager.openConfigModal()">🔑 PILGRIM-ALPHA (AUTHENTICATED)</span>
+                <span id="auth-angel-badge" class="p-tag p1-tag" onclick="SeveranceManager.openConfigModal()">🔑 PILGRIM-ALPHA (AUTHENTICATED)</span>
                 <button type="button" id="btn-theme-toggle" class="btn-micro btn-phase" onclick="SeveranceManager.toggleTheme()">☀️ Solar Light</button>
                 <button type="button" class="btn-micro btn-action" onclick="SeveranceManager.openConfigModal()">⚙️ Config</button>
             </div>
@@ -26,55 +26,52 @@
         <!-- ======================================================== -->
         <!-- WELCOME TO STAGE 1 OF THE DEMO WELCOME SCREEN             -->
         <!-- ======================================================== -->
-        <section id="welcome-section" class="panel welcome-panel hidden">
+        <section id="welcome-section" class="panel welcome-panel">
             <div class="welcome-badge">🚀 SEVERANCE v2.4: DUAL-CONSCIOUSNESS TACTICAL CORE</div>
             <h2>WELCOME TO OPERATION: SEVERED GRID</h2>
-            <p class="welcome-subtitle">Manage celestial infrastructure in the <strong>Outie Sanctum</strong>, dive into the <strong>Innie Ascent</strong> for d20 tabletop incursions, or battle in the <strong>Operative Armor Duel Arena</strong>.</p>
+            <p class="welcome-subtitle">Manage celestial infrastructure in the <strong>Outie The Great Archive</strong>, dive into the <strong>Divine Chronicles</strong> for d20 tabletop chronicles, or battle in the <strong>Angel Willpower Celestial Combat</strong>.</p>
             
             <div class="welcome-features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🏛️</div>
-                    <div class="feature-title">Outie Sanctum</div>
-                    <div class="feature-desc">Harvest Tithe Credits, synthesize passive modifiers, and bank unextracted Aether Shards.</div>
+                    <div class="feature-title">Outie The Great Archive</div>
+                    <div class="feature-desc">Harvest Tithe Credits, synthesize passive modifiers, and bank unextracted Divine Favor.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🌀</div>
-                    <div class="feature-title">Innie Ascent (5e)</div>
-                    <div class="feature-desc">Tabletop hex grid incursion, d20 + Mod daemon combat, and Synaptic Memory Decay extraction.</div>
+                    <div class="feature-title">Divine Chronicles (5e)</div>
+                    <div class="feature-desc">Tabletop hex grid chronicle, d20 + Mod fiend combat, and Synaptic Memory Decay extraction.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚔️</div>
-                    <div class="feature-title">Armor Duel Arena</div>
-                    <div class="feature-desc">Real-time WebRTC P2P multiplayer duels with elemental archetypes and Fog-of-War wire masking.</div>
+                    <div class="feature-title">Willpower Celestial Combat</div>
+                    <div class="feature-desc">Real-time WebRTC P2P multiplayer combats with elemental archetypes and Fog-of-War wire masking.</div>
                 </div>
             </div>
 
             <div class="welcome-input-row">
-                <input type="text" id="welcome-player-id" placeholder="Enter Operative Callsign (e.g. ALPHA-7)" value="PILGRIM-ALPHA">
+                <input type="text" id="welcome-player-id" placeholder="Enter Angel Paladin Name (e.g. ALPHA-7)" value="PILGRIM-ALPHA">
                 <div class="welcome-cta-group">
-                    <button type="button" class="btn-welcome-enter" style="background:linear-gradient(135deg, #0284c7, #0369a1);" onclick="switchAppMode('OUTIE')">🏛️ OUTIE SANCTUM (BASE)</button>
-                    <button type="button" class="btn-welcome-enter" style="background:linear-gradient(135deg, #7c3aed, #4c1d95);" onclick="SeveranceManager.startIncursion()">🌀 INNIE ASCENT (5e INCURSION)</button>
-                    <button type="button" id="btn-welcome-lobby" class="btn-welcome-enter" onclick="switchAppMode('LOBBY')">🏟️ TRAINING LOBBY</button>
-                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" style="background:linear-gradient(135deg, #1e3a8a, #4338ca);" onclick="enterStage1Demo()">⚔️ COMBAT ARENA</button>
+                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" style="background:linear-gradient(135deg, #1e3a8a, #4338ca); width:100%;" onclick="enterStage1Demo()">🚀 COMMENCE ASCENSION PROTOCOL</button>
                 </div>
             </div>
         </section>
 
         <!-- Mode Tabs -->
-        <nav id="mode-tabs" class="mode-tabs-bar">
+        <nav id="mode-tabs" class="mode-tabs-bar hidden">
             <button id="tab-angelic" class="mode-tab-btn active" onclick="switchAppMode('ANGELIC')">👼 ANGELIC WARRIOR</button>
-            <button id="tab-outie" class="mode-tab-btn" onclick="switchAppMode('OUTIE')">🏛️ OUTIE SANCTUM</button>
-            <button id="tab-innie" class="mode-tab-btn" onclick="switchAppMode('INNIE')">🌀 INNIE ASCENT (5e)</button>
+            <button id="tab-outie" class="mode-tab-btn" onclick="switchAppMode('OUTIE')">🏛️ THE GREAT ARCHIVE</button>
+            <button id="tab-innie" class="mode-tab-btn" onclick="switchAppMode('INNIE')">🌀 DIVINE CHRONICLES (5e)</button>
             <button id="tab-lobby" class="mode-tab-btn" onclick="switchAppMode('LOBBY')">🏟️ TRAINING LOBBY</button>
-            <button id="tab-duel" class="mode-tab-btn" onclick="switchAppMode('DUEL')">⚔️ ARMOR DUEL ARENA</button>
-            <button id="tab-leaderboard" class="mode-tab-btn" onclick="switchAppMode('LEADERBOARD')">🏆 LEADERBOARD</button>
+            <button id="tab-combat" class="mode-tab-btn" onclick="switchAppMode('DUEL')">⚔️ WILLPOWER DUEL ARENA</button>
+            <button id="tab-archangel hierarchy" class="mode-tab-btn" onclick="switchAppMode('LEADERBOARD')">🏆 LEADERBOARD</button>
             <button id="tab-beta" class="mode-tab-btn" onclick="switchAppMode('BETA')">📝 BETA SIGN-UP</button>
         </nav>
 
         <!-- ======================================================== -->
         <!-- ANGELIC WARRIOR RPG PROTOTYPE                            -->
         <!-- ======================================================== -->
-        <section id="angelic-section" class="panel">
+        <section id="angelic-section" class="panel hidden">
             <div class="setup-header">
                 <h2>👼 ANGELIC WARRIOR: PALADIN INITIATION</h2>
                 <p>Become an angelic warrior, master an elemental House, forge your own Order, and rise from Initiate to legendary Paladin.</p>
@@ -136,7 +133,7 @@
                     </div>
 
                     <div class="beta-submit-row" style="margin-top:20px;">
-                        <button type="submit" id="angelic-submit-btn" class="btn-start-duel" style="font-size: 16px; padding: 12px; width: 100%;">👼 CREATE PALADIN / ENTER WORLD</button>
+                        <button type="submit" id="angelic-submit-btn" class="btn-start-combat" style="font-size: 16px; padding: 12px; width: 100%;">👼 CREATE PALADIN / ENTER WORLD</button>
                     </div>
                 </form>
 
@@ -147,36 +144,37 @@
         </section>
 
         <!-- ======================================================== -->
-        <!-- 1. THE OUTIE SANCTUM (C&C BASE GRID & SYNTHESIS MATRIX)  -->
+        <!-- 1. THE THE GREAT ARCHIVE (C&C BASE GRID & SYNTHESIS MATRIX)  -->
         <!-- ======================================================== -->
-        <section id="outie-sanctum-section" class="panel hidden">
+        <section id="archive-section" class="panel hidden">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>
-                        <h2>🏛️ THE OUTIE SANCTUM (C&C BASE GRID)</h2>
+                        <h2>🏛️ THE THE GREAT ARCHIVE (C&C BASE GRID)</h2>
                         <p>Celestial Management & Synthesis Core • Protocol: SEVERANCE v2.4</p>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button type="button" class="btn-start-duel" style="margin:0; padding:8px 16px;" onclick="SeveranceManager.startIncursion()">🌀 DIVE INTO INNIE ASCENT</button>
+                        <button type="button" class="btn-start-combat" style="margin:0; padding:8px 16px;" onclick="SeveranceManager.startChronicle()">🌀 DIVE INTO DIVINE CHRONICLES</button>
+<div style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Log your written Word Count (WC) to harvest Favor.</div>
                     </div>
                 </div>
             </div>
 
             <!-- Balances Overview -->
-            <div class="sanctum-balances-grid">
+            <div class="the great archive-balances-grid">
                 <div class="balance-card">
                     <div class="bal-label">🪙 CELESTIAL TITHE CREDITS</div>
-                    <div id="sanctum-tithes" class="bal-value">450 🪙</div>
+                    <div id="the great archive-tithes" class="bal-value">450 🪙</div>
                     <button type="button" id="btn-harvest-tithes" class="btn-micro btn-action" style="margin-top:6px; width:100%;" onclick="SeveranceManager.harvestTithes()">🪙 HARVEST CELESTIAL TITHES</button>
                 </div>
                 <div class="balance-card">
-                    <div class="bal-label">💎 BANKED AETHER SHARDS</div>
-                    <div id="sanctum-banked-shards" class="bal-value" style="color:#38bdf8;">180 💎</div>
-                    <button type="button" class="btn-micro btn-phase" style="margin-top:6px; width:100%;" onclick="SeveranceManager.bankExtraction()">💎 BANK EXTRACTION SHARDS</button>
+                    <div class="bal-label">💎 BANKED DIVINE FAVORS</div>
+                    <div id="the great archive-banked-favor" class="bal-value" style="color:#38bdf8;">180 💎</div>
+                    <button type="button" class="btn-micro btn-phase" style="margin-top:6px; width:100%;" onclick="SeveranceManager.bankExtraction()">💎 BANK EXTRACTION FAVORS</button>
                 </div>
                 <div class="balance-card">
                     <div class="bal-label">⭐ PILGRIM TITHE RATING</div>
-                    <div id="sanctum-tithe-rating" class="bal-value" style="color:#fcee0a;">2,450 ⭐</div>
+                    <div id="the great archive-tithe-rating" class="bal-value" style="color:#fcee0a;">2,450 ⭐</div>
                     <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Rank Tier: ARCHON VANGUARD</div>
                 </div>
             </div>
@@ -187,14 +185,14 @@
                 <div class="synthesis-grid">
                     <div class="synth-card">
                         <div class="synth-icon">🛡️</div>
-                        <div class="synth-title">Aether Shielding</div>
-                        <div class="synth-desc">+25% Defense vs Incursion Void Surges</div>
+                        <div class="synth-title">Divine Shielding</div>
+                        <div class="synth-desc">+25% Defense vs Chronicle Void Surges</div>
                         <button type="button" id="mod-btn-aetherShield" class="btn-sm btn-action" onclick="SeveranceManager.synthesizeModifier('aetherShield', 100)">✅ ACTIVE</button>
                     </div>
                     <div class="synth-card">
                         <div class="synth-icon">🔥</div>
                         <div class="synth-title">Kinetic Overclock</div>
-                        <div class="synth-desc">+30% Strike Damage on d20 Weapon Attacks</div>
+                        <div class="synth-desc">+30% Strike Damage on d20 Weapon Radiances</div>
                         <button type="button" id="mod-btn-kineticOverclock" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('kineticOverclock', 120)">⚡ SYNTHESIZE (120 🪙)</button>
                     </div>
                     <div class="synth-card">
@@ -205,26 +203,30 @@
                     </div>
                     <div class="synth-card">
                         <div class="synth-icon">💎</div>
-                        <div class="synth-title">Shard Resonator</div>
-                        <div class="synth-desc">+2x Aether Shard Incursion Harvest Yield</div>
-                        <button type="button" id="mod-btn-shardResonator" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('shardResonator', 200)">⚡ SYNTHESIZE (200 🪙)</button>
+                        <div class="synth-title">Favor Resonator</div>
+                        <div class="synth-desc">+2x Divine Favor Chronicle Harvest Yield</div>
+                        <button type="button" id="mod-btn-favorResonator" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('favorResonator', 200)">⚡ SYNTHESIZE (200 🪙)</button>
                     </div>
                 </div>
             </div>
         </section>
 
+            <div class="panel data-panel" style="margin-top:20px; border-color: gold;">
+                <h3 style="color: gold;">⚖️ High Council Status</h3>
+                <p>Status: <span style="color: #4ade80;">Approved</span> | Your chronicles have been reviewed by the High Council. You are cleared for further Divine Chronicles.</p>
+            </div>
         <!-- ======================================================== -->
-        <!-- 2. THE INNIE ASCENT (5e TABLETOP INCURSION & D20 ROLLER)  -->
+        <!-- 2. THE DIVINE CHRONICLES (5e TABLETOP INCURSION & D20 ROLLER)  -->
         <!-- ======================================================== -->
-        <section id="innie-ascent-section" class="panel hidden">
+        <section id="chronicles-section" class="panel hidden">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>
-                        <h2>🌀 THE INNIE ASCENT (5e TACTICAL INCURSION)</h2>
-                        <p>Tabletop Hex Incursion • d20 Combat Engine • Synaptic Memory Decay Active</p>
+                        <h2>🌀 THE DIVINE CHRONICLES (5e TACTICAL INCURSION)</h2>
+                        <p>Tabletop Hex Chronicle • d20 Combat Engine • Synaptic Memory Decay Active</p>
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <button type="button" class="btn-start-duel" style="margin:0; padding:8px 16px; background:linear-gradient(135deg, #10b981, #059669);" onclick="SeveranceManager.extractFromIncursion()">⚡ EXTRACT & ESCAPE TO SANCTUM</button>
+                        <button type="button" class="btn-start-combat" style="margin:0; padding:8px 16px; background:linear-gradient(135deg, #10b981, #059669);" onclick="SeveranceManager.extractFromChronicle()">⚡ EXTRACT & ESCAPE TO SANCTUM</button>
                     </div>
                 </div>
             </div>
@@ -232,60 +234,60 @@
             <!-- Environmental Synaptic Memory Decay Meter -->
             <div class="decay-meter-container">
                 <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
-                    <span style="color:#ef4444; font-weight:bold;">⚠️ SYNAPTIC MEMORY DECAY: <span id="incursion-decay-text">0%</span></span>
-                    <span style="color:#38bdf8; font-weight:bold;">UNBANKED SHARDS AT RISK: <span id="incursion-bag-shards">0 💎</span></span>
+                    <span style="color:#ef4444; font-weight:bold;">⚠️ SYNAPTIC MEMORY DECAY: <span id="chronicle-decay-text">0%</span></span>
+                    <span style="color:#38bdf8; font-weight:bold;">UNBANKED FAVORS AT RISK: <span id="chronicle-bag-favor">0 💎</span></span>
                 </div>
                 <div class="decay-progress-bar-bg">
-                    <div id="incursion-decay-bar" class="decay-progress" style="width:0%;"></div>
+                    <div id="chronicle-decay-bar" class="decay-progress" style="width:0%;"></div>
                 </div>
-                <div style="font-size:10px; color:#94a3b8; margin-top:3px;">Warning: If decay reaches 100%, total Amnesia Wipe occurs and unbanked shards are lost!</div>
+                <div style="font-size:10px; color:#94a3b8; margin-top:3px;">Warning: If decay reaches 100%, total Amnesia Wipe occurs and unbanked favor are lost!</div>
             </div>
 
-            <div class="incursion-layout-grid">
-                <!-- 3D / Tabletop Hex Incursion Arena -->
-                <div class="incursion-grid-card">
+            <div class="chronicle-layout-grid">
+                <!-- 3D / Tabletop Hex Chronicle Arena -->
+                <div class="chronicle-grid-card">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                         <span style="font-size:12px; font-weight:bold; color:#cbd5e1;">🗺️ TACTICAL HEX MATRIX (SECTOR 0-6)</span>
                         <span style="font-size:11px; color:#38bdf8;">Click node or use controls to move</span>
                     </div>
-                    <div id="incursion-hex-grid" class="hex-grid-container"></div>
+                    <div id="chronicle-hex-grid" class="hex-grid-container"></div>
                     <div class="hex-move-controls">
-                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(-1, 0)">⬆️ North</button>
+                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(-1, 0)">⬆️ North</button>
                         <div style="display:flex; gap:6px;">
-                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(0, -1)">⬅️ West</button>
-                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(0, 1)">➡️ East</button>
+                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(0, -1)">⬅️ West</button>
+                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(0, 1)">➡️ East</button>
                         </div>
-                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveIncursion(1, 0)">⬇️ South</button>
+                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(1, 0)">⬇️ South</button>
                     </div>
                 </div>
 
-                <!-- D&D 5e Combat Dice Roller & Daemon Encounter -->
-                <div class="incursion-combat-card">
+                <!-- D&D 5e Combat Dice Roller & Fiend Encounter -->
+                <div class="chronicle-combat-card">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:12px; font-weight:bold; color:#f87171;">⚔️ DAEMON BREACH ENCOUNTER</span>
+                        <span style="font-size:12px; font-weight:bold; color:#f87171;">⚔️ FIEND BREACH ENCOUNTER</span>
                         <span class="p-tag" style="background:#450a0a; color:#fca5a5; border:1px solid #dc2626;">THREAT: HOSTILE</span>
                     </div>
 
-                    <div class="daemon-stat-block">
-                        <div id="daemon-name" style="font-weight:bold; font-size:13px; color:#f8fafc;">👾 Void-Corruptor Archon</div>
-                        <div style="font-size:11px; color:#94a3b8;">Armor Class (AC): <strong>13</strong> | Bounty: <strong>30 💎</strong></div>
+                    <div class="fiend-stat-block">
+                        <div id="fiend-name" style="font-weight:bold; font-size:13px; color:#f8fafc;">👾 Void-Corruptor Archon</div>
+                        <div style="font-size:11px; color:#94a3b8;">Willpower Class (AC): <strong>13</strong> | Bounty: <strong>30 💎</strong></div>
                         <div style="display:flex; justify-content:space-between; font-size:10px; margin-top:6px;">
-                            <span>DAEMON INTEGRITY</span>
-                            <span id="daemon-hp">40 / 40 HP</span>
+                            <span>FIEND INTEGRITY</span>
+                            <span id="fiend-hp">40 / 40 HP</span>
                         </div>
                         <div class="decay-progress-bar-bg" style="height:6px; margin-top:2px;">
-                            <div id="daemon-hp-bar" class="decay-progress" style="width:100%; background:#ef4444;"></div>
+                            <div id="fiend-hp-bar" class="decay-progress" style="width:100%; background:#ef4444;"></div>
                         </div>
                     </div>
 
                     <!-- Dice Roller Box -->
                     <div id="dice-result-display" class="dice-roller-box normal">
                         <div style="font-size:24px;">🎲 d20</div>
-                        <div style="font-size:11px; color:#94a3b8;">Select attack action below to roll D&D 5e combat check vs Daemon AC (13)</div>
+                        <div style="font-size:11px; color:#94a3b8;">Select miracle action below to roll D&D 5e combat check vs Fiend AC (13)</div>
                     </div>
 
                     <div class="dice-actions-row">
-                        <button type="button" class="btn-sm btn-start-duel" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('ATTACK')">⚔️ Weapon Strike (d20 + DEX)</button>
+                        <button type="button" class="btn-sm btn-start-combat" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('RADIANCE')">⚔️ Weapon Strike (d20 + DEX)</button>
                         <button type="button" class="btn-sm btn-phase" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('BREACH')">🧠 Cyber-Breach (d20 + INT)</button>
                         <button type="button" class="btn-sm btn-phase" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('SAVE')">🛡️ Kinetic Shield (d20 + CON)</button>
                     </div>
@@ -309,8 +311,8 @@
                 <div class="lobby-card host-card">
                     <div class="lobby-card-badge">🔱 HOST (PLAYER 1)</div>
                     <h3>1. Create New Match</h3>
-                    <p>Initialize a WebRTC combat room as Player 1. Runs the authoritative duel engine and broadcasts state to connecting peers.</p>
-                    <button type="button" class="btn-start-duel" onclick="MultiplayerManager.hostMatch()">🎮 Create Match & Generate Room ID</button>
+                    <p>Initialize a WebRTC combat room as Player 1. Runs the authoritative combat engine and broadcasts state to connecting peers.</p>
+                    <button type="button" class="btn-start-combat" onclick="MultiplayerManager.hostMatch()">🎮 Create Match & Generate Room ID</button>
                     
                     <div id="lobby-room-code-display" class="room-code-display hidden">
                         <label for="lobby-generated-code">Your Room ID (Share with Opponent / Spectator):</label>
@@ -318,7 +320,7 @@
                             <input type="text" id="lobby-generated-code" readonly value="">
                             <button type="button" id="btn-copy-code" class="btn-sm btn-phase" onclick="MultiplayerManager.copyRoomCode()">📋 Copy Code</button>
                         </div>
-                        <button type="button" class="btn-start-duel" style="margin-top:6px;" onclick="switchAppMode('DUEL')">⚔️ Enter Deck Selector</button>
+                        <button type="button" class="btn-start-combat" style="margin-top:6px;" onclick="switchAppMode('DUEL')">⚔️ Enter Deck Selector</button>
                     </div>
                 </div>
 
@@ -329,7 +331,7 @@
                     <p>Paste a Room ID generated by the Host to link directly via WebRTC DataChannels as Player 2.</p>
                     <label for="lobby-join-code">Enter Host Room ID:</label>
                     <input type="text" id="lobby-join-code" placeholder="e.g. HB-4821">
-                    <button type="button" class="btn-start-duel" onclick="MultiplayerManager.joinMatch(document.getElementById('lobby-join-code').value)">⚔️ Connect & Join as Player 2</button>
+                    <button type="button" class="btn-start-combat" onclick="MultiplayerManager.joinMatch(document.getElementById('lobby-join-code').value)">⚔️ Connect & Join as Player 2</button>
                 </div>
 
                 <!-- Option 3: Spectate -->
@@ -367,7 +369,7 @@
                         <button type="button" class="btn-micro btn-action" onclick="MultiplayerManager.hostMatch()">➕ Host Public Match</button>
                     </div>
                 </div>
-                <p style="font-size:11px; color:#94a3b8; margin:4px 0 10px 0;">Live feed of open duels awaiting Player 2. Click <strong>"⚔️ 1-Click Join"</strong> to connect instantly. Strict 2-player capacity is atomically enforced.</p>
+                <p style="font-size:11px; color:#94a3b8; margin:4px 0 10px 0;">Live feed of open combats awaiting Player 2. Click <strong>"⚔️ 1-Click Join"</strong> to connect instantly. Strict 2-player capacity is atomically enforced.</p>
                 
                 <div id="lobby-rooms-list" class="lobby-rooms-grid">
                     <div class="lobby-feed-empty">
@@ -382,14 +384,14 @@
         <!-- ======================================================== -->
         <!-- PRE-DUEL LOADOUT & DECK SELECTION SCREEN                -->
         <!-- ======================================================== -->
-        <section id="pre-duel-setup-section" class="panel hidden">
+        <section id="pre-combat-setup-section" class="panel hidden">
             <div class="setup-header">
                 <h2>⚡ OPERATIVE TACTICAL DECK SELECTION</h2>
                 <p>Configure archetypes and loadout profiles before entering the combat grid.</p>
                 <div id="setup-match-status" class="setup-status-banner">🌐 MATCH MODE: LOCAL PRACTICE</div>
             </div>
 
-            <div class="pre-duel-grid">
+            <div class="pre-combat-grid">
                 <!-- P1 Configuration Card -->
                 <div class="setup-player-card p1-setup-border">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -397,7 +399,7 @@
                         <span id="setup-p1-role-badge" class="p-tag p1-tag">PLAYER 1</span>
                     </div>
                     <label for="setup-p1-deck">Select Combat Archetype:</label>
-                    <select id="setup-p1-deck" onchange="DuelEngine.changeDeck('P1', this.value)">
+                    <select id="setup-p1-deck" onchange="CombatEngine.changeDeck('P1', this.value)">
                         <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
                         <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
                         <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
@@ -418,7 +420,7 @@
                         <span id="setup-p2-role-badge" class="p-tag p2-tag">PLAYER 2</span>
                     </div>
                     <label for="setup-p2-deck">Select Combat Archetype:</label>
-                    <select id="setup-p2-deck" onchange="DuelEngine.changeDeck('P2', this.value)">
+                    <select id="setup-p2-deck" onchange="CombatEngine.changeDeck('P2', this.value)">
                         <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
                         <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
                         <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
@@ -434,48 +436,48 @@
             </div>
 
             <div class="setup-action-row">
-                <button type="button" id="btn-start-duel-action" class="btn-start-duel" onclick="DuelEngine.startConfiguredMatch()">⚔️ INITIALIZE DUEL & ENGAGE COMBAT</button>
+                <button type="button" id="btn-start-combat-action" class="btn-start-combat" onclick="CombatEngine.startConfiguredMatch()">⚔️ INITIALIZE DUEL & ENGAGE COMBAT</button>
             </div>
         </section>
 
         <!-- ======================================================== -->
-        <!-- ARMOR DUEL ACTIVE COMBAT ARENA                           -->
+        <!-- WILLPOWER DUEL ACTIVE COMBAT ARENA                           -->
         <!-- ======================================================== -->
-        <section id="duel-section" class="panel hidden">
+        <section id="combat-section" class="panel hidden">
             <!-- Top Controls Row -->
-            <div class="duel-top-bar">
+            <div class="combat-top-bar">
                 <div class="deck-indicator-summary">
                     <span id="p1-summary-badge" class="p-tag p1-tag">P1: ABYSSAL TIDE</span>
                     <span style="color:#64748b; font-size:11px;">VS</span>
                     <span id="p2-summary-badge" class="p-tag p2-tag">P2: INFERNAL FORGE</span>
                 </div>
-                <button class="btn-sm btn-reconfigure" onclick="DuelEngine.openSetupScreen()">⚙️ Change Decks / Setup</button>
+                <button class="btn-sm btn-reconfigure" onclick="CombatEngine.openSetupScreen()">⚙️ Change Decks / Setup</button>
             </div>
 
             <!-- Turn Banner & Phase Bar -->
-            <div class="duel-arena-header">
+            <div class="combat-arena-header">
                 <div id="turn-indicator" class="turn-status-banner">👉 INITIALIZING...</div>
                 <div id="phase-bar" class="phase-bar-container"></div>
                 <div class="phase-action-buttons">
-                    <button class="btn-sm btn-phase" onclick="DuelEngine.startBattlePhase()">⚔️ Battle Phase</button>
-                    <button class="btn-sm btn-phase" onclick="DuelEngine.startMainPhase2()">🏛️ Main Phase 2</button>
-                    <button class="btn-sm btn-phase" onclick="DuelEngine.startEndPhase()">🚪 End Turn</button>
-                    <button class="btn-sm btn-warn"  onclick="DuelEngine.passReaction(DuelEngine.reactionPlayer)">⏭️ Pass Reaction</button>
-                    <button class="btn-sm btn-phase" onclick="DuelEngine.declareStrike()">⚔️ Declare Strike</button>
-                    <button class="btn-sm btn-reset" onclick="DuelEngine.initMatch()">🔁 Restart Match</button>
+                    <button class="btn-sm btn-phase" onclick="CombatEngine.startBattlePhase()">⚔️ Battle Phase</button>
+                    <button class="btn-sm btn-phase" onclick="CombatEngine.startMainPhase2()">🏛️ Main Phase 2</button>
+                    <button class="btn-sm btn-phase" onclick="CombatEngine.startEndPhase()">🚪 End Turn</button>
+                    <button class="btn-sm btn-warn"  onclick="CombatEngine.passReaction(CombatEngine.reactionPlayer)">⏭️ Pass Reaction</button>
+                    <button class="btn-sm btn-phase" onclick="CombatEngine.declareStrike()">⚔️ Declare Strike</button>
+                    <button class="btn-sm btn-reset" onclick="CombatEngine.initMatch()">🔁 Restart Match</button>
                 </div>
             </div>
 
             <!-- Chain Link Stack -->
             <div class="chain-arena-box">
                 <div style="font-size:11px; font-weight:bold; color:#f43f5e; margin-bottom:4px;">⚡ Active LIFO Chain Link Stack:</div>
-                <div id="duel-chain-stack" class="chain-stack-flex">
+                <div id="combat-chain-stack" class="chain-stack-flex">
                     <span style="color:#64748b; font-size:11px;">[No Active Chain Links]</span>
                 </div>
             </div>
 
-            <!-- Dual Operative Command Panels -->
-            <div class="duel-split-layout">
+            <!-- Dual Angel Command Panels -->
+            <div class="combat-split-layout">
 
                 <!-- P1: OPERATIVE ALPHA -->
                 <div class="player-deck-card p1-card">
@@ -486,14 +488,14 @@
                             <span>⚡ <strong id="p1-energy" style="color:#38bdf8;">100</strong></span>
                         </div>
                     </div>
-                    <div class="operative-combat-stats">
+                    <div class="angel-combat-stats">
                         <span>⚔️ ATK: <strong id="p1-atk" style="color:#ef4444;">500</strong></span>
                         <span>🛡️ DEF: <strong id="p1-def" style="color:#38bdf8;">500</strong></span>
                         <span>🧥 Gear: <strong id="p1-pieces" style="color:#fbbf24;">0/5</strong></span>
                     </div>
 
-                    <!-- Armor Loadout -->
-                    <div class="field-zone-label">🧥 Operative Armor Loadout:</div>
+                    <!-- Willpower Loadout -->
+                    <div class="field-zone-label">🧥 Angel Willpower Loadout:</div>
                     <div id="p1-armor" class="armor-loadout-grid"></div>
 
                     <!-- Spell/Trap Zone -->
@@ -514,14 +516,14 @@
                             <span>⚡ <strong id="p2-energy" style="color:#c084fc;">100</strong></span>
                         </div>
                     </div>
-                    <div class="operative-combat-stats">
+                    <div class="angel-combat-stats">
                         <span>⚔️ ATK: <strong id="p2-atk" style="color:#ef4444;">500</strong></span>
                         <span>🛡️ DEF: <strong id="p2-def" style="color:#38bdf8;">500</strong></span>
                         <span>🧥 Gear: <strong id="p2-pieces" style="color:#fbbf24;">0/5</strong></span>
                     </div>
 
-                    <!-- Armor Loadout -->
-                    <div class="field-zone-label">🧥 Operative Armor Loadout:</div>
+                    <!-- Willpower Loadout -->
+                    <div class="field-zone-label">🧥 Angel Willpower Loadout:</div>
                     <div id="p2-armor" class="armor-loadout-grid"></div>
 
                     <!-- Spell/Trap Zone -->
@@ -537,13 +539,13 @@
         </section>
 
         <!-- ======================================================== -->
-        <!-- ABILITY & ARMOR INTEL INSPECTOR MODAL                    -->
+        <!-- ABILITY & WILLPOWER INTEL INSPECTOR MODAL                    -->
         <!-- ======================================================== -->
-        <div id="intel-inspector-modal" class="intel-modal-overlay hidden" onclick="if(event.target===this)DuelEngine.closeCardInspector()">
+        <div id="intel-inspector-modal" class="intel-modal-overlay hidden" onclick="if(event.target===this)CombatEngine.closeCardInspector()">
             <div class="intel-modal-box">
                 <div class="intel-modal-header">
-                    <span id="intel-modal-tag" class="p-tag p1-tag">🧥 ARMOR INTEL</span>
-                    <button type="button" class="intel-modal-close" onclick="DuelEngine.closeCardInspector()">✖</button>
+                    <span id="intel-modal-tag" class="p-tag p1-tag">🧥 WILLPOWER INTEL</span>
+                    <button type="button" class="intel-modal-close" onclick="CombatEngine.closeCardInspector()">✖</button>
                 </div>
                 <h3 id="intel-modal-title">Card Name</h3>
                 <div id="intel-modal-subtitle" class="intel-modal-subtitle">Slot / Type</div>
@@ -551,7 +553,7 @@
                 <div id="intel-modal-stats-row" class="intel-modal-stats-row">
                     <span>⚔️ ATK: <strong id="intel-stat-atk" style="color:#ef4444;">+0</strong></span>
                     <span>🛡️ DEF: <strong id="intel-stat-def" style="color:#38bdf8;">+0</strong></span>
-                    <span>⚡ Cost: <strong id="intel-stat-cost" style="color:#fbbf24;">0 Energy</strong></span>
+                    <span>⚡ Cost: <strong id="intel-stat-cost" style="color:#fbbf24;">0 Grace</strong></span>
                 </div>
 
                 <div class="intel-modal-body">
@@ -562,7 +564,7 @@
                 </div>
 
                 <div class="intel-modal-footer">
-                    <button type="button" class="btn-sm btn-phase" style="width:100%;" onclick="DuelEngine.closeCardInspector()">Close Intel</button>
+                    <button type="button" class="btn-sm btn-phase" style="width:100%;" onclick="CombatEngine.closeCardInspector()">Close Intel</button>
                 </div>
             </div>
         </div>
@@ -580,8 +582,8 @@
                 <form id="betaSignupForm" onsubmit="submitBetaTesterForm(event)">
                     <div class="beta-form-grid">
                         <div class="beta-field-group">
-                            <label for="beta-name">Operative / Full Name <span class="req-star">*</span></label>
-                            <input type="text" id="beta-name" name="name" required placeholder="Your full name or operative handle">
+                            <label for="beta-name">Angel / Full Name <span class="req-star">*</span></label>
+                            <input type="text" id="beta-name" name="name" required placeholder="Your full name or angel handle">
                         </div>
 
                         <div class="beta-field-group">
@@ -596,7 +598,7 @@
                                 <option value="Infernal Juggernaut (FIRE)">🔥 Infernal Juggernaut (FIRE Burn / Attrition)</option>
                                 <option value="Zephyr Scout (WIND)">🌪️ Zephyr Scout (WIND Chain-Equip / Control)</option>
                                 <option value="Terra Bastion (EARTH)">🪨 Terra Bastion (EARTH Excavate / Resonance)</option>
-                                <option value="Aether Cyber-Mage">⚡ Aether Cyber-Mage (Grid Special Ops)</option>
+                                <option value="Divine Cyber-Mage">⚡ Divine Cyber-Mage (Grid Special Ops)</option>
                                 <option value="Seraphim Mystic">🔮 Seraphim Mystic (Celestial Protocol)</option>
                             </select>
                         </div>
@@ -618,7 +620,7 @@
                     </div>
 
                     <div class="beta-submit-row">
-                        <button type="submit" id="beta-submit-btn" class="btn-start-duel">🚀 TRANSMIT BETA APPLICATION TO GOOGLE SHEETS</button>
+                        <button type="submit" id="beta-submit-btn" class="btn-start-combat">🚀 TRANSMIT BETA APPLICATION TO GOOGLE SHEETS</button>
                     </div>
                 </form>
                 <div id="beta-form-status" class="form-status-msg"></div>
@@ -628,7 +630,7 @@
         <!-- ======================================================== -->
         <!-- TOP PILGRIMS MATRIX LEADERBOARD                          -->
         <!-- ======================================================== -->
-        <section id="leaderboard-section" class="panel hidden">
+        <section id="archangel hierarchy-section" class="panel hidden">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>
@@ -639,18 +641,18 @@
                 </div>
             </div>
 
-            <div class="leaderboard-table-container">
-                <table class="leaderboard-table">
+            <div class="archangel hierarchy-table-container">
+                <table class="archangel hierarchy-table">
                     <thead>
                         <tr>
                             <th>RANK</th>
                             <th>OPERATIVE ID</th>
                             <th>NAME / CALLSIGN</th>
-                            <th>BANKED SHARDS</th>
+                            <th>BANKED FAVORS</th>
                             <th>TITHE RATING</th>
                         </tr>
                     </thead>
-                    <tbody id="leaderboard-table-body">
+                    <tbody id="archangel hierarchy-table-body">
                         <!-- Populated by SeveranceManager.fetchLeaderboard() -->
                     </tbody>
                 </table>
@@ -664,7 +666,7 @@
                     <h3>⚙️ SEVERED GRID SYSTEM CONFIGURATION</h3>
                     <button type="button" class="intel-modal-close" onclick="SeveranceManager.closeConfigModal()">✕</button>
                 </div>
-                <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Configure your deployed Google Apps Script database endpoint and Operative credentials.</p>
+                <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Configure your deployed Google Apps Script database endpoint and Angel credentials.</p>
 
                 <div class="beta-field-group">
                     <label for="config-api-endpoint">Google Apps Script Web App URL (HeavenlyBound_GameDB):</label>
@@ -672,8 +674,8 @@
                 </div>
 
                 <div class="beta-field-group" style="margin-top:10px;">
-                    <label for="config-operative-id">Operative ID / Callsign:</label>
-                    <input type="text" id="config-operative-id" value="PILGRIM-ALPHA">
+                    <label for="config-angel-id">Angel ID / Paladin Name:</label>
+                    <input type="text" id="config-angel-id" value="PILGRIM-ALPHA">
                 </div>
 
                 <div class="beta-field-group" style="margin-top:10px;">
@@ -692,7 +694,7 @@
         <div class="terminal-box">
             <div style="font-size:11px; color:#22c55e; font-weight:bold; margin-bottom:6px; text-transform:uppercase;">📡 Tactical Communications Log</div>
             <div id="terminal-log">
-                <div>[SYSTEM] HeavenlyBound operational. Awaiting operative deployment.</div>
+                <div>[SYSTEM] HeavenlyBound operational. Awaiting angel deployment.</div>
             </div>
         </div>
     </div>
@@ -702,12 +704,13 @@
         function enterStage1Demo() {
             var welcomeSec = document.getElementById('welcome-section');
             if (welcomeSec) welcomeSec.classList.add('hidden');
-            switchAppMode('DUEL');
+            // Force user to character creation first
+            switchAppMode('ANGELIC');
             if (typeof logToTerminal === 'function') {
-                var callsignEl = document.getElementById('welcome-player-id');
-                var cs = (callsignEl && callsignEl.value) || 'PILGRIM-ALPHA';
-                logToTerminal('🚀 [STAGE 1 DEMO] Grid Link Initialized for Operative: ' + cs);
-                logToTerminal('⚔️ Welcome to Stage 1: Operative Armor Card Duel Arena.');
+                var paladinNameEl = document.getElementById('welcome-player-id');
+                var cs = (paladinNameEl && paladinNameEl.value) || 'PILGRIM-ALPHA';
+                logToTerminal('🚀 [ASCENSION PROTOCOL] Initialization Started for: ' + cs);
+                logToTerminal('👼 Welcome to the First Radiance Era. Please create your Angelic profile.');
             }
         }
 
@@ -720,80 +723,7 @@
             }
         }
 
-        function switchAppMode(mode) {
-            var welcomeSec = document.getElementById('welcome-section');
-            var outieSec   = document.getElementById('outie-sanctum-section');
-            var innieSec   = document.getElementById('innie-ascent-section');
-            var lobbySec   = document.getElementById('training-lobby-section');
-            var setupSec   = document.getElementById('pre-duel-setup-section');
-            var duelSec    = document.getElementById('duel-section');
-            var lbSec      = document.getElementById('leaderboard-section');
-            var betaSec    = document.getElementById('beta-signup-section');
-            
-            var modeTabs   = document.getElementById('mode-tabs');
-            var tabOutie   = document.getElementById('tab-outie');
-            var tabInnie   = document.getElementById('tab-innie');
-            var tabLobby   = document.getElementById('tab-lobby');
-            var tabDuel    = document.getElementById('tab-duel');
-            var tabLb      = document.getElementById('tab-leaderboard');
-            var tabBeta    = document.getElementById('tab-beta');
-
-            if (welcomeSec) welcomeSec.classList.add('hidden');
-            if (modeTabs)   modeTabs.classList.remove('hidden');
-
-            // Toggle tab active state
-            if (tabOutie) tabOutie.classList.toggle('active', mode === 'OUTIE');
-            if (tabInnie) tabInnie.classList.toggle('active', mode === 'INNIE');
-            if (tabLobby) tabLobby.classList.toggle('active', mode === 'LOBBY');
-            if (tabDuel)  tabDuel.classList.toggle('active', mode === 'DUEL');
-            if (tabLb)    tabLb.classList.toggle('active', mode === 'LEADERBOARD');
-            if (tabBeta)  tabBeta.classList.toggle('active', mode === 'BETA' || mode === 'SOLO');
-
-            // Hide all by default
-            if (outieSec) outieSec.classList.add('hidden');
-            if (innieSec) innieSec.classList.add('hidden');
-            if (lobbySec) lobbySec.classList.add('hidden');
-            if (setupSec) setupSec.classList.add('hidden');
-            if (duelSec)  duelSec.classList.add('hidden');
-            if (lbSec)    lbSec.classList.add('hidden');
-            if (betaSec)  betaSec.classList.add('hidden');
-
-            if (mode === 'OUTIE') {
-                if (outieSec) outieSec.classList.remove('hidden');
-                if (window.SeveranceManager && typeof window.SeveranceManager.updateSanctumDisplay === 'function') {
-                    window.SeveranceManager.updateSanctumDisplay();
-                }
-            } else if (mode === 'INNIE') {
-                if (innieSec) innieSec.classList.remove('hidden');
-                if (window.SeveranceManager && typeof window.SeveranceManager.renderIncursionGrid === 'function') {
-                    window.SeveranceManager.renderIncursionGrid();
-                    window.SeveranceManager.updateIncursionDisplay();
-                }
-            } else if (mode === 'LOBBY') {
-                if (lobbySec) lobbySec.classList.remove('hidden');
-                if (window.LobbyFeedManager && typeof window.LobbyFeedManager.renderLobbyFeed === 'function') {
-                    window.LobbyFeedManager.renderLobbyFeed();
-                }
-            } else if (mode === 'DUEL') {
-                if (window.DuelEngine && window.DuelEngine.isDuelActive) {
-                    if (duelSec) duelSec.classList.remove('hidden');
-                } else {
-                    if (window.DuelEngine && typeof window.DuelEngine.openSetupScreen === 'function') {
-                        window.DuelEngine.openSetupScreen();
-                    } else if (setupSec) {
-                        setupSec.classList.remove('hidden');
-                    }
-                }
-            } else if (mode === 'LEADERBOARD') {
-                if (lbSec) lbSec.classList.remove('hidden');
-                if (window.SeveranceManager && typeof window.SeveranceManager.fetchLeaderboard === 'function') {
-                    window.SeveranceManager.fetchLeaderboard();
-                }
-            } else if (mode === 'BETA' || mode === 'SOLO') {
-                if (betaSec) betaSec.classList.remove('hidden');
-            }
-        }
-    </script>
+            </script>
     <script src="script.js?v=2.9.6"></script>
     <script src="multiplayer.js?v=2.9.6"></script>
     <script src="severance.js?v=2.9.6"></script>

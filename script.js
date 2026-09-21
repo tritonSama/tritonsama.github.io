@@ -1,36 +1,36 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec";
 
 // Global State
-let aetherShards = 100;
+let aetherFavor = 100;
 let currentAppMode = "DUEL";
 let allCardsPool = [];
 let archetypeDecks = {};
 
-// Armor Slot definitions — body slots each operative can equip
-const ARMOR_SLOTS = ["helm", "torso", "arms", "legs", "back"];
+// Willpower Slot definitions — body slots each angel can equip
+const WILLPOWER_SLOTS = ["helm", "torso", "arms", "legs", "back"];
 
 // Fallback card pool
 const DEFAULT_CARDS = [
-    { id: "ARMOR_001", name: "Seraph Blade Gauntlets",         type: "Armor/Equipment", slot: "arms",  tier: 1, atkBonus: 400, defBonus: 150, activation_cost: { energy: 20 }, resolution_payload: "Arms Slot: Dual radiant energy blades (+400 ATK / +150 DEF).",          effect: { equipSlot: "arms",  atkBonus: 400, defBonus: 150 } },
-    { id: "ARMOR_002", name: "Apophis Stone Vanguard Plate",   type: "Armor/Equipment", slot: "torso", tier: 1, atkBonus: 200, defBonus: 600, activation_cost: { energy: 25 }, resolution_payload: "Torso Slot: Ancient stone chest plate (+200 ATK / +600 DEF).",           effect: { equipSlot: "torso", atkBonus: 200, defBonus: 600 } },
-    { id: "ARMOR_003", name: "Cybernetic Archangel Wings",     type: "Armor/Equipment", slot: "back",  tier: 2, atkBonus: 700, defBonus: 500, activation_cost: { energy: 40 }, resolution_payload: "Back Slot: Titanium ceramic wings (+700 ATK / +500 DEF).",             effect: { equipSlot: "back",  atkBonus: 700, defBonus: 500 } },
-    { id: "ARMOR_004", name: "Solaris Seraph Crown",           type: "Armor/Equipment", slot: "helm",  tier: 3, atkBonus: 900, defBonus: 700, activation_cost: { energy: 50 }, resolution_payload: "Helm Slot: Solar sovereign crown (+900 ATK / +700 DEF).",              effect: { equipSlot: "helm",  atkBonus: 900, defBonus: 700 } },
-    { id: "ARMOR_005", name: "Void Stalker Stealth Cloak",     type: "Armor/Equipment", slot: "back",  tier: 1, atkBonus: 550, defBonus: 200, activation_cost: { energy: 20 }, resolution_payload: "Back Slot: Dark matter infiltration cloak (+550 ATK / +200 DEF).",    effect: { equipSlot: "back",  atkBonus: 550, defBonus: 200 } },
-    { id: "ARMOR_006", name: "Cryo Sentry Leg Guards",         type: "Armor/Equipment", slot: "legs",  tier: 1, atkBonus: 150, defBonus: 650, activation_cost: { energy: 20 }, resolution_payload: "Legs Slot: Sub-zero cryo-alloy plating (+150 ATK / +650 DEF).",      effect: { equipSlot: "legs",  atkBonus: 150, defBonus: 650 } },
-    { id: "ARMOR_007", name: "Dark Matter Shoulderplates",     type: "Armor/Equipment", slot: "arms",  tier: 2, atkBonus: 800, defBonus: 550, activation_cost: { energy: 40 }, resolution_payload: "Arms Slot: Void-forged titanite pauldrons (+800 ATK / +550 DEF).",  effect: { equipSlot: "arms",  atkBonus: 800, defBonus: 550 } },
-    { id: "ARMOR_008", name: "Abyssal Dragon Scale Chestplate",type: "Armor/Equipment", slot: "torso", tier: 3, atkBonus: 600, defBonus: 900, activation_cost: { energy: 50 }, resolution_payload: "Torso Slot: Void-dragon scale plating (+600 ATK / +900 DEF).",       effect: { equipSlot: "torso", atkBonus: 600, defBonus: 900 } },
-    { id: "SPELL_001", name: "Aether Inversion Protocol", type: "Spell/Quick-Play", spell_speed: 2, activation_cost: { energy: 25 }, resolution_payload: "Negate active chain link and refund 20 energy.", effect: { negate: true, energyRefund: 20 } },
-    { id: "SPELL_002", name: "Solaris Flare Burst",       type: "Spell/Normal",     spell_speed: 1, activation_cost: { energy: 30 }, resolution_payload: "Deal 800 direct LP damage.",                    effect: { directDamage: 800 } },
-    { id: "SPELL_003", name: "Mystical Space Typhoon",    type: "Spell/Quick-Play", spell_speed: 2, activation_cost: { energy: 20 }, resolution_payload: "Destroy 1 equipped Armor piece on opponent.",   effect: { destroyEquipment: true } },
-    { id: "SPELL_004", name: "Pot of Aether Greed",       type: "Spell/Normal",     spell_speed: 1, activation_cost: { energy: 25 }, resolution_payload: "Draw 2 cards from deck.",                      effect: { drawCards: 2 } },
-    { id: "SPELL_005", name: "Synaptic Echo Anchor",      type: "Spell/Continuous", spell_speed: 1, activation_cost: { energy: 20 }, resolution_payload: "+300 LP and +20 Energy each Standby Phase.",   effect: { standbyHeal: 300, standbyEnergy: 20 } },
-    { id: "SPELL_006", name: "Power Bond Sync",           type: "Spell/Normal",     spell_speed: 1, activation_cost: { energy: 35 }, resolution_payload: "Double ATK bonus of one equipped Armor piece this turn.", effect: { doubleEquipAtk: true } },
-    { id: "TRAP_001", name: "Cryo-Armor Directive",     type: "Trap/Normal",     spell_speed: 2, activation_cost: { energy: 25 }, resolution_payload: "When attacked: Halt attack and grant +600 LP.",                    effect: { haltAttack: true, heal: 600 } },
-    { id: "TRAP_002", name: "Armor Shatter Collapse",   type: "Trap/Normal",     spell_speed: 2, activation_cost: { energy: 30 }, resolution_payload: "Destroy target Armor piece on opponent operative.",               effect: { destroyTargetArmor: true } },
-    { id: "TRAP_003", name: "Mirror Force Radiance",    type: "Trap/Normal",     spell_speed: 2, activation_cost: { energy: 35 }, resolution_payload: "When attacked: Destroy 1 random opponent equipped Armor piece!",   effect: { reflectDestroyArmor: true } },
-    { id: "TRAP_004", name: "Skill Drain Matrix",       type: "Trap/Continuous", spell_speed: 2, activation_cost: { energy: 30 }, resolution_payload: "Drain 40 Energy from opponent each turn.",                        effect: { energyDrain: 40 } },
-    { id: "TRAP_005", name: "Solemn Sentinel Barrier",  type: "Trap/Counter",    spell_speed: 3, activation_cost: { energy: 40 }, resolution_payload: "Pay 500 LP: Negate opponent action and destroy it.",              effect: { counterNegate: true, costLP: 500 } },
-    { id: "TRAP_006", name: "Effect Veiler Pulse",      type: "Hand-Trap/Reaction", spell_speed: 2, activation_cost: { energy: 20 }, resolution_payload: "Discard: Negate opponent equipment activation or attack.",    effect: { handTrapNegate: true } }
+    { id: "WILLPOWER_001", name: "Seraph Blade Gauntlets",         type: "Willpower/Equipment", slot: "arms",  tier: 1, atkBonus: 400, defBonus: 150, activation_cost: { grace: 20 }, resolution_payload: "Arms Slot: Dual radiant grace blades (+400 ATK / +150 DEF).",          effect: { equipSlot: "arms",  atkBonus: 400, defBonus: 150 } },
+    { id: "WILLPOWER_002", name: "Apophis Stone Vanguard Plate",   type: "Willpower/Equipment", slot: "torso", tier: 1, atkBonus: 200, defBonus: 600, activation_cost: { grace: 25 }, resolution_payload: "Torso Slot: Ancient stone chest plate (+200 ATK / +600 DEF).",           effect: { equipSlot: "torso", atkBonus: 200, defBonus: 600 } },
+    { id: "WILLPOWER_003", name: "Cybernetic Archangel Wings",     type: "Willpower/Equipment", slot: "back",  tier: 2, atkBonus: 700, defBonus: 500, activation_cost: { grace: 40 }, resolution_payload: "Back Slot: Titanium ceramic wings (+700 ATK / +500 DEF).",             effect: { equipSlot: "back",  atkBonus: 700, defBonus: 500 } },
+    { id: "WILLPOWER_004", name: "Solaris Seraph Crown",           type: "Willpower/Equipment", slot: "helm",  tier: 3, atkBonus: 900, defBonus: 700, activation_cost: { grace: 50 }, resolution_payload: "Helm Slot: Solar sovereign crown (+900 ATK / +700 DEF).",              effect: { equipSlot: "helm",  atkBonus: 900, defBonus: 700 } },
+    { id: "WILLPOWER_005", name: "Void Stalker Stealth Cloak",     type: "Willpower/Equipment", slot: "back",  tier: 1, atkBonus: 550, defBonus: 200, activation_cost: { grace: 20 }, resolution_payload: "Back Slot: Dark matter infiltration cloak (+550 ATK / +200 DEF).",    effect: { equipSlot: "back",  atkBonus: 550, defBonus: 200 } },
+    { id: "WILLPOWER_006", name: "Cryo Sentry Leg Guards",         type: "Willpower/Equipment", slot: "legs",  tier: 1, atkBonus: 150, defBonus: 650, activation_cost: { grace: 20 }, resolution_payload: "Legs Slot: Sub-zero cryo-alloy plating (+150 ATK / +650 DEF).",      effect: { equipSlot: "legs",  atkBonus: 150, defBonus: 650 } },
+    { id: "WILLPOWER_007", name: "Dark Matter Shoulderplates",     type: "Willpower/Equipment", slot: "arms",  tier: 2, atkBonus: 800, defBonus: 550, activation_cost: { grace: 40 }, resolution_payload: "Arms Slot: Void-forged titanite pauldrons (+800 ATK / +550 DEF).",  effect: { equipSlot: "arms",  atkBonus: 800, defBonus: 550 } },
+    { id: "WILLPOWER_008", name: "Abyssal Dragon Scale Chestplate",type: "Willpower/Equipment", slot: "torso", tier: 3, atkBonus: 600, defBonus: 900, activation_cost: { grace: 50 }, resolution_payload: "Torso Slot: Void-dragon scale plating (+600 ATK / +900 DEF).",       effect: { equipSlot: "torso", atkBonus: 600, defBonus: 900 } },
+    { id: "SPELL_001", name: "Divine Inversion Protocol", type: "Spell/Quick-Play", spell_agility: 2, activation_cost: { grace: 25 }, resolution_payload: "Negate active chain link and refund 20 grace.", effect: { negate: true, graceRefund: 20 } },
+    { id: "SPELL_002", name: "Solaris Flare Burst",       type: "Spell/Normal",     spell_agility: 1, activation_cost: { grace: 30 }, resolution_payload: "Deal 800 direct LP damage.",                    effect: { directDamage: 800 } },
+    { id: "SPELL_003", name: "Mystical Space Typhoon",    type: "Spell/Quick-Play", spell_agility: 2, activation_cost: { grace: 20 }, resolution_payload: "Destroy 1 equipped Willpower piece on opponent.",   effect: { destroyEquipment: true } },
+    { id: "SPELL_004", name: "Pot of Divine Greed",       type: "Spell/Normal",     spell_agility: 1, activation_cost: { grace: 25 }, resolution_payload: "Draw 2 cards from deck.",                      effect: { drawCards: 2 } },
+    { id: "SPELL_005", name: "Synaptic Echo Anchor",      type: "Spell/Continuous", spell_agility: 1, activation_cost: { grace: 20 }, resolution_payload: "+300 LP and +20 Grace each Standby Phase.",   effect: { standbyHeal: 300, standbyGrace: 20 } },
+    { id: "SPELL_006", name: "Power Bond Sync",           type: "Spell/Normal",     spell_agility: 1, activation_cost: { grace: 35 }, resolution_payload: "Double ATK bonus of one equipped Willpower piece this turn.", effect: { doubleEquipAtk: true } },
+    { id: "TRAP_001", name: "Cryo-Willpower Directive",     type: "Trap/Normal",     spell_agility: 2, activation_cost: { grace: 25 }, resolution_payload: "When radianceed: Halt radiance and grant +600 LP.",                    effect: { haltRadiance: true, heal: 600 } },
+    { id: "TRAP_002", name: "Willpower Shatter Collapse",   type: "Trap/Normal",     spell_agility: 2, activation_cost: { grace: 30 }, resolution_payload: "Destroy target Willpower piece on opponent angel.",               effect: { destroyTargetWillpower: true } },
+    { id: "TRAP_003", name: "Mirror Force Radiance",    type: "Trap/Normal",     spell_agility: 2, activation_cost: { grace: 35 }, resolution_payload: "When radianceed: Destroy 1 random opponent equipped Willpower piece!",   effect: { reflectDestroyWillpower: true } },
+    { id: "TRAP_004", name: "Skill Drain Matrix",       type: "Trap/Continuous", spell_agility: 2, activation_cost: { grace: 30 }, resolution_payload: "Drain 40 Grace from opponent each turn.",                        effect: { graceDrain: 40 } },
+    { id: "TRAP_005", name: "Solemn Sentinel Barrier",  type: "Trap/Counter",    spell_agility: 3, activation_cost: { grace: 40 }, resolution_payload: "Pay 500 LP: Negate opponent action and destroy it.",              effect: { counterNegate: true, costLP: 500 } },
+    { id: "TRAP_006", name: "Effect Veiler Pulse",      type: "Hand-Trap/Reaction", spell_agility: 2, activation_cost: { grace: 20 }, resolution_payload: "Discard: Negate opponent equipment activation or radiance.",    effect: { handTrapNegate: true } }
 ];
 
 allCardsPool = [...DEFAULT_CARDS];
@@ -43,15 +43,15 @@ const ANGELIC_HOUSES = {
         color: "#ef4444"
     },
     "Storm": {
-        desc: "Freedom, speed, precision and power.",
-        combat: "Fast attacks and mobility.",
+        desc: "Freedom, agility, precision and power.",
+        combat: "Fast radiances and mobility.",
         abilities: ["Lightning Step", "Thunder Spear", "Storm Wings", "Chain Lightning", "Tempest Strike", "Heaven's Thunder"],
         color: "#fbbf24"
     },
     "Tide": {
         desc: "Adaptation, patience, knowledge and balance.",
-        combat: "Defensive and counterattack-oriented.",
-        abilities: ["Water Blade", "Frost Armor", "Tidal Wave", "Ice Lance", "Frozen Domain", "Ocean's Judgment"],
+        combat: "Defensive and counterradiance-oriented.",
+        abilities: ["Water Blade", "Frost Willpower", "Tidal Wave", "Ice Lance", "Frozen Domain", "Ocean's Judgment"],
         color: "#38bdf8"
     },
     "Terra": {
@@ -62,7 +62,7 @@ const ANGELIC_HOUSES = {
     },
     "Gale": {
         desc: "Freedom, movement, awareness and perception.",
-        combat: "Extreme mobility and ranged attacks.",
+        combat: "Extreme mobility and ranged radiances.",
         abilities: ["Wind Blade", "Air Dash", "Cyclone", "Vacuum Strike", "Sky Prison", "Heaven's Gale"],
         color: "#a7f3d0"
     },
@@ -83,27 +83,27 @@ const ANGELIC_HOUSES = {
 const ARCHETYPE_INFO = {
     "ABYSSAL_TIDE": {
         title: "Abyssal Tide Corps (WATER)",
-        desc: "Deep-grid pressure-alloy armor. Strips enemy tactical assets, executes rapid search combos, and unleashes high-priority counter-traps.",
+        desc: "Deep-grid pressure-alloy willpower. Strips enemy tactical assets, executes rapid search combos, and unleashes high-priority counter-traps.",
         color: "#38bdf8"
     },
     "INFERNAL_FORGE": {
         title: "Infernal Forge Corps (FIRE)",
-        desc: "Volcanic-core reactor plating. Emits passive End Phase burn damage, punishes armor destruction with Backfire, and deflects strikes with Magic Cylinder.",
+        desc: "Volcanic-core reactor plating. Emits passive End Phase burn damage, punishes willpower destruction with Backfire, and deflects strikes with Magic Cylinder.",
         color: "#f87171"
     },
     "ZEPHYR_AVIAN": {
         title: "Zephyr Sky-Reign Aviary (WIND)",
-        desc: "High-altitude storm-forged chassis. Chains rapid multi-slot armor mounts in a single turn, searches boss armor, and halves opponent ATK.",
+        desc: "High-altitude storm-forged chassis. Chains rapid multi-slot willpower mounts in a single turn, searches boss willpower, and halves opponent ATK.",
         color: "#34d399"
     },
     "TERRA_MAGNET": {
         title: "Terra-Magnet Bastion (EARTH)",
-        desc: "Sub-crust electromagnetic ferrolith armor. Excavates deep deck reserves, fields massive DEF monolithic frames, and wields superconducting negations.",
+        desc: "Sub-crust electromagnetic ferrolith willpower. Excavates deep deck reserves, fields massive DEF monolithic frames, and wields superconducting negations.",
         color: "#fbbf24"
     },
     "DEFAULT": {
         title: "Tactical Default Hybrid",
-        desc: "Balanced standard-issue Sanctum operative chassis with versatile equipment, spells, and traps.",
+        desc: "Balanced standard-issue The Great Archive angel chassis with versatile equipment, spells, and traps.",
         color: "#94a3b8"
     }
 };
@@ -116,7 +116,7 @@ fetch('decks.json')
             data.decks.forEach(d => {
                 archetypeDecks[d.id] = d;
             });
-            if (typeof DuelEngine !== 'undefined' && DuelEngine.p1SelectedDeck === "ABYSSAL_TIDE" && archetypeDecks["ABYSSAL_TIDE"]) {
+            if (typeof CombatEngine !== 'undefined' && CombatEngine.p1SelectedDeck === "ABYSSAL_TIDE" && archetypeDecks["ABYSSAL_TIDE"]) {
                 allCardsPool = [...archetypeDecks["ABYSSAL_TIDE"].cards, ...DEFAULT_CARDS];
             }
         }
@@ -131,7 +131,7 @@ fetch('cards.json')
 // ============================================================================
 // OPERATIVE BASE STATS
 // ============================================================================
-function createOperative(id, name, deckArchetypeId = "DEFAULT") {
+function createAngel(id, name, deckArchetypeId = "DEFAULT") {
     return {
         id,
         name,
@@ -140,21 +140,21 @@ function createOperative(id, name, deckArchetypeId = "DEFAULT") {
         maxLp: 4000,
         baseAtk: 500,
         baseDef: 500,
-        energy: 100,
-        maxEnergy: 100,
+        grace: 100,
+        maxGrace: 100,
         hand: [],
         deck: [],
         graveyard: [],
-        equippedArmor: { helm: null, torso: null, arms: null, legs: null, back: null },
+        equippedWillpower: { helm: null, torso: null, arms: null, legs: null, back: null },
         spellsTraps: [],
         normalEquipUsed: false,
-        hasAttacked: false,
+        hasRadianceed: false,
 
         get totalAtk() {
             let atk = this.baseAtk;
-            const pieces = this.armorPieces;
-            for (const slot of ARMOR_SLOTS) {
-                const item = this.equippedArmor[slot];
+            const pieces = this.willpowerPieces;
+            for (const slot of WILLPOWER_SLOTS) {
+                const item = this.equippedWillpower[slot];
                 if (item) {
                     let bonus = item.atkBonus || 0;
                     if (item.effect && item.effect.scalingAtkPerPiece) {
@@ -168,13 +168,13 @@ function createOperative(id, name, deckArchetypeId = "DEFAULT") {
         },
         get totalDef() {
             let def = this.baseDef;
-            for (const slot of ARMOR_SLOTS) {
-                if (this.equippedArmor[slot]) def += this.equippedArmor[slot].defBonus || 0;
+            for (const slot of WILLPOWER_SLOTS) {
+                if (this.equippedWillpower[slot]) def += this.equippedWillpower[slot].defBonus || 0;
             }
             return def;
         },
-        get armorPieces() {
-            return ARMOR_SLOTS.filter(s => this.equippedArmor[s] !== null).length;
+        get willpowerPieces() {
+            return WILLPOWER_SLOTS.filter(s => this.equippedWillpower[s] !== null).length;
         }
     };
 }
@@ -182,12 +182,12 @@ function createOperative(id, name, deckArchetypeId = "DEFAULT") {
 // ============================================================================
 // 6-PHASE 2-PLAYER TACTICAL DUEL ENGINE
 // ============================================================================
-const DuelEngine = {
-    p1: createOperative("P1", "Operative Alpha", "ABYSSAL_TIDE"),
-    p2: createOperative("P2", "Operative Omega", "INFERNAL_FORGE"),
+const CombatEngine = {
+    p1: createAngel("P1", "Angel Alpha", "ABYSSAL_TIDE"),
+    p2: createAngel("P2", "Angel Omega", "INFERNAL_FORGE"),
     p1SelectedDeck: "ABYSSAL_TIDE",
     p2SelectedDeck: "INFERNAL_FORGE",
-    isDuelActive: false,
+    isCombatActive: false,
     activeTurn: "P1",
     turnCount: 1,
     currentPhase: "DRAW",
@@ -195,7 +195,7 @@ const DuelEngine = {
     isResolving: false,
     waitingForReaction: false,
     reactionPlayer: null,
-    pendingAttack: null,
+    pendingRadiance: null,
 
     getArchetypeBadgeLabel(deckId, playerSlot) {
         const defaultName = playerSlot === "P1" ? "ALPHA" : "OMEGA";
@@ -209,27 +209,27 @@ const DuelEngine = {
     },
 
     getArchetypeName(deckId, playerSlot) {
-        const defaultName = playerSlot === "P1" ? "Operative Alpha" : "Operative Omega";
+        const defaultName = playerSlot === "P1" ? "Angel Alpha" : "Angel Omega";
         switch (deckId) {
             case "ABYSSAL_TIDE": return `${defaultName} (Abyssal Tide)`;
             case "INFERNAL_FORGE": return `${defaultName} (Infernal Forge)`;
             case "ZEPHYR_AVIAN": return `${defaultName} (Zephyr Aviary)`;
             case "TERRA_MAGNET": return `${defaultName} (Terra-Magnet)`;
-            default: return `${defaultName} (Sanctum)`;
+            default: return `${defaultName} (The Great Archive)`;
         }
     },
 
     openSetupScreen() {
-        this.isDuelActive = false;
+        this.isCombatActive = false;
         const welcomeSec = document.getElementById('welcome-section');
-        const setupSec   = document.getElementById('pre-duel-setup-section');
-        const duelSec    = document.getElementById('duel-section');
+        const setupSec   = document.getElementById('pre-combat-setup-section');
+        const combatSec    = document.getElementById('combat-section');
         const betaSec    = document.getElementById('beta-signup-section');
         const modeTabs   = document.getElementById('mode-tabs');
         
         if (welcomeSec) welcomeSec.classList.add('hidden');
         if (betaSec)    betaSec.classList.add('hidden');
-        if (duelSec)    duelSec.classList.add('hidden');
+        if (combatSec)    combatSec.classList.add('hidden');
         if (setupSec)   setupSec.classList.remove('hidden');
         if (modeTabs)   modeTabs.classList.remove('hidden');
 
@@ -263,11 +263,11 @@ const DuelEngine = {
     },
 
     startConfiguredMatch() {
-        const setupSec = document.getElementById('pre-duel-setup-section');
-        const duelSec = document.getElementById('duel-section');
+        const setupSec = document.getElementById('pre-combat-setup-section');
+        const combatSec = document.getElementById('combat-section');
         if (setupSec) setupSec.classList.add('hidden');
-        if (duelSec) duelSec.classList.remove('hidden');
-        this.isDuelActive = true;
+        if (combatSec) combatSec.classList.remove('hidden');
+        this.isCombatActive = true;
         this.initMatch();
     },
 
@@ -323,8 +323,8 @@ const DuelEngine = {
         const p1Name = this.getArchetypeName(this.p1SelectedDeck, "P1");
         const p2Name = this.getArchetypeName(this.p2SelectedDeck, "P2");
 
-        this.p1 = createOperative("P1", p1Name, this.p1SelectedDeck);
-        this.p2 = createOperative("P2", p2Name, this.p2SelectedDeck);
+        this.p1 = createAngel("P1", p1Name, this.p1SelectedDeck);
+        this.p2 = createAngel("P2", p2Name, this.p2SelectedDeck);
 
         this.p1.deck = this.buildDeck(this.p1SelectedDeck);
         this.p2.deck = this.buildDeck(this.p2SelectedDeck);
@@ -341,13 +341,13 @@ const DuelEngine = {
         this.chainStack = [];
         this.isResolving = false;
         this.waitingForReaction = false;
-        this.pendingAttack = null;
+        this.pendingRadiance = null;
 
         logToTerminal(`⚔️ =================================================`);
         logToTerminal(`⚔️ TACTICAL DUEL STARTED!`);
         logToTerminal(`🛡️ P1: ${this.p1.name} [Deck: ${this.p1SelectedDeck}]`);
         logToTerminal(`⚔️ P2: ${this.p2.name} [Deck: ${this.p2SelectedDeck}]`);
-        logToTerminal(`🧥 Armor Cards equip directly to operative body slots.`);
+        logToTerminal(`🧥 Willpower Cards equip directly to angel body slots.`);
         logToTerminal(`⚔️ =================================================`);
         this.startDrawPhase();
     },
@@ -357,7 +357,7 @@ const DuelEngine = {
         this.currentPhase = "DRAW";
         const player = this.activeTurn === "P1" ? this.p1 : this.p2;
         player.normalEquipUsed = false;
-        player.hasAttacked = false;
+        player.hasRadianceed = false;
 
         logToTerminal(`──────────────────────────────────────────────────`);
         logToTerminal(`👉 [TURN ${this.turnCount}] ${player.name} — 🃏 DRAW PHASE`);
@@ -375,14 +375,14 @@ const DuelEngine = {
             }
         }
 
-        // Resource Dice Roll (d6) → +25 to +50 Energy
+        // Resource Dice Roll (d6) → +25 to +50 Grace
         await sleep(300);
         const roll = Math.floor(Math.random() * 6) + 1;
         const manaGain = 20 + (roll * 5);
-        player.energy = Math.min(player.maxEnergy, player.energy + manaGain);
-        logToTerminal(`🎲 [RESOURCE ROLL] d6 → ${roll} → +${manaGain} Energy/Shards! (Total: ${player.energy})`);
+        player.grace = Math.min(player.maxGrace, player.grace + manaGain);
+        logToTerminal(`🎲 [RESOURCE ROLL] d6 → ${roll} → +${manaGain} Grace/Favor! (Total: ${player.grace})`);
 
-        this.renderDuelUI();
+        this.renderCombatUI();
         await sleep(400);
         this.startStandbyPhase();
     },
@@ -392,7 +392,7 @@ const DuelEngine = {
         this.currentPhase = "STANDBY";
         const player = this.activeTurn === "P1" ? this.p1 : this.p2;
         const opponent = this.activeTurn === "P1" ? this.p2 : this.p1;
-        logToTerminal(`⏱️ [STANDBY PHASE] Evaluating field runes and persistent armor cores...`);
+        logToTerminal(`⏱️ [STANDBY PHASE] Evaluating field runes and persistent willpower cores...`);
 
         // Continuous Spell/Trap standby effects for active player
         player.spellsTraps.forEach(slot => {
@@ -402,9 +402,9 @@ const DuelEngine = {
                 player.lp = Math.min(player.maxLp, player.lp + eff.standbyHeal);
                 logToTerminal(`✨ [${slot.card.name}] Standby: +${eff.standbyHeal} LP restored.`);
             }
-            if (eff.standbyEnergy) {
-                player.energy = Math.min(player.maxEnergy, player.energy + eff.standbyEnergy);
-                logToTerminal(`✨ [${slot.card.name}] Standby: +${eff.standbyEnergy} Energy restored.`);
+            if (eff.standbyGrace) {
+                player.grace = Math.min(player.maxGrace, player.grace + eff.standbyGrace);
+                logToTerminal(`✨ [${slot.card.name}] Standby: +${eff.standbyGrace} Grace restored.`);
             }
         });
 
@@ -420,7 +420,7 @@ const DuelEngine = {
 
         if (this.p1.lp <= 0 || this.p2.lp <= 0) { this.handleMatchEnd(); return; }
 
-        this.renderDuelUI();
+        this.renderCombatUI();
         await sleep(350);
         this.startMainPhase1();
     },
@@ -429,9 +429,9 @@ const DuelEngine = {
     startMainPhase1() {
         this.currentPhase = "MAIN1";
         const player = this.activeTurn === "P1" ? this.p1 : this.p2;
-        logToTerminal(`🏛️ [MAIN PHASE 1] ${player.name}: Equip Armor, activate Spells, or Set Traps.`);
+        logToTerminal(`🏛️ [MAIN PHASE 1] ${player.name}: Equip Willpower, activate Spells, or Set Traps.`);
         logToTerminal(`   ⚔️ Current Stats → ATK: ${player.totalAtk} / DEF: ${player.totalDef}`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     // ── PHASE 4: BATTLE PHASE ────────────────────────────────────────────────
@@ -449,7 +449,7 @@ const DuelEngine = {
         const opponent = this.activeTurn === "P1" ? this.p2 : this.p1;
         logToTerminal(`⚔️ [BATTLE PHASE] ${player.name} (ATK ${player.totalAtk}) advances on ${opponent.name} (DEF ${opponent.totalDef})!`);
         logToTerminal(`   Click [⚔️ Declare Strike] to initiate the Damage Step!`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     async declareStrike() {
@@ -457,24 +457,24 @@ const DuelEngine = {
             logToTerminal(`⚠️ Must be in Battle Phase to strike!`);
             return;
         }
-        const attackerKey = this.activeTurn;
-        const attacker = attackerKey === "P1" ? this.p1 : this.p2;
-        const defenderKey = attackerKey === "P1" ? "P2" : "P1";
+        const radianceerKey = this.activeTurn;
+        const radianceer = radianceerKey === "P1" ? this.p1 : this.p2;
+        const defenderKey = radianceerKey === "P1" ? "P2" : "P1";
 
-        if (attacker.hasAttacked) {
+        if (radianceer.hasRadianceed) {
             logToTerminal(`⚠️ You have already declared a strike this turn!`);
             return;
         }
 
-        attacker.hasAttacked = true;
+        radianceer.hasRadianceed = true;
         const defender = defenderKey === "P1" ? this.p1 : this.p2;
-        logToTerminal(`⚔️ [STRIKE DECLARED] ${attacker.name} (ATK ${attacker.totalAtk}) strikes at ${defender.name} (DEF ${defender.totalDef})!`);
+        logToTerminal(`⚔️ [STRIKE DECLARED] ${radianceer.name} (ATK ${radianceer.totalAtk}) strikes at ${defender.name} (DEF ${defender.totalDef})!`);
 
-        this.pendingAttack = { attackerKey, defenderKey };
+        this.pendingRadiance = { radianceerKey, defenderKey };
         this.waitingForReaction = true;
         this.reactionPlayer = defenderKey;
         logToTerminal(`⏱️ [BATTLE REACTION WINDOW] ${defender.name}: Activate a Trap/Quick-Play to respond, or Pass to take the hit!`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     // ── PHASE 5: MAIN PHASE 2 ───────────────────────────────────────────────
@@ -485,8 +485,8 @@ const DuelEngine = {
         }
         this.currentPhase = "MAIN2";
         const player = this.activeTurn === "P1" ? this.p1 : this.p2;
-        logToTerminal(`🏛️ [MAIN PHASE 2] ${player.name}: Equip additional Armor, set Traps, or activate post-battle Spells.`);
-        this.renderDuelUI();
+        logToTerminal(`🏛️ [MAIN PHASE 2] ${player.name}: Equip additional Willpower, set Traps, or activate post-battle Spells.`);
+        this.renderCombatUI();
     },
 
     // ── PHASE 6: END PHASE ───────────────────────────────────────────────────
@@ -496,9 +496,9 @@ const DuelEngine = {
         const opponent = this.activeTurn === "P1" ? this.p2 : this.p1;
         logToTerminal(`🚪 [END PHASE] ${player.name}: Resolving end-of-turn cleanup.`);
 
-        // End Phase burn effects from equipped armor (Solar Flare Reactor, etc.)
-        for (const slot of ARMOR_SLOTS) {
-            const piece = player.equippedArmor[slot];
+        // End Phase burn effects from equipped willpower (Solar Flare Reactor, etc.)
+        for (const slot of WILLPOWER_SLOTS) {
+            const piece = player.equippedWillpower[slot];
             if (piece && piece.effect && piece.effect.endPhaseBurn) {
                 opponent.lp = Math.max(0, opponent.lp - piece.effect.endPhaseBurn);
                 logToTerminal(`🔥 [${piece.name}] End Phase Reactor: Inflicted ${piece.effect.endPhaseBurn} LP burn to ${opponent.name}! (LP: ${opponent.lp})`);
@@ -516,9 +516,9 @@ const DuelEngine = {
         opponent.spellsTraps.forEach(slot => {
             const eff = slot.card && slot.card.effect;
             if (!eff || slot.isSet) return;
-            if (eff.energyDrain) {
-                player.energy = Math.max(0, player.energy - eff.energyDrain);
-                logToTerminal(`🔋 [${slot.card.name}] Drained ${eff.energyDrain} Energy from ${player.name}!`);
+            if (eff.graceDrain) {
+                player.grace = Math.max(0, player.grace - eff.graceDrain);
+                logToTerminal(`🔋 [${slot.card.name}] Drained ${eff.graceDrain} Grace from ${player.name}!`);
             }
         });
 
@@ -530,11 +530,11 @@ const DuelEngine = {
         this.startDrawPhase();
     },
 
-    // ── EQUIP ARMOR PIECE ────────────────────────────────────────────────────
-    equipArmor(playerKey, cardIndex) {
+    // ── EQUIP WILLPOWER PIECE ────────────────────────────────────────────────────
+    equipWillpower(playerKey, cardIndex) {
         const isMain = this.currentPhase === "MAIN1" || this.currentPhase === "MAIN2";
         if (!isMain) {
-            logToTerminal(`⚠️ Can only equip Armor during Main Phase 1 or 2!`);
+            logToTerminal(`⚠️ Can only equip Willpower during Main Phase 1 or 2!`);
             return;
         }
         if (this.activeTurn !== playerKey) {
@@ -543,56 +543,56 @@ const DuelEngine = {
         }
         const player = playerKey === "P1" ? this.p1 : this.p2;
         if (player.normalEquipUsed) {
-            logToTerminal(`⚠️ [EQUIP LIMIT] You have already equipped 1 Armor piece this turn!`);
+            logToTerminal(`⚠️ [EQUIP LIMIT] You have already equipped 1 Willpower piece this turn!`);
             return;
         }
 
         const card = player.hand[cardIndex];
-        if (!card || card.type !== "Armor/Equipment") {
-            logToTerminal(`⚠️ Selected card is not an Armor/Equipment piece!`);
+        if (!card || card.type !== "Willpower/Equipment") {
+            logToTerminal(`⚠️ Selected card is not an Willpower/Equipment piece!`);
             return;
         }
 
-        // Check required armor pieces condition (e.g. Moulinglacia / Infernal Emperor / Empen / Block Dragon)
-        if (card.effect && card.effect.requirePieces && player.armorPieces < card.effect.requirePieces) {
-            logToTerminal(`⚠️ [RESTRICTION] [${card.name}] requires at least ${card.effect.requirePieces} equipped Armor pieces to mount! (Current: ${player.armorPieces})`);
+        // Check required willpower pieces condition (e.g. Moulinglacia / Infernal Emperor / Empen / Block Dragon)
+        if (card.effect && card.effect.requirePieces && player.willpowerPieces < card.effect.requirePieces) {
+            logToTerminal(`⚠️ [RESTRICTION] [${card.name}] requires at least ${card.effect.requirePieces} equipped Willpower pieces to mount! (Current: ${player.willpowerPieces})`);
             return;
         }
 
-        const cost = card.activation_cost ? card.activation_cost.energy : 20;
-        if (player.energy < cost) {
-            logToTerminal(`⚠️ [ENERGY] Insufficient Energy for [${card.name}] (requires ${cost}).`);
+        const cost = card.activation_cost ? card.activation_cost.grace : 20;
+        if (player.grace < cost) {
+            logToTerminal(`⚠️ [GRACE] Insufficient Grace for [${card.name}] (requires ${cost}).`);
             return;
         }
 
         const slot = card.effect && card.effect.equipSlot ? card.effect.equipSlot : card.slot;
-        if (!slot || !ARMOR_SLOTS.includes(slot)) {
+        if (!slot || !WILLPOWER_SLOTS.includes(slot)) {
             logToTerminal(`⚠️ Unknown slot: [${slot}].`);
             return;
         }
 
-        player.energy -= cost;
+        player.grace -= cost;
         player.hand.splice(cardIndex, 1);
 
-        // Unequip existing armor in slot → send to graveyard
-        if (player.equippedArmor[slot]) {
-            const old = player.equippedArmor[slot];
+        // Unequip existing willpower in slot → send to graveyard
+        if (player.equippedWillpower[slot]) {
+            const old = player.equippedWillpower[slot];
             player.graveyard.push(old);
             logToTerminal(`🗑️ [REPLACED] Sent [${old.name}] from ${slot.toUpperCase()} slot to Graveyard.`);
         }
 
-        player.equippedArmor[slot] = card;
+        player.equippedWillpower[slot] = card;
         
         // Check extraEquip effect (Zephyr chain equip)
         if (card.effect && card.effect.extraEquip) {
             player.normalEquipUsed = false;
-            logToTerminal(`🌪️ [ZEPHYR SLIPSTREAM] Chain Equip triggered! You can equip another Armor piece this turn.`);
+            logToTerminal(`🌪️ [ZEPHYR SLIPSTREAM] Chain Equip triggered! You can equip another Willpower piece this turn.`);
         } else {
             player.normalEquipUsed = true;
         }
 
         logToTerminal(`🧥 [EQUIP] ${player.name} equipped [${card.name}] to ${slot.toUpperCase()} SLOT.`);
-        logToTerminal(`   ⚔️ New Operative ATK: ${player.totalAtk} / DEF: ${player.totalDef}`);
+        logToTerminal(`   ⚔️ New Angel ATK: ${player.totalAtk} / DEF: ${player.totalDef}`);
 
         // Trigger on-equip special archetypal effects
         const opponentKey = playerKey === "P1" ? "P2" : "P1";
@@ -628,7 +628,7 @@ const DuelEngine = {
             }
             // Destroy opponent equipment on equip (Abyssrhine / Empen / Raiza / Berserkion / Baronne)
             if (card.effect.destroyEquipment) {
-                this.destroyRandomOpponentArmor(opponent);
+                this.destroyRandomOpponentWillpower(opponent);
             }
             // Destroy opponent field Spells/Traps on equip (Infernal Emperor / Harpie Duster)
             if (card.effect.destroySpellTrap && opponent.spellsTraps.length > 0) {
@@ -636,11 +636,11 @@ const DuelEngine = {
                 opponent.spellsTraps = [];
                 logToTerminal(`   💥 [OBLITERATE] Wiped all active Spell/Trap runes on ${opponent.name}'s field!`);
             }
-            // Revive armor from Graveyard (Abyssteus / Inferno / Toccan / Valkyrion / Magnet Bonding)
-            if (card.effect.reviveArmor && player.graveyard.length > 0) {
-                const armorInGrave = player.graveyard.filter(c => c.type === "Armor/Equipment");
-                if (armorInGrave.length > 0) {
-                    const rev = armorInGrave[0];
+            // Revive willpower from Graveyard (Abyssteus / Inferno / Toccan / Valkyrion / Magnet Bonding)
+            if (card.effect.reviveWillpower && player.graveyard.length > 0) {
+                const willpowerInGrave = player.graveyard.filter(c => c.type === "Willpower/Equipment");
+                if (willpowerInGrave.length > 0) {
+                    const rev = willpowerInGrave[0];
                     const gIdx = player.graveyard.indexOf(rev);
                     player.graveyard.splice(gIdx, 1);
                     player.hand.push(rev);
@@ -654,15 +654,15 @@ const DuelEngine = {
         this.waitingForReaction = true;
         this.reactionPlayer = opponentKey;
         logToTerminal(`⏱️ [REACTION WINDOW] ${opponent.name}: Respond with a Trap/Quick-Play or Pass.`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
-    destroyRandomOpponentArmor(opponent) {
-        const equippedSlots = ARMOR_SLOTS.filter(s => opponent.equippedArmor[s]);
+    destroyRandomOpponentWillpower(opponent) {
+        const equippedSlots = WILLPOWER_SLOTS.filter(s => opponent.equippedWillpower[s]);
         if (equippedSlots.length > 0) {
             const slot = equippedSlots[Math.floor(Math.random() * equippedSlots.length)];
-            const destroyedCard = opponent.equippedArmor[slot];
-            opponent.equippedArmor[slot] = null;
+            const destroyedCard = opponent.equippedWillpower[slot];
+            opponent.equippedWillpower[slot] = null;
             opponent.graveyard.push(destroyedCard);
             logToTerminal(`   💥 Destroyed [${destroyedCard.name}] from ${opponent.name}'s ${slot.toUpperCase()} slot!`);
             logToTerminal(`   ⚔️ ${opponent.name} revised stats → ATK: ${opponent.totalAtk} / DEF: ${opponent.totalDef}`);
@@ -676,7 +676,7 @@ const DuelEngine = {
                 }
             });
         } else {
-            logToTerminal(`   ℹ️ ${opponent.name} has no equipped Armor pieces to destroy.`);
+            logToTerminal(`   ℹ️ ${opponent.name} has no equipped Willpower pieces to destroy.`);
         }
     },
 
@@ -688,13 +688,13 @@ const DuelEngine = {
         const card = fromField ? player.spellsTraps[fieldIndex].card : player.hand[cardIndex];
         if (!card) return;
 
-        const cost = card.activation_cost ? card.activation_cost.energy : 20;
-        if (player.energy < cost) {
-            logToTerminal(`⚠️ [ENERGY] ${card.name} requires ${cost} Energy!`);
+        const cost = card.activation_cost ? card.activation_cost.grace : 20;
+        if (player.grace < cost) {
+            logToTerminal(`⚠️ [GRACE] ${card.name} requires ${cost} Grace!`);
             return;
         }
 
-        player.energy -= cost;
+        player.grace -= cost;
         if (fromField) {
             player.spellsTraps.splice(fieldIndex, 1);
         } else {
@@ -705,7 +705,7 @@ const DuelEngine = {
         if (card.type === "Spell/Continuous") {
             player.spellsTraps.push({ card, isSet: false });
             logToTerminal(`🌀 [CONTINUOUS] ${player.name} activated [${card.name}] as a persistent field rune.`);
-            this.renderDuelUI();
+            this.renderCombatUI();
             return;
         }
 
@@ -716,7 +716,7 @@ const DuelEngine = {
         this.waitingForReaction = true;
         this.reactionPlayer = opponentKey;
         logToTerminal(`⏱️ [REACTION WINDOW] ${opponent.name}: Chain a Fast Effect or Pass.`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     setSpellTrap(playerKey, cardIndex) {
@@ -731,7 +731,7 @@ const DuelEngine = {
         player.hand.splice(cardIndex, 1);
         player.spellsTraps.push({ card, isSet: true });
         logToTerminal(`🎴 ${player.name} SET [${card.name}] face-down.`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     activateSetCard(playerKey, fieldIndex) {
@@ -741,19 +741,19 @@ const DuelEngine = {
         if (!slot || !slot.isSet) return;
 
         const card = slot.card;
-        const cost = card.activation_cost ? card.activation_cost.energy : 20;
-        if (player.energy < cost) {
-            logToTerminal(`⚠️ Insufficient Energy to activate [${card.name}].`);
+        const cost = card.activation_cost ? card.activation_cost.grace : 20;
+        if (player.grace < cost) {
+            logToTerminal(`⚠️ Insufficient Grace to activate [${card.name}].`);
             return;
         }
 
-        player.energy -= cost;
+        player.grace -= cost;
         player.spellsTraps.splice(fieldIndex, 1);
 
         if (card.type === "Trap/Continuous") {
             player.spellsTraps.push({ card, isSet: false });
             logToTerminal(`🌀 [CONTINUOUS TRAP] ${player.name} activated [${card.name}] into active rune state.`);
-            this.renderDuelUI();
+            this.renderCombatUI();
             return;
         }
 
@@ -761,7 +761,7 @@ const DuelEngine = {
         const linkNum = this.chainStack.length + 1;
         this.chainStack.push({ playerKey, card });
         logToTerminal(`⛓️ [CHAIN LINK ${linkNum}] ${player.name} flipped [${card.name}] from S/T Zone!`);
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     passReaction(playerKey) {
@@ -777,7 +777,7 @@ const DuelEngine = {
 
         if (this.chainStack.length > 0) {
             this.resolveChain();
-        } else if (this.pendingAttack) {
+        } else if (this.pendingRadiance) {
             this.resolveDamageStep();
         }
     },
@@ -786,7 +786,7 @@ const DuelEngine = {
     async resolveChain() {
         this.isResolving = true;
         logToTerminal(`⚡ [LIFO CHAIN RESOLVING] ${this.chainStack.length} link(s) in reverse order...`);
-        this.renderDuelUI();
+        this.renderCombatUI();
 
         let chainNegated = false;
 
@@ -802,7 +802,7 @@ const DuelEngine = {
             if (chainNegated) {
                 logToTerminal(`🚫 [CL${linkNum} NEGATED] ${actor.name}'s [${card.name}] was negated!`);
                 chainNegated = false;
-                this.renderDuelUI();
+                this.renderCombatUI();
                 continue;
             }
 
@@ -816,9 +816,9 @@ const DuelEngine = {
                     logToTerminal(`   💔 Paid ${eff.costLP} LP.`);
                 }
             }
-            if (eff.energyRefund) {
-                actor.energy = Math.min(actor.maxEnergy, actor.energy + eff.energyRefund);
-                logToTerminal(`   ⚡ +${eff.energyRefund} Energy refunded to ${actor.name}.`);
+            if (eff.graceRefund) {
+                actor.grace = Math.min(actor.maxGrace, actor.grace + eff.graceRefund);
+                logToTerminal(`   ⚡ +${eff.graceRefund} Grace refunded to ${actor.name}.`);
             }
             if (eff.directDamage) {
                 target.lp = Math.max(0, target.lp - eff.directDamage);
@@ -834,34 +834,34 @@ const DuelEngine = {
                 actor.lp = Math.min(actor.maxLp, actor.lp + eff.heal);
                 logToTerminal(`   💚 Restored +${eff.heal} LP to ${actor.name}. (LP: ${actor.lp})`);
             }
-            if (eff.haltAttack && this.pendingAttack) {
-                logToTerminal(`   🛑 Pending attack was halted!`);
-                this.pendingAttack = null;
+            if (eff.haltRadiance && this.pendingRadiance) {
+                logToTerminal(`   🛑 Pending radiance was halted!`);
+                this.pendingRadiance = null;
             }
-            if (eff.reflectAtkDamage && this.pendingAttack) {
+            if (eff.reflectAtkDamage && this.pendingRadiance) {
                 const strikeDmg = target.totalAtk;
                 target.lp = Math.max(0, target.lp - strikeDmg);
                 logToTerminal(`   🔄 [MAGIC CYLINDER] Strike redirected! ${target.name} takes ${strikeDmg} LP damage! (LP: ${target.lp})`);
-                this.pendingAttack = null;
+                this.pendingRadiance = null;
             }
 
-            // Armor destruction effects
-            if (eff.destroyEquipment || eff.destroyTargetArmor) {
-                this.destroyRandomOpponentArmor(target);
+            // Willpower destruction effects
+            if (eff.destroyEquipment || eff.destroyTargetWillpower) {
+                this.destroyRandomOpponentWillpower(target);
             }
             if (eff.destroySpellTrap && target.spellsTraps.length > 0) {
                 target.spellsTraps.forEach(st => target.graveyard.push(st.card));
                 target.spellsTraps = [];
                 logToTerminal(`   💥 [OBLITERATE] Wiped all active Spell/Trap runes on ${target.name}'s field!`);
             }
-            if (eff.reflectDestroyArmor && this.pendingAttack) {
-                this.destroyRandomOpponentArmor(target);
-                this.pendingAttack = null;
+            if (eff.reflectDestroyWillpower && this.pendingRadiance) {
+                this.destroyRandomOpponentWillpower(target);
+                this.pendingRadiance = null;
             }
-            if (eff.reviveArmor && actor.graveyard.length > 0) {
-                const armorInGrave = actor.graveyard.filter(c => c.type === "Armor/Equipment");
-                if (armorInGrave.length > 0) {
-                    const rev = armorInGrave[0];
+            if (eff.reviveWillpower && actor.graveyard.length > 0) {
+                const willpowerInGrave = actor.graveyard.filter(c => c.type === "Willpower/Equipment");
+                if (willpowerInGrave.length > 0) {
+                    const rev = willpowerInGrave[0];
                     const gIdx = actor.graveyard.indexOf(rev);
                     actor.graveyard.splice(gIdx, 1);
                     actor.hand.push(rev);
@@ -869,7 +869,7 @@ const DuelEngine = {
                 }
             }
 
-            this.renderDuelUI();
+            this.renderCombatUI();
             if (this.p1.lp <= 0 || this.p2.lp <= 0) { this.handleMatchEnd(); return; }
         }
 
@@ -877,25 +877,25 @@ const DuelEngine = {
         logToTerminal(`✅ [CHAIN COMPLETE] All links resolved.`);
         this.isResolving = false;
 
-        if (this.pendingAttack) { await this.resolveDamageStep(); }
-        this.renderDuelUI();
+        if (this.pendingRadiance) { await this.resolveDamageStep(); }
+        this.renderCombatUI();
     },
 
-    // ── DAMAGE STEP (Operative vs Operative) ─────────────────────────────────
+    // ── DAMAGE STEP (Angel vs Angel) ─────────────────────────────────
     async resolveDamageStep() {
-        if (!this.pendingAttack) return;
-        const { attackerKey, defenderKey } = this.pendingAttack;
-        this.pendingAttack = null;
+        if (!this.pendingRadiance) return;
+        const { radianceerKey, defenderKey } = this.pendingRadiance;
+        this.pendingRadiance = null;
 
-        const attacker = attackerKey === "P1" ? this.p1 : this.p2;
+        const radianceer = radianceerKey === "P1" ? this.p1 : this.p2;
         const defender = defenderKey === "P1" ? this.p1 : this.p2;
 
         await sleep(500);
 
-        const atkVal = attacker.totalAtk;
+        const atkVal = radianceer.totalAtk;
         const defVal = defender.totalDef;
 
-        logToTerminal(`⚔️ [DAMAGE STEP] ${attacker.name} ATK ${atkVal} vs ${defender.name} DEF ${defVal}`);
+        logToTerminal(`⚔️ [DAMAGE STEP] ${radianceer.name} ATK ${atkVal} vs ${defender.name} DEF ${defVal}`);
 
         if (atkVal > defVal) {
             const dmg = atkVal - defVal;
@@ -903,14 +903,14 @@ const DuelEngine = {
             logToTerminal(`💥 [HIT!] ATK overpowered DEF by ${dmg}! ${defender.name} takes ${dmg} LP damage! (LP: ${defender.lp})`);
         } else if (atkVal < defVal) {
             const rebound = defVal - atkVal;
-            attacker.lp = Math.max(0, attacker.lp - rebound);
-            logToTerminal(`🛡️ [REBOUND!] DEF outclassed ATK! ${attacker.name} takes ${rebound} rebound damage! (LP: ${attacker.lp})`);
+            radianceer.lp = Math.max(0, radianceer.lp - rebound);
+            logToTerminal(`🛡️ [REBOUND!] DEF outclassed ATK! ${radianceer.name} takes ${rebound} rebound damage! (LP: ${radianceer.lp})`);
         } else {
-            logToTerminal(`⚡ [CLASH!] ATK equals DEF — both operatives hold ground. No LP damage.`);
+            logToTerminal(`⚡ [CLASH!] ATK equals DEF — both angels hold ground. No LP damage.`);
         }
 
         if (this.p1.lp <= 0 || this.p2.lp <= 0) { this.handleMatchEnd(); return; }
-        this.renderDuelUI();
+        this.renderCombatUI();
     },
 
     handleMatchEnd() {
@@ -922,16 +922,16 @@ const DuelEngine = {
         logToTerminal(`🏆 DUEL CONCLUDED! ${winner.toUpperCase()} WINS!`);
         logToTerminal(`💀 ${loser}'s Life Points reached 0.`);
         logToTerminal(`🏆 ==============================================`);
-        aetherShards += 50;
-        updateShardDisplay();
-        syncWithBackend({ action: 'duel_result', winner, loser, rounds: this.turnCount });
-        this.renderDuelUI();
+        aetherFavor += 50;
+        updateFavorDisplay();
+        syncWithBackend({ action: 'combat_result', winner, loser, rounds: this.turnCount });
+        this.renderCombatUI();
     },
 
     // ── CARD & ABILITY INTEL INSPECTOR ───────────────────────────────────────
-    inspectArmor(playerKey, slot) {
+    inspectWillpower(playerKey, slot) {
         const player = playerKey === "P1" ? this.p1 : this.p2;
-        const piece = player.equippedArmor[slot];
+        const piece = player.equippedWillpower[slot];
         if (!piece) return;
 
         this.openCardInspector(piece, `${slot.toUpperCase()} SLOT • ${player.name}`);
@@ -973,11 +973,11 @@ const DuelEngine = {
 
         if (titleEl) titleEl.innerText = card.name;
         if (tagEl) tagEl.innerText = contextLabel;
-        if (subtitleEl) subtitleEl.innerText = `${card.type} • Tier ${card.tier || 1} ${card.spell_speed ? `(Speed ${card.spell_speed})` : ''}`;
+        if (subtitleEl) subtitleEl.innerText = `${card.type} • Tier ${card.tier || 1} ${card.spell_agility ? `(Agility ${card.spell_agility})` : ''}`;
         
-        const isArmor = card.type === "Armor/Equipment";
+        const isWillpower = card.type === "Willpower/Equipment";
         if (statsRow) {
-            if (isArmor) {
+            if (isWillpower) {
                 statsRow.style.display = "flex";
                 if (atkEl) atkEl.innerText = `+${card.atkBonus || 0}`;
                 if (defEl) defEl.innerText = `+${card.defBonus || 0}`;
@@ -986,8 +986,8 @@ const DuelEngine = {
                 if (atkEl) atkEl.innerText = `N/A`;
                 if (defEl) defEl.innerText = `N/A`;
             }
-            const energyCost = card.activation_cost ? card.activation_cost.energy : 20;
-            if (costEl) costEl.innerText = `${energyCost} Energy`;
+            const graceCost = card.activation_cost ? card.activation_cost.grace : 20;
+            if (costEl) costEl.innerText = `${graceCost} Grace`;
         }
 
         if (effectEl) {
@@ -1013,18 +1013,18 @@ const DuelEngine = {
         const card = slot.card;
         logToTerminal(`👁️ [PEEK] ${player.name} inspects face-down card:`);
         logToTerminal(`   📋 Name: ${card.name}`);
-        logToTerminal(`   📋 Type: ${card.type} (Speed ${card.spell_speed || 1})`);
-        logToTerminal(`   📋 Cost: ${card.activation_cost ? card.activation_cost.energy : '?'} Energy`);
+        logToTerminal(`   📋 Type: ${card.type} (Agility ${card.spell_agility || 1})`);
+        logToTerminal(`   📋 Cost: ${card.activation_cost ? card.activation_cost.grace : '?'} Grace`);
         logToTerminal(`   📋 Effect: ${card.resolution_payload}`);
         this.openCardInspector(card, `👁️ YOUR FACE-DOWN CARD • ${player.name}`);
     },
 
     // ── UI RENDER ────────────────────────────────────────────────────────────
-    renderDuelUI() {
+    renderCombatUI() {
         this.renderStats("P1");
         this.renderStats("P2");
-        this.renderArmorLoadout("P1");
-        this.renderArmorLoadout("P2");
+        this.renderWillpowerLoadout("P1");
+        this.renderWillpowerLoadout("P2");
         this.renderSpellZone("P1");
         this.renderSpellZone("P2");
         this.renderHand("P1");
@@ -1053,35 +1053,35 @@ const DuelEngine = {
     renderStats(playerKey) {
         const player = playerKey === "P1" ? this.p1 : this.p2;
         const lp    = document.getElementById(`${playerKey.toLowerCase()}-lp`);
-        const energy= document.getElementById(`${playerKey.toLowerCase()}-energy`);
+        const grace= document.getElementById(`${playerKey.toLowerCase()}-grace`);
         const atk   = document.getElementById(`${playerKey.toLowerCase()}-atk`);
         const def   = document.getElementById(`${playerKey.toLowerCase()}-def`);
         const pieces= document.getElementById(`${playerKey.toLowerCase()}-pieces`);
         if (lp)     lp.innerText     = `${player.lp}`;
-        if (energy) energy.innerText = `${player.energy}`;
+        if (grace) grace.innerText = `${player.grace}`;
         if (atk)    atk.innerText    = `${player.totalAtk}`;
         if (def)    def.innerText    = `${player.totalDef}`;
-        if (pieces) pieces.innerText = `${player.armorPieces}/5`;
+        if (pieces) pieces.innerText = `${player.willpowerPieces}/5`;
     },
 
-    renderArmorLoadout(playerKey) {
+    renderWillpowerLoadout(playerKey) {
         const player = playerKey === "P1" ? this.p1 : this.p2;
-        const container = document.getElementById(`${playerKey.toLowerCase()}-armor`);
+        const container = document.getElementById(`${playerKey.toLowerCase()}-willpower`);
         if (!container) return;
 
-        container.innerHTML = ARMOR_SLOTS.map(slot => {
-            const piece = player.equippedArmor[slot];
+        container.innerHTML = WILLPOWER_SLOTS.map(slot => {
+            const piece = player.equippedWillpower[slot];
             const slotIcon = { helm: "🪖", torso: "🛡️", arms: "⚔️", legs: "🦿", back: "🦅" }[slot] || "📦";
             if (piece) {
                 return `
-                    <div class="armor-slot equipped" onclick="DuelEngine.inspectArmor('${playerKey}', '${slot}')" title="Click to inspect ${piece.name} ability">
+                    <div class="willpower-slot equipped" onclick="CombatEngine.inspectWillpower('${playerKey}', '${slot}')" title="Click to inspect ${piece.name} ability">
                         <div class="slot-label">${slotIcon} ${slot.toUpperCase()} 🔍</div>
                         <div class="slot-name">${piece.name}</div>
                         <div class="slot-stats">+${piece.atkBonus} ATK / +${piece.defBonus} DEF</div>
                     </div>`;
             }
             return `
-                <div class="armor-slot empty">
+                <div class="willpower-slot empty">
                     <div class="slot-label">${slotIcon} ${slot.toUpperCase()}</div>
                     <div class="slot-empty-text">[Empty]</div>
                 </div>`;
@@ -1107,15 +1107,15 @@ const DuelEngine = {
                         <div style="font-size: 10px; font-weight: bold; color: #f59e0b;">🎴 Face-Down</div>
                         <div style="font-size: 9px; color: #94a3b8;">Set Trap/Spell</div>
                         <div class="card-btn-row">
-                            ${isMe ? `<button class="btn-micro btn-phase" onclick="DuelEngine.peekFaceDown('${playerKey}', ${idx})" title="Peek face-down card">👁️ Peek</button>` : ''}
-                            ${this.waitingForReaction && this.reactionPlayer === playerKey && st.card.spell_speed >= 2 ? `
-                                <button class="btn-micro btn-react" onclick="DuelEngine.activateSetCard('${playerKey}', ${idx})">⚡ Flip!</button>
+                            ${isMe ? `<button class="btn-micro btn-phase" onclick="CombatEngine.peekFaceDown('${playerKey}', ${idx})" title="Peek face-down card">👁️ Peek</button>` : ''}
+                            ${this.waitingForReaction && this.reactionPlayer === playerKey && st.card.spell_agility >= 2 ? `
+                                <button class="btn-micro btn-react" onclick="CombatEngine.activateSetCard('${playerKey}', ${idx})">⚡ Flip!</button>
                             ` : ''}
                         </div>
                     </div>`;
             } else {
                 return `
-                    <div class="field-st-card" onclick="DuelEngine.inspectFieldCard('${playerKey}', ${idx})" style="cursor:pointer;" title="Click to inspect card ability">
+                    <div class="field-st-card" onclick="CombatEngine.inspectFieldCard('${playerKey}', ${idx})" style="cursor:pointer;" title="Click to inspect card ability">
                         <div style="font-size: 10px; font-weight: bold; color: #67e8f9;">${st.card.name} 🔍</div>
                         <div style="font-size: 9px; color: #94a3b8;">${st.card.type}</div>
                     </div>`;
@@ -1155,7 +1155,7 @@ const DuelEngine = {
                 container.innerHTML = `<div class="empty-zone-slot">[No cards in hand]</div>`;
             } else {
                 container.innerHTML = player.hand.map((_, i) => `
-                    <div class="duel-card disabled" style="text-align:center; justify-content:center; min-height:55px; background:#0f172a; border:1px solid #334155;">
+                    <div class="combat-card disabled" style="text-align:center; justify-content:center; min-height:55px; background:#0f172a; border:1px solid #334155;">
                         <div style="font-size:16px;">🂠</div>
                         <div style="font-size:9px; color:#64748b; font-weight:bold;">CLASSIFIED (${i + 1}/${player.hand.length})</div>
                     </div>
@@ -1165,33 +1165,33 @@ const DuelEngine = {
         }
 
         container.innerHTML = player.hand.map((card, idx) => {
-            const isArmor = card.type === "Armor/Equipment";
-            const cost    = card.activation_cost ? card.activation_cost.energy : 20;
-            const canAfford = player.energy >= cost;
+            const isWillpower = card.type === "Willpower/Equipment";
+            const cost    = card.activation_cost ? card.activation_cost.grace : 20;
+            const canAfford = player.grace >= cost;
 
             let buttons = "";
 
-            if (isArmor && isTurn && isMain && !player.normalEquipUsed) {
-                buttons += `<button class="btn-micro btn-action" onclick="DuelEngine.equipArmor('${playerKey}', ${idx})">🧥 Equip ${(card.slot || card.effect?.equipSlot || '?').toUpperCase()}</button>`;
+            if (isWillpower && isTurn && isMain && !player.normalEquipUsed) {
+                buttons += `<button class="btn-micro btn-action" onclick="CombatEngine.equipWillpower('${playerKey}', ${idx})">🧥 Equip ${(card.slot || card.effect?.equipSlot || '?').toUpperCase()}</button>`;
             }
-            if (!isArmor && isTurn && isMain) {
+            if (!isWillpower && isTurn && isMain) {
                 if (card.type !== "Trap/Normal" && card.type !== "Trap/Continuous" && card.type !== "Trap/Counter" && card.type !== "Hand-Trap/Reaction") {
-                    buttons += `<button class="btn-micro btn-action" onclick="DuelEngine.activateSpellCard('${playerKey}', ${idx})">⚡ Activate</button>`;
+                    buttons += `<button class="btn-micro btn-action" onclick="CombatEngine.activateSpellCard('${playerKey}', ${idx})">⚡ Activate</button>`;
                 }
-                buttons += `<button class="btn-micro btn-warn" onclick="DuelEngine.setSpellTrap('${playerKey}', ${idx})">📋 Set</button>`;
+                buttons += `<button class="btn-micro btn-warn" onclick="CombatEngine.setSpellTrap('${playerKey}', ${idx})">📋 Set</button>`;
             }
-            if (isReact && card.spell_speed >= 2) {
-                buttons += `<button class="btn-micro btn-react" onclick="DuelEngine.activateSpellCard('${playerKey}', ${idx})">⛓️ Chain!</button>`;
+            if (isReact && card.spell_agility >= 2) {
+                buttons += `<button class="btn-micro btn-react" onclick="CombatEngine.activateSpellCard('${playerKey}', ${idx})">⛓️ Chain!</button>`;
             }
 
             return `
-                <div class="duel-card ${canAfford ? 'playable' : 'disabled'}">
+                <div class="combat-card ${canAfford ? 'playable' : 'disabled'}">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="font-weight:bold; font-size:11px; color:${color};">${card.name}</div>
-                        <button class="btn-micro btn-phase" style="padding:1px 4px; font-size:9px;" onclick="DuelEngine.openCardInspector(DuelEngine.${playerKey.toLowerCase()}.hand[${idx}], 'HAND CARD INTEL')" title="Inspect Full Card Details">🔍</button>
+                        <button class="btn-micro btn-phase" style="padding:1px 4px; font-size:9px;" onclick="CombatEngine.openCardInspector(CombatEngine.${playerKey.toLowerCase()}.hand[${idx}], 'HAND CARD INTEL')" title="Inspect Full Card Details">🔍</button>
                     </div>
-                    <div style="font-size:9px; color:#94a3b8;">${card.type}${isArmor ? ` [${(card.slot||card.effect?.equipSlot||'').toUpperCase()} SLOT]` : ` (Spd ${card.spell_speed||1})`}</div>
-                    ${isArmor ? `<div style="font-size:10px; color:#fde047;">+${card.atkBonus} ATK / +${card.defBonus} DEF</div>` : ''}
+                    <div style="font-size:9px; color:#94a3b8;">${card.type}${isWillpower ? ` [${(card.slot||card.effect?.equipSlot||'').toUpperCase()} SLOT]` : ` (Spd ${card.spell_agility||1})`}</div>
+                    ${isWillpower ? `<div style="font-size:10px; color:#fde047;">+${card.atkBonus} ATK / +${card.defBonus} DEF</div>` : ''}
                     <div style="font-size:9px; color:#cbd5e1; line-height:1.2; margin-top:2px;">${card.resolution_payload}</div>
                     <div style="font-size:9px; color:#94a3b8;">⚡ Cost: ${cost}</div>
                     <div class="card-btn-row">${buttons}</div>
@@ -1209,7 +1209,7 @@ const DuelEngine = {
     },
 
     renderChainStack() {
-        const el = document.getElementById('duel-chain-stack');
+        const el = document.getElementById('combat-chain-stack');
         if (!el) return;
         if (this.chainStack.length === 0) {
             el.innerHTML = `<span style="color:#64748b; font-size:11px;">[No Active Chain Links]</span>`;
@@ -1256,7 +1256,7 @@ const GameEngine = {
     },
 
     async triggerEvent(eventType, cardData) {
-        if (this.toggleState === "ON" || (this.toggleState === "AUTO" && (eventType === "ATTACK_INCOMING" || eventType === "VAULT_BREACH"))) {
+        if (this.toggleState === "ON" || (this.toggleState === "AUTO" && (eventType === "RADIANCE_INCOMING" || eventType === "VAULT_BREACH"))) {
             await this.openChainLink(cardData);
         } else {
             logToTerminal(`[SYSTEM] Toggle: ${this.toggleState}. Bypassing prompt for: ${cardData.name}`);
@@ -1276,23 +1276,23 @@ const GameEngine = {
         while (this.chainStack.length > 0) {
             const c = this.chainStack.pop();
             logToTerminal(`↳ [RESOLVED] ${c.name}: "${c.resolution_payload}"`);
-            aetherShards += 25;
-            updateShardDisplay();
+            aetherFavor += 25;
+            updateFavorDisplay();
             await sleep(300);
         }
-        logToTerminal(`✅ [CHAIN COMPLETE] +25 Aether Shards banked.`);
+        logToTerminal(`✅ [CHAIN COMPLETE] +25 Divine Favor banked.`);
     }
 };
 
 function switchAppMode(mode) {
     currentAppMode = mode;
     const welcomeSec = document.getElementById('welcome-section');
-    const outieSec   = document.getElementById('outie-sanctum-section');
-    const innieSec   = document.getElementById('innie-ascent-section');
+    const outieSec   = document.getElementById('archive-section');
+    const innieSec   = document.getElementById('chronicles-section');
     const lobbySec   = document.getElementById('training-lobby-section');
-    const setupSec   = document.getElementById('pre-duel-setup-section');
-    const duelSec    = document.getElementById('duel-section');
-    const lbSec      = document.getElementById('leaderboard-section');
+    const setupSec   = document.getElementById('pre-combat-setup-section');
+    const combatSec    = document.getElementById('combat-section');
+    const lbSec      = document.getElementById('archangel hierarchy-section');
     const betaSec    = document.getElementById('beta-signup-section');
     const angelicSec = document.getElementById('angelic-section');
     
@@ -1300,8 +1300,8 @@ function switchAppMode(mode) {
     const tabOutie   = document.getElementById('tab-outie');
     const tabInnie   = document.getElementById('tab-innie');
     const tabLobby   = document.getElementById('tab-lobby');
-    const tabDuel    = document.getElementById('tab-duel');
-    const tabLb      = document.getElementById('tab-leaderboard');
+    const tabCombat    = document.getElementById('tab-combat');
+    const tabLb      = document.getElementById('tab-archangel hierarchy');
     const tabBeta    = document.getElementById('tab-beta');
     const tabAngelic = document.getElementById('tab-angelic');
     
@@ -1311,7 +1311,7 @@ function switchAppMode(mode) {
     if (tabOutie) tabOutie.classList.toggle('active', mode === "OUTIE");
     if (tabInnie) tabInnie.classList.toggle('active', mode === "INNIE");
     if (tabLobby) tabLobby.classList.toggle('active', mode === "LOBBY");
-    if (tabDuel)  tabDuel.classList.toggle('active', mode === "DUEL");
+    if (tabCombat)  tabCombat.classList.toggle('active', mode === "DUEL");
     if (tabLb)    tabLb.classList.toggle('active', mode === "LEADERBOARD");
     if (tabBeta)  tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
     if (tabAngelic) tabAngelic.classList.toggle('active', mode === "ANGELIC");
@@ -1321,7 +1321,7 @@ function switchAppMode(mode) {
     if (innieSec) innieSec.classList.add('hidden');
     if (lobbySec) lobbySec.classList.add('hidden');
     if (setupSec) setupSec.classList.add('hidden');
-    if (duelSec)  duelSec.classList.add('hidden');
+    if (combatSec)  combatSec.classList.add('hidden');
     if (lbSec)    lbSec.classList.add('hidden');
     if (betaSec)  betaSec.classList.add('hidden');
     if (angelicSec) angelicSec.classList.add('hidden');
@@ -1330,14 +1330,14 @@ function switchAppMode(mode) {
         if (angelicSec) angelicSec.classList.remove('hidden');
     } else if (mode === "OUTIE") {
         if (outieSec) outieSec.classList.remove('hidden');
-        if (window.SeveranceManager && typeof window.SeveranceManager.updateSanctumDisplay === 'function') {
-            window.SeveranceManager.updateSanctumDisplay();
+        if (window.SeveranceManager && typeof window.SeveranceManager.updateThe Great ArchiveDisplay === 'function') {
+            window.SeveranceManager.updateThe Great ArchiveDisplay();
         }
     } else if (mode === "INNIE") {
         if (innieSec) innieSec.classList.remove('hidden');
-        if (window.SeveranceManager && typeof window.SeveranceManager.renderIncursionGrid === 'function') {
-            window.SeveranceManager.renderIncursionGrid();
-            window.SeveranceManager.updateIncursionDisplay();
+        if (window.SeveranceManager && typeof window.SeveranceManager.renderChronicleGrid === 'function') {
+            window.SeveranceManager.renderChronicleGrid();
+            window.SeveranceManager.updateChronicleDisplay();
         }
     } else if (mode === "LOBBY") {
         if (lobbySec) lobbySec.classList.remove('hidden');
@@ -1345,15 +1345,15 @@ function switchAppMode(mode) {
             window.LobbyFeedManager.renderLobbyFeed();
         }
     } else if (mode === "DUEL") {
-        if (!DuelEngine.isDuelActive) {
-            DuelEngine.openSetupScreen();
+        if (!CombatEngine.isCombatActive) {
+            CombatEngine.openSetupScreen();
         } else {
-            if (duelSec) duelSec.classList.remove('hidden');
+            if (combatSec) combatSec.classList.remove('hidden');
         }
     } else if (mode === "LEADERBOARD") {
         if (lbSec) lbSec.classList.remove('hidden');
-        if (window.SeveranceManager && typeof window.SeveranceManager.fetchLeaderboard === 'function') {
-            window.SeveranceManager.fetchLeaderboard();
+        if (window.SeveranceManager && typeof window.SeveranceManager.fetchArchangel Hierarchy === 'function') {
+            window.SeveranceManager.fetchArchangel Hierarchy();
         }
     } else if (mode === "BETA" || mode === "SOLO") {
         if (betaSec) betaSec.classList.remove('hidden');
@@ -1361,8 +1361,8 @@ function switchAppMode(mode) {
 }
 
 function enterStage1Demo() {
-    const callsignInput = document.getElementById('welcome-player-id');
-    const callsign = (callsignInput && callsignInput.value.trim()) || "PILGRIM-ALPHA";
+    const paladinNameInput = document.getElementById('welcome-player-id');
+    const paladinName = (paladinNameInput && paladinNameInput.value.trim()) || "PILGRIM-ALPHA";
     
     const welcomeSec = document.getElementById('welcome-section');
     const modeTabs = document.getElementById('mode-tabs');
@@ -1370,12 +1370,12 @@ function enterStage1Demo() {
     if (welcomeSec) welcomeSec.classList.add('hidden');
     if (modeTabs) modeTabs.classList.remove('hidden');
     
-    switchAppMode("DUEL");
-    logToTerminal(`🚀 [STAGE 1 DEMO] Grid Link Initialized for Operative: ${callsign}`);
-    logToTerminal(`⚔️ Welcome to Stage 1: Operative Armor Card Duel Arena.`);
+    switchAppMode("ANGELIC");
+    logToTerminal(`🚀 [STAGE 1 DEMO] Grid Link Initialized for Angel: ${paladin name}`);
+    logToTerminal(`⚔️ Welcome to Stage 1: Angel Willpower Card Celestial Combat.`);
     logToTerminal(`🛡️ Configure P1 & P2 Combat Archetypes below to engage.`);
     
-    syncWithBackend({ player_id: callsign, action: 'stage1_demo_enter' });
+    syncWithBackend({ player_id: paladin name, action: 'stage1_demo_enter' });
 }
 
 function enterBetaSignup() {
@@ -1466,31 +1466,18 @@ async function submitAngelicForm(event) {
         if (summaryBox) {
             const data = ANGELIC_HOUSES[house];
             summaryBox.innerHTML = `
-                <div class="angelic-success-header" style="color:${data.color};">
-                    <span style="font-size:24px;">✨</span>
-                    <h3 style="margin:0;">PALADIN INITIATION COMPLETE</h3>
-                    <span style="font-size:24px;">✨</span>
-                </div>
-                <div style="text-align:center; margin-bottom:20px; font-size:14px;">
-                    Arise, <strong>${name}</strong>. Your oath to the <strong>House of ${house}</strong> is forged.
-                </div>
-                <div class="angelic-stats-grid">
-                    <div class="angelic-stat-card">
-                        <div class="stat-label">BODY TYPE</div>
-                        <div class="stat-value">${bodyType}</div>
-                    </div>
-                    <div class="angelic-stat-card">
-                        <div class="stat-label">COSMETICS</div>
-                        <div class="stat-value">${cosmetics}</div>
-                    </div>
-                    <div class="angelic-stat-card">
-                        <div class="stat-label">ELEMENT</div>
-                        <div class="stat-value" style="color:${data.color};">${house.toUpperCase()}</div>
-                    </div>
-                </div>
-                <button type="button" class="btn-start-duel" style="margin-top:20px; width:100%;" onclick="location.reload()">RETURN TO NEXUS</button>
-            `;
-            summaryBox.classList.remove('hidden');
+            <h3>🌟 Paladin Initiation Successful</h3>
+            <p>Welcome, <strong>${name}</strong>.</p>
+            <p>You have joined the <strong>House of ${house}</strong>.</p>
+            <p>Your journey into Celestia begins now.</p>
+            <div style="margin-top: 15px;">
+                <button class="btn-action" onclick="switchAppMode('OUTIE')">Enter The Great Archive ➔</button>
+            </div>
+        `;
+        summaryBox.classList.remove('hidden');
+        window.characterCreated = true;
+        // Un-hide the tabs
+        document.getElementById('mode-tabs').classList.remove('hidden');
         }
 
     } catch (err) {
@@ -1517,7 +1504,7 @@ async function submitBetaTesterForm(event) {
     
     const name = nameEl ? nameEl.value.trim() : "";
     const email = emailEl ? emailEl.value.trim() : "";
-    const guildClass = classEl ? classEl.value : "Tactical Operative";
+    const guildClass = classEl ? classEl.value : "Tactical Angel";
     const phone = phoneEl ? phoneEl.value.trim() : "";
     const birthDate = birthDateEl ? birthDateEl.value : "";
     const birthTime = birthTimeEl ? birthTimeEl.value : "12:00";
@@ -1561,10 +1548,10 @@ async function submitBetaTesterForm(event) {
         
         if (statusEl) {
             statusEl.className = "form-status-msg success";
-            statusEl.innerHTML = `✅ <strong>BETA APPLICATION RECORDED!</strong><br>Welcome to the Pilgrim Protocol, Operative <strong>${name}</strong> (${guildClass}). Your record has been transmitted to Google Sheets.`;
+            statusEl.innerHTML = `✅ <strong>BETA APPLICATION RECORDED!</strong><br>Welcome to the Fledgling Protocol, Angel <strong>${name}</strong> (${guildClass}). Your record has been transmitted to Google Sheets.`;
         }
         
-        logToTerminal(`✅ [BETA APPLICATION SUBMITTED] Operative: ${name} | Class: ${guildClass} | Transmitted to Google Sheets.`);
+        logToTerminal(`✅ [BETA APPLICATION SUBMITTED] Angel: ${name} | Class: ${guildClass} | Transmitted to Google Sheets.`);
         
         const form = document.getElementById('betaSignupForm');
         if (form) form.reset();
@@ -1593,9 +1580,9 @@ function logToTerminal(message) {
     term.scrollTop = term.scrollHeight;
 }
 
-function updateShardDisplay() {
-    const el = document.getElementById('shard-display');
-    if (el) el.innerText = aetherShards;
+function updateFavorDisplay() {
+    const el = document.getElementById('favor-display');
+    if (el) el.innerText = aetherFavor;
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -1615,7 +1602,7 @@ window.enterStage1Demo = enterStage1Demo;
 window.enterBetaSignup = enterBetaSignup;
 window.switchAppMode = switchAppMode;
 window.submitBetaTesterForm = submitBetaTesterForm;
-window.DuelEngine = DuelEngine;
+window.CombatEngine = CombatEngine;
 
 // Wire up event listeners
 if (document.readyState === 'loading') {
