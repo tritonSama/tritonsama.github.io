@@ -2,8 +2,8 @@
  * ============================================================================
  * HeavenlyBound - WebRTC P2P Multiplayer Engine & Real-Time Lobby
  * ============================================================================
- * Enables direct browser-to-browser P2P multiplayer dueling:
- *  - HOST (P1): Authoritative logic runner (DuelEngine), broadcasts state to peers.
+ * Enables direct browser-to-browser P2P multiplayer combating:
+ *  - HOST (P1): Authoritative logic runner (CombatEngine), broadcasts state to peers.
  *  - CLIENT (P2): Controller for Player 2, sends actions to Host, renders synced state.
  *  - SPECTATOR: Observes active match in real-time.
  *  - LOBBY FEED: Real-time public matchmaker with atomic 2-player capacity locking.
@@ -58,7 +58,7 @@ const LobbyFeedManager = {
         const store = this.getRoomsStore();
         store[roomObj.id] = {
             id: roomObj.id,
-            hostName: roomObj.hostName || "Operative Alpha",
+            hostName: roomObj.hostName || "Angel Alpha",
             archetype: roomObj.archetype || "ABYSSAL_TIDE",
             status: roomObj.status || "waiting", // "waiting" | "in_progress" | "completed"
             players: roomObj.players || ["P1"],
@@ -153,14 +153,14 @@ const LobbyFeedManager = {
                     </div>
 
                     <div class="lobby-room-details">
-                        <div>👤 <strong>Host:</strong> ${room.hostName || 'Operative Alpha'}</div>
+                        <div>👤 <strong>Host:</strong> ${room.hostName || 'Angel Alpha'}</div>
                         <div style="color:#38bdf8; font-size:10px; margin-top:2px;">🎴 <strong>Archetype:</strong> ${archetypeLabel}</div>
                     </div>
 
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
                         <span style="font-size:10px; color:#64748b;">Capacity: 2 Players Max</span>
                         ${isWaiting ? `
-                            <button type="button" class="btn-start-duel" style="margin:0; padding:6px 14px; font-size:11px; width:auto;" onclick="MultiplayerManager.joinMatch('${room.id}')">⚔️ 1-Click Join</button>
+                            <button type="button" class="btn-start-combat" style="margin:0; padding:6px 14px; font-size:11px; width:auto;" onclick="MultiplayerManager.joinMatch('${room.id}')">⚔️ 1-Click Join</button>
                         ` : `
                             <button type="button" class="btn-sm btn-warn" style="margin:0; padding:6px 12px; font-size:11px; opacity:0.6;" disabled>🔒 Full (2/2)</button>
                         `}
@@ -342,8 +342,8 @@ const MultiplayerManager = {
             // Register in real-time public lobby feed
             LobbyFeedManager.publishRoom({
                 id: this.roomId,
-                hostName: "Operative Alpha",
-                archetype: (typeof DuelEngine !== "undefined" && DuelEngine.p1SelectedDeck) || "ABYSSAL_TIDE",
+                hostName: "Angel Alpha",
+                archetype: (typeof CombatEngine !== "undefined" && CombatEngine.p1SelectedDeck) || "ABYSSAL_TIDE",
                 status: "waiting",
                 players: ["P1"],
                 maxPlayers: 2
@@ -355,8 +355,8 @@ const MultiplayerManager = {
                 if (this.role === "HOST" && this.roomId) {
                     LobbyFeedManager.publishRoom({
                         id: this.roomId,
-                        hostName: "Operative Alpha",
-                        archetype: (typeof DuelEngine !== "undefined" && DuelEngine.p1SelectedDeck) || "ABYSSAL_TIDE",
+                        hostName: "Angel Alpha",
+                        archetype: (typeof CombatEngine !== "undefined" && CombatEngine.p1SelectedDeck) || "ABYSSAL_TIDE",
                         status: this.player2Conn ? "in_progress" : "waiting",
                         players: this.player2Conn ? ["P1", "P2"] : ["P1"],
                         maxPlayers: 2
@@ -525,7 +525,7 @@ const MultiplayerManager = {
 
             this.hostConn.on("open", () => {
                 this.updateLobbyStatus(`👁️ <strong>WATCHING MATCH!</strong> (Room: ${this.roomId})`, "success");
-                logToTerminal(`👁️ [SPECTATOR ACTIVE] Connected to Match ${this.roomId}. Observing duel...`);
+                logToTerminal(`👁️ [SPECTATOR ACTIVE] Connected to Match ${this.roomId}. Observing combat...`);
                 
                 const specBadge = document.getElementById("lobby-connection-badge");
                 if (specBadge) {
@@ -590,47 +590,47 @@ const MultiplayerManager = {
 
             switch (action) {
                 case "selectDeck":
-                    DuelEngine.p2SelectedDeck = payload.deckId;
-                    DuelEngine.updateSetupPreview("P2", payload.deckId);
+                    CombatEngine.p2SelectedDeck = payload.deckId;
+                    CombatEngine.updateSetupPreview("P2", payload.deckId);
                     const p2Sel = document.getElementById("setup-p2-deck");
                     if (p2Sel) p2Sel.value = payload.deckId;
                     logToTerminal(`🎴 [DECK SYNC] Player 2 selected archetype: ${payload.deckId}`);
                     this.broadcastState();
                     break;
                 case "startMatch":
-                    DuelEngine.startConfiguredMatch();
+                    CombatEngine.startConfiguredMatch();
                     break;
-                case "equipArmor":
-                    DuelEngine.equipArmor(playerKey, payload.cardIndex);
+                case "equipWillpower":
+                    CombatEngine.equipWillpower(playerKey, payload.cardIndex);
                     break;
                 case "activateSpellCard":
-                    DuelEngine.activateSpellCard(playerKey, payload.cardIndex, payload.fromField, payload.fieldIndex);
+                    CombatEngine.activateSpellCard(playerKey, payload.cardIndex, payload.fromField, payload.fieldIndex);
                     break;
                 case "setSpellTrap":
-                    DuelEngine.setSpellTrap(playerKey, payload.cardIndex);
+                    CombatEngine.setSpellTrap(playerKey, payload.cardIndex);
                     break;
                 case "activateSetCard":
-                    DuelEngine.activateSetCard(playerKey, payload.fieldIndex);
+                    CombatEngine.activateSetCard(playerKey, payload.fieldIndex);
                     break;
                 case "passReaction":
-                    DuelEngine.passReaction(playerKey);
+                    CombatEngine.passReaction(playerKey);
                     break;
                 case "declareStrike":
-                    DuelEngine.declareStrike();
+                    CombatEngine.declareStrike();
                     break;
                 case "startBattlePhase":
-                    DuelEngine.startBattlePhase();
+                    CombatEngine.startBattlePhase();
                     break;
                 case "startMainPhase2":
-                    DuelEngine.startMainPhase2();
+                    CombatEngine.startMainPhase2();
                     break;
                 case "startEndPhase":
-                    DuelEngine.startEndPhase();
+                    CombatEngine.startEndPhase();
                     break;
                 case "peekFaceDown":
                     // Authoritative peek: only send face-down data back to the actual owner
-                    if (playerKey === "P2" && DuelEngine.p2.spellsTraps[payload.fieldIndex]) {
-                        const slot = DuelEngine.p2.spellsTraps[payload.fieldIndex];
+                    if (playerKey === "P2" && CombatEngine.p2.spellsTraps[payload.fieldIndex]) {
+                        const slot = CombatEngine.p2.spellsTraps[payload.fieldIndex];
                         if (slot && slot.isSet) {
                             conn.send({
                                 type: "PEEK_RESULT",
@@ -673,7 +673,7 @@ const MultiplayerManager = {
         } else if (data.type === "PEEK_RESULT") {
             if (data.card) {
                 logToTerminal(`👁️ [PEEK TELEMETRY] You inspected: [${data.card.name}] (${data.card.type}) - ${data.card.resolution_payload}`);
-                DuelEngine.openCardInspector(data.card, `👁️ YOUR FACE-DOWN CARD • ${data.playerKey || 'P2'}`);
+                CombatEngine.openCardInspector(data.card, `👁️ YOUR FACE-DOWN CARD • ${data.playerKey || 'P2'}`);
             }
         }
     },
@@ -684,25 +684,25 @@ const MultiplayerManager = {
         const isHost = targetSeat === "P1";
 
         return {
-            isDuelActive: DuelEngine.isDuelActive,
-            activeTurn: DuelEngine.activeTurn,
-            turnCount: DuelEngine.turnCount,
-            currentPhase: DuelEngine.currentPhase,
-            chainStack: DuelEngine.chainStack,
-            isResolving: DuelEngine.isResolving,
-            waitingForReaction: DuelEngine.waitingForReaction,
-            reactionPlayer: DuelEngine.reactionPlayer,
-            pendingAttack: DuelEngine.pendingAttack,
-            p1SelectedDeck: DuelEngine.p1SelectedDeck,
-            p2SelectedDeck: DuelEngine.p2SelectedDeck,
+            isCombatActive: CombatEngine.isCombatActive,
+            activeTurn: CombatEngine.activeTurn,
+            turnCount: CombatEngine.turnCount,
+            currentPhase: CombatEngine.currentPhase,
+            chainStack: CombatEngine.chainStack,
+            isResolving: CombatEngine.isResolving,
+            waitingForReaction: CombatEngine.waitingForReaction,
+            reactionPlayer: CombatEngine.reactionPlayer,
+            pendingRadiance: CombatEngine.pendingRadiance,
+            p1SelectedDeck: CombatEngine.p1SelectedDeck,
+            p2SelectedDeck: CombatEngine.p2SelectedDeck,
             // P1 hand and face-downs are ONLY unmasked for Host (P1)
-            p1: this.serializeOperative(DuelEngine.p1, isHost),
+            p1: this.serializeAngel(CombatEngine.p1, isHost),
             // P2 hand and face-downs are ONLY unmasked for Client (P2)
-            p2: this.serializeOperative(DuelEngine.p2, isP2)
+            p2: this.serializeAngel(CombatEngine.p2, isP2)
         };
     },
 
-    serializeOperative(op, isOwner) {
+    serializeAngel(op, isOwner) {
         if (!op) return null;
 
         // Security: Mask opponent hand completely on the wire
@@ -740,18 +740,18 @@ const MultiplayerManager = {
             maxLp: op.maxLp,
             baseAtk: op.baseAtk,
             baseDef: op.baseDef,
-            energy: op.energy,
-            maxEnergy: op.maxEnergy,
+            grace: op.grace,
+            maxGrace: op.maxGrace,
             hand: handData,
             deckCount: (op.deck && op.deck.length) || 0,
             graveyard: op.graveyard || [],
-            equippedArmor: op.equippedArmor || {}, // Public on the grid
+            equippedWillpower: op.equippedWillpower || {}, // Public on the grid
             spellsTraps: spellsTrapsData,
             normalEquipUsed: op.normalEquipUsed,
-            hasAttacked: op.hasAttacked,
+            hasRadianceed: op.hasRadianceed,
             totalAtk: op.totalAtk,
             totalDef: op.totalDef,
-            armorPieces: op.armorPieces
+            willpowerPieces: op.willpowerPieces
         };
     },
 
@@ -770,67 +770,67 @@ const MultiplayerManager = {
     applySynchronizedState(remoteState) {
         if (!remoteState) return;
 
-        DuelEngine.isDuelActive = remoteState.isDuelActive;
-        DuelEngine.activeTurn = remoteState.activeTurn;
-        DuelEngine.turnCount = remoteState.turnCount;
-        DuelEngine.currentPhase = remoteState.currentPhase;
-        DuelEngine.chainStack = remoteState.chainStack || [];
-        DuelEngine.isResolving = remoteState.isResolving;
-        DuelEngine.waitingForReaction = remoteState.waitingForReaction;
-        DuelEngine.reactionPlayer = remoteState.reactionPlayer;
-        DuelEngine.pendingAttack = remoteState.pendingAttack;
-        DuelEngine.p1SelectedDeck = remoteState.p1SelectedDeck;
-        DuelEngine.p2SelectedDeck = remoteState.p2SelectedDeck;
+        CombatEngine.isCombatActive = remoteState.isCombatActive;
+        CombatEngine.activeTurn = remoteState.activeTurn;
+        CombatEngine.turnCount = remoteState.turnCount;
+        CombatEngine.currentPhase = remoteState.currentPhase;
+        CombatEngine.chainStack = remoteState.chainStack || [];
+        CombatEngine.isResolving = remoteState.isResolving;
+        CombatEngine.waitingForReaction = remoteState.waitingForReaction;
+        CombatEngine.reactionPlayer = remoteState.reactionPlayer;
+        CombatEngine.pendingRadiance = remoteState.pendingRadiance;
+        CombatEngine.p1SelectedDeck = remoteState.p1SelectedDeck;
+        CombatEngine.p2SelectedDeck = remoteState.p2SelectedDeck;
 
-        // Apply operatives
-        if (remoteState.p1) this.hydrateOperative(DuelEngine.p1, remoteState.p1);
-        if (remoteState.p2) this.hydrateOperative(DuelEngine.p2, remoteState.p2);
+        // Apply angels
+        if (remoteState.p1) this.hydrateAngel(CombatEngine.p1, remoteState.p1);
+        if (remoteState.p2) this.hydrateAngel(CombatEngine.p2, remoteState.p2);
 
-        // Switch to duel view if match started
-        const setupSec = document.getElementById("pre-duel-setup-section");
-        const duelSec = document.getElementById("duel-section");
+        // Switch to combat view if match started
+        const setupSec = document.getElementById("pre-combat-setup-section");
+        const combatSec = document.getElementById("combat-section");
         const lobbySec = document.getElementById("training-lobby-section");
         const welcomeSec = document.getElementById("welcome-section");
 
         if (welcomeSec) welcomeSec.classList.add("hidden");
         if (lobbySec) lobbySec.classList.add("hidden");
 
-        if (DuelEngine.isDuelActive) {
+        if (CombatEngine.isCombatActive) {
             if (setupSec) setupSec.classList.add("hidden");
-            if (duelSec) duelSec.classList.remove("hidden");
+            if (combatSec) combatSec.classList.remove("hidden");
         } else {
             if (setupSec) setupSec.classList.remove("hidden");
-            if (duelSec) duelSec.classList.add("hidden");
+            if (combatSec) combatSec.classList.add("hidden");
             
             // Sync setup dropdown values & previews
             const p1Sel = document.getElementById("setup-p1-deck");
             const p2Sel = document.getElementById("setup-p2-deck");
-            if (p1Sel) p1Sel.value = DuelEngine.p1SelectedDeck;
-            if (p2Sel) p2Sel.value = DuelEngine.p2SelectedDeck;
-            DuelEngine.updateSetupPreview("P1", DuelEngine.p1SelectedDeck);
-            DuelEngine.updateSetupPreview("P2", DuelEngine.p2SelectedDeck);
+            if (p1Sel) p1Sel.value = CombatEngine.p1SelectedDeck;
+            if (p2Sel) p2Sel.value = CombatEngine.p2SelectedDeck;
+            CombatEngine.updateSetupPreview("P1", CombatEngine.p1SelectedDeck);
+            CombatEngine.updateSetupPreview("P2", CombatEngine.p2SelectedDeck);
             this.syncDeckSelectionControls();
         }
 
         // Render UI
-        DuelEngine.renderDuelUI();
+        CombatEngine.renderCombatUI();
     },
 
-    hydrateOperative(targetOp, remoteOp) {
+    hydrateAngel(targetOp, remoteOp) {
         if (!targetOp || !remoteOp) return;
         targetOp.name = remoteOp.name;
         targetOp.deckArchetypeId = remoteOp.deckArchetypeId;
         targetOp.lp = remoteOp.lp;
         targetOp.maxLp = remoteOp.maxLp;
-        targetOp.energy = remoteOp.energy;
-        targetOp.maxEnergy = remoteOp.maxEnergy;
+        targetOp.grace = remoteOp.grace;
+        targetOp.maxGrace = remoteOp.maxGrace;
         targetOp.hand = remoteOp.hand || [];
         targetOp.deck = new Array(remoteOp.deckCount || 0);
         targetOp.graveyard = remoteOp.graveyard || [];
-        targetOp.equippedArmor = remoteOp.equippedArmor || {};
+        targetOp.equippedWillpower = remoteOp.equippedWillpower || {};
         targetOp.spellsTraps = remoteOp.spellsTraps || [];
         targetOp.normalEquipUsed = remoteOp.normalEquipUsed;
-        targetOp.hasAttacked = remoteOp.hasAttacked;
+        targetOp.hasRadianceed = remoteOp.hasRadianceed;
     },
 
     // ── DECK SELECTION CONTROLS SYNCHRONIZATION ────────────────────────────────
@@ -840,7 +840,7 @@ const MultiplayerManager = {
         const p2Badge  = document.getElementById("setup-p2-role-badge");
         const p1Select = document.getElementById("setup-p1-deck");
         const p2Select = document.getElementById("setup-p2-deck");
-        const startBtn = document.getElementById("btn-start-duel-action");
+        const startBtn = document.getElementById("btn-start-combat-action");
 
         if (this.role === "HOST") {
             const opponentName = this.connections.length > 0 ? "P2 Connected" : "Awaiting P2";
@@ -1030,26 +1030,26 @@ const MultiplayerManager = {
 // ============================================================================
 // MONKEY-PATCH DUEL ENGINE FOR AUTOMATIC MULTIPLAYER BROADCASTING / FORWARDING
 // ============================================================================
-(function hookMultiplayerToDuelEngine() {
-    if (typeof DuelEngine === "undefined") return;
+(function hookMultiplayerToCombatEngine() {
+    if (typeof CombatEngine === "undefined") return;
 
     // Wrap changeDeck
-    const origChangeDeck = DuelEngine.changeDeck;
-    DuelEngine.changeDeck = function(playerKey, deckId) {
+    const origChangeDeck = CombatEngine.changeDeck;
+    CombatEngine.changeDeck = function(playerKey, deckId) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && playerKey === "P2") {
             MultiplayerManager.sendAction("selectDeck", { deckId });
-            DuelEngine.updateSetupPreview("P2", deckId);
+            CombatEngine.updateSetupPreview("P2", deckId);
             return;
         }
         origChangeDeck.apply(this, arguments);
         MultiplayerManager.broadcastState();
     };
 
-    // Wrap equipArmor
-    const origEquip = DuelEngine.equipArmor;
-    DuelEngine.equipArmor = function(playerKey, cardIndex) {
+    // Wrap equipWillpower
+    const origEquip = CombatEngine.equipWillpower;
+    CombatEngine.equipWillpower = function(playerKey, cardIndex) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && playerKey === "P2") {
-            MultiplayerManager.sendAction("equipArmor", { cardIndex });
+            MultiplayerManager.sendAction("equipWillpower", { cardIndex });
             return;
         }
         origEquip.apply(this, arguments);
@@ -1057,8 +1057,8 @@ const MultiplayerManager = {
     };
 
     // Wrap activateSpellCard
-    const origSpell = DuelEngine.activateSpellCard;
-    DuelEngine.activateSpellCard = function(playerKey, cardIndex, fromField, fieldIndex) {
+    const origSpell = CombatEngine.activateSpellCard;
+    CombatEngine.activateSpellCard = function(playerKey, cardIndex, fromField, fieldIndex) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && playerKey === "P2") {
             MultiplayerManager.sendAction("activateSpellCard", { cardIndex, fromField, fieldIndex });
             return;
@@ -1068,8 +1068,8 @@ const MultiplayerManager = {
     };
 
     // Wrap setSpellTrap
-    const origSet = DuelEngine.setSpellTrap;
-    DuelEngine.setSpellTrap = function(playerKey, cardIndex) {
+    const origSet = CombatEngine.setSpellTrap;
+    CombatEngine.setSpellTrap = function(playerKey, cardIndex) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && playerKey === "P2") {
             MultiplayerManager.sendAction("setSpellTrap", { cardIndex });
             return;
@@ -1079,8 +1079,8 @@ const MultiplayerManager = {
     };
 
     // Wrap activateSetCard
-    const origActivateSet = DuelEngine.activateSetCard;
-    DuelEngine.activateSetCard = function(playerKey, fieldIndex) {
+    const origActivateSet = CombatEngine.activateSetCard;
+    CombatEngine.activateSetCard = function(playerKey, fieldIndex) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && playerKey === "P2") {
             MultiplayerManager.sendAction("activateSetCard", { fieldIndex });
             return;
@@ -1090,8 +1090,8 @@ const MultiplayerManager = {
     };
 
     // Wrap passReaction
-    const origPass = DuelEngine.passReaction;
-    DuelEngine.passReaction = function(playerKey) {
+    const origPass = CombatEngine.passReaction;
+    CombatEngine.passReaction = function(playerKey) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2") {
             MultiplayerManager.sendAction("passReaction", {});
             return;
@@ -1101,9 +1101,9 @@ const MultiplayerManager = {
     };
 
     // Wrap declareStrike
-    const origStrike = DuelEngine.declareStrike;
-    DuelEngine.declareStrike = function() {
-        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && DuelEngine.activeTurn === "P2") {
+    const origStrike = CombatEngine.declareStrike;
+    CombatEngine.declareStrike = function() {
+        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && CombatEngine.activeTurn === "P2") {
             MultiplayerManager.sendAction("declareStrike", {});
             return;
         }
@@ -1112,9 +1112,9 @@ const MultiplayerManager = {
     };
 
     // Wrap startBattlePhase
-    const origBattle = DuelEngine.startBattlePhase;
-    DuelEngine.startBattlePhase = function() {
-        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && DuelEngine.activeTurn === "P2") {
+    const origBattle = CombatEngine.startBattlePhase;
+    CombatEngine.startBattlePhase = function() {
+        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && CombatEngine.activeTurn === "P2") {
             MultiplayerManager.sendAction("startBattlePhase", {});
             return;
         }
@@ -1123,9 +1123,9 @@ const MultiplayerManager = {
     };
 
     // Wrap startMainPhase2
-    const origMain2 = DuelEngine.startMainPhase2;
-    DuelEngine.startMainPhase2 = function() {
-        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && DuelEngine.activeTurn === "P2") {
+    const origMain2 = CombatEngine.startMainPhase2;
+    CombatEngine.startMainPhase2 = function() {
+        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && CombatEngine.activeTurn === "P2") {
             MultiplayerManager.sendAction("startMainPhase2", {});
             return;
         }
@@ -1134,9 +1134,9 @@ const MultiplayerManager = {
     };
 
     // Wrap startEndPhase
-    const origEnd = DuelEngine.startEndPhase;
-    DuelEngine.startEndPhase = function() {
-        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && DuelEngine.activeTurn === "P2") {
+    const origEnd = CombatEngine.startEndPhase;
+    CombatEngine.startEndPhase = function() {
+        if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2" && CombatEngine.activeTurn === "P2") {
             MultiplayerManager.sendAction("startEndPhase", {});
             return;
         }
@@ -1145,8 +1145,8 @@ const MultiplayerManager = {
     };
 
     // Wrap startConfiguredMatch
-    const origStartMatch = DuelEngine.startConfiguredMatch;
-    DuelEngine.startConfiguredMatch = function() {
+    const origStartMatch = CombatEngine.startConfiguredMatch;
+    CombatEngine.startConfiguredMatch = function() {
         if (MultiplayerManager.role === "CLIENT") {
             MultiplayerManager.sendAction("startMatch", {});
             return;
@@ -1156,8 +1156,8 @@ const MultiplayerManager = {
     };
 
     // Wrap peekFaceDown
-    const origPeek = DuelEngine.peekFaceDown;
-    DuelEngine.peekFaceDown = function(playerKey, fieldIndex) {
+    const origPeek = CombatEngine.peekFaceDown;
+    CombatEngine.peekFaceDown = function(playerKey, fieldIndex) {
         if (MultiplayerManager.role === "CLIENT" && MultiplayerManager.mySeat === "P2") {
             MultiplayerManager.sendAction("peekFaceDown", { fieldIndex });
             return;
