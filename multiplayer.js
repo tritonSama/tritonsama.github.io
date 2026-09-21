@@ -412,6 +412,8 @@ const MultiplayerManager = {
             
             // Automatically transition Host to Deck Selector and sync controls
             switchAppMode("DUEL");
+            // Scroll down to the duel setup section
+            document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });
             this.syncDeckSelectionControls();
 
             // Notify all peers of current state
@@ -480,6 +482,7 @@ const MultiplayerManager = {
 
                 // Automatically transition Player 2 to Deck Selection
                 switchAppMode("DUEL");
+                document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });
                 this.syncDeckSelectionControls();
             });
 
@@ -536,6 +539,7 @@ const MultiplayerManager = {
                 }
 
                 switchAppMode("DUEL");
+                document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });
                 this.syncDeckSelectionControls();
             });
 
