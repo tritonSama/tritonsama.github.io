@@ -35,6 +35,51 @@ const DEFAULT_CARDS = [
 
 allCardsPool = [...DEFAULT_CARDS];
 
+const ANGELIC_HOUSES = {
+    "Flame": {
+        desc: "Strength, passion, courage and destruction.",
+        combat: "Aggressive melee combat.",
+        abilities: ["Flame Blade", "Inferno Strike", "Burning Wings", "Meteor Fall", "Solar Burst", "Phoenix Ascension"],
+        color: "#ef4444"
+    },
+    "Storm": {
+        desc: "Freedom, speed, precision and power.",
+        combat: "Fast attacks and mobility.",
+        abilities: ["Lightning Step", "Thunder Spear", "Storm Wings", "Chain Lightning", "Tempest Strike", "Heaven's Thunder"],
+        color: "#fbbf24"
+    },
+    "Tide": {
+        desc: "Adaptation, patience, knowledge and balance.",
+        combat: "Defensive and counterattack-oriented.",
+        abilities: ["Water Blade", "Frost Armor", "Tidal Wave", "Ice Lance", "Frozen Domain", "Ocean's Judgment"],
+        color: "#38bdf8"
+    },
+    "Terra": {
+        desc: "Strength, stability, endurance and protection.",
+        combat: "Heavy weapons and defensive combat.",
+        abilities: ["Stone Skin", "Earthquake", "Titan Strike", "Crystal Shield", "Mountain's Wrath", "Colossus Ascension"],
+        color: "#10b981"
+    },
+    "Gale": {
+        desc: "Freedom, movement, awareness and perception.",
+        combat: "Extreme mobility and ranged attacks.",
+        abilities: ["Wind Blade", "Air Dash", "Cyclone", "Vacuum Strike", "Sky Prison", "Heaven's Gale"],
+        color: "#a7f3d0"
+    },
+    "Radiance": {
+        desc: "Justice, protection, healing and leadership.",
+        combat: "Balanced offense/support.",
+        abilities: ["Radiant Blade", "Holy Barrier", "Restoration", "Light Spear", "Divine Judgment", "Seraphic Ascension"],
+        color: "#fde047"
+    },
+    "Shadow": {
+        desc: "Knowledge, sacrifice, secrecy and power.",
+        combat: "Assassination, debuffs and forbidden abilities.",
+        abilities: ["Shadow Step", "Void Blade", "Darkness Field", "Soul Rend", "Abyssal Chains", "Eclipse Ascension"],
+        color: "#c084fc"
+    }
+};
+
 const ARCHETYPE_INFO = {
     "ABYSSAL_TIDE": {
         title: "Abyssal Tide Corps (WATER)",
@@ -1249,6 +1294,7 @@ function switchAppMode(mode) {
     const duelSec    = document.getElementById('duel-section');
     const lbSec      = document.getElementById('leaderboard-section');
     const betaSec    = document.getElementById('beta-signup-section');
+    const angelicSec = document.getElementById('angelic-section');
     
     const modeTabs   = document.getElementById('mode-tabs');
     const tabOutie   = document.getElementById('tab-outie');
@@ -1257,6 +1303,7 @@ function switchAppMode(mode) {
     const tabDuel    = document.getElementById('tab-duel');
     const tabLb      = document.getElementById('tab-leaderboard');
     const tabBeta    = document.getElementById('tab-beta');
+    const tabAngelic = document.getElementById('tab-angelic');
     
     if (welcomeSec) welcomeSec.classList.add('hidden');
     if (modeTabs)   modeTabs.classList.remove('hidden');
@@ -1267,6 +1314,7 @@ function switchAppMode(mode) {
     if (tabDuel)  tabDuel.classList.toggle('active', mode === "DUEL");
     if (tabLb)    tabLb.classList.toggle('active', mode === "LEADERBOARD");
     if (tabBeta)  tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
+    if (tabAngelic) tabAngelic.classList.toggle('active', mode === "ANGELIC");
     
     // Hide all sections first
     if (outieSec) outieSec.classList.add('hidden');
@@ -1276,8 +1324,11 @@ function switchAppMode(mode) {
     if (duelSec)  duelSec.classList.add('hidden');
     if (lbSec)    lbSec.classList.add('hidden');
     if (betaSec)  betaSec.classList.add('hidden');
+    if (angelicSec) angelicSec.classList.add('hidden');
 
-    if (mode === "OUTIE") {
+    if (mode === "ANGELIC") {
+        if (angelicSec) angelicSec.classList.remove('hidden');
+    } else if (mode === "OUTIE") {
         if (outieSec) outieSec.classList.remove('hidden');
         if (window.SeveranceManager && typeof window.SeveranceManager.updateSanctumDisplay === 'function') {
             window.SeveranceManager.updateSanctumDisplay();
@@ -1336,6 +1387,120 @@ function enterBetaSignup() {
     
     switchAppMode("BETA");
     logToTerminal(`📝 [BETA PORTAL] Navigated to Closed Beta Application Form.`);
+}
+
+function selectHouse(houseName) {
+    const input = document.getElementById('angelic-house-input');
+    if (input) input.value = houseName;
+
+    // Update active button styling
+    document.querySelectorAll('.house-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const activeBtn = document.getElementById(`house-btn-${houseName}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Update Info Box
+    const box = document.getElementById('house-info-box');
+    const data = ANGELIC_HOUSES[houseName];
+    if (box && data) {
+        box.innerHTML = `
+            <h4 style="color:${data.color}; margin-top:0; margin-bottom:8px; font-size:16px;">HOUSE OF ${houseName.toUpperCase()}</h4>
+            <div style="margin-bottom:8px;"><strong>Philosophy:</strong> <span style="color:#cbd5e1;">${data.desc}</span></div>
+            <div style="margin-bottom:12px;"><strong>Combat Style:</strong> <span style="color:#cbd5e1;">${data.combat}</span></div>
+            <div style="font-weight:bold; color:#94a3b8; font-size:11px; margin-bottom:4px; text-transform:uppercase;">Core Abilities:</div>
+            <div class="abilities-grid">
+                ${data.abilities.map(ab => `<div class="ability-tag">${ab}</div>`).join('')}
+            </div>
+        `;
+    }
+}
+
+async function submitAngelicForm(event) {
+    if (event) event.preventDefault();
+
+    const nameEl = document.getElementById('angelic-name');
+    const bodyEl = document.getElementById('angelic-body');
+    const cosmeticsEl = document.getElementById('angelic-cosmetics');
+    const houseInput = document.getElementById('angelic-house-input');
+    const submitBtn = document.getElementById('angelic-submit-btn');
+    const summaryBox = document.getElementById('angelic-summary');
+
+    const name = nameEl ? nameEl.value.trim() : "";
+    const bodyType = bodyEl ? bodyEl.value : "";
+    const cosmetics = cosmeticsEl ? cosmeticsEl.value : "";
+    const house = houseInput ? houseInput.value : "";
+
+    if (!name || !house) {
+        alert("⚠️ Please provide a Character Name and select an Elemental House.");
+        return;
+    }
+
+    const payload = {
+        timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
+        name,
+        bodyType,
+        cosmetics,
+        house,
+        action: "angelic_creation"
+    };
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "⏳ FORGING PALADIN OATH...";
+    }
+
+    try {
+        await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        });
+
+        logToTerminal(`👼 [ANGELIC WARRIOR CREATED] ${name} joined House of ${house}.`);
+
+        const form = document.getElementById('angelicCreationForm');
+        if (form) form.classList.add('hidden');
+
+        if (summaryBox) {
+            const data = ANGELIC_HOUSES[house];
+            summaryBox.innerHTML = `
+                <div class="angelic-success-header" style="color:${data.color};">
+                    <span style="font-size:24px;">✨</span>
+                    <h3 style="margin:0;">PALADIN INITIATION COMPLETE</h3>
+                    <span style="font-size:24px;">✨</span>
+                </div>
+                <div style="text-align:center; margin-bottom:20px; font-size:14px;">
+                    Arise, <strong>${name}</strong>. Your oath to the <strong>House of ${house}</strong> is forged.
+                </div>
+                <div class="angelic-stats-grid">
+                    <div class="angelic-stat-card">
+                        <div class="stat-label">BODY TYPE</div>
+                        <div class="stat-value">${bodyType}</div>
+                    </div>
+                    <div class="angelic-stat-card">
+                        <div class="stat-label">COSMETICS</div>
+                        <div class="stat-value">${cosmetics}</div>
+                    </div>
+                    <div class="angelic-stat-card">
+                        <div class="stat-label">ELEMENT</div>
+                        <div class="stat-value" style="color:${data.color};">${house.toUpperCase()}</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-start-duel" style="margin-top:20px; width:100%;" onclick="location.reload()">RETURN TO NEXUS</button>
+            `;
+            summaryBox.classList.remove('hidden');
+        }
+
+    } catch (err) {
+        console.error("Angelic form submission error:", err);
+        alert("Transmission failed. Please check your connection.");
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "👼 CREATE PALADIN / ENTER WORLD";
+        }
+    }
 }
 
 async function submitBetaTesterForm(event) {

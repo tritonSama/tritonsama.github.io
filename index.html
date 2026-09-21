@@ -26,7 +26,7 @@
         <!-- ======================================================== -->
         <!-- WELCOME TO STAGE 1 OF THE DEMO WELCOME SCREEN             -->
         <!-- ======================================================== -->
-        <section id="welcome-section" class="panel welcome-panel">
+        <section id="welcome-section" class="panel welcome-panel hidden">
             <div class="welcome-badge">🚀 SEVERANCE v2.4: DUAL-CONSCIOUSNESS TACTICAL CORE</div>
             <h2>WELCOME TO OPERATION: SEVERED GRID</h2>
             <p class="welcome-subtitle">Manage celestial infrastructure in the <strong>Outie Sanctum</strong>, dive into the <strong>Innie Ascent</strong> for d20 tabletop incursions, or battle in the <strong>Operative Armor Duel Arena</strong>.</p>
@@ -61,8 +61,9 @@
         </section>
 
         <!-- Mode Tabs -->
-        <nav id="mode-tabs" class="mode-tabs-bar hidden">
-            <button id="tab-outie" class="mode-tab-btn active" onclick="switchAppMode('OUTIE')">🏛️ OUTIE SANCTUM</button>
+        <nav id="mode-tabs" class="mode-tabs-bar">
+            <button id="tab-angelic" class="mode-tab-btn active" onclick="switchAppMode('ANGELIC')">👼 ANGELIC WARRIOR</button>
+            <button id="tab-outie" class="mode-tab-btn" onclick="switchAppMode('OUTIE')">🏛️ OUTIE SANCTUM</button>
             <button id="tab-innie" class="mode-tab-btn" onclick="switchAppMode('INNIE')">🌀 INNIE ASCENT (5e)</button>
             <button id="tab-lobby" class="mode-tab-btn" onclick="switchAppMode('LOBBY')">🏟️ TRAINING LOBBY</button>
             <button id="tab-duel" class="mode-tab-btn" onclick="switchAppMode('DUEL')">⚔️ ARMOR DUEL ARENA</button>
@@ -71,9 +72,84 @@
         </nav>
 
         <!-- ======================================================== -->
+        <!-- ANGELIC WARRIOR RPG PROTOTYPE                            -->
+        <!-- ======================================================== -->
+        <section id="angelic-section" class="panel">
+            <div class="setup-header">
+                <h2>👼 ANGELIC WARRIOR: PALADIN INITIATION</h2>
+                <p>Become an angelic warrior, master an elemental House, forge your own Order, and rise from Initiate to legendary Paladin.</p>
+            </div>
+
+            <div class="angelic-form-container">
+                <form id="angelicCreationForm" onsubmit="submitAngelicForm(event)">
+                    <div class="angelic-grid-layout">
+                        <!-- Left Column: Character Details -->
+                        <div class="angelic-left-col">
+                            <h3 class="angelic-section-title">1. Character Details</h3>
+
+                            <div class="beta-field-group">
+                                <label for="angelic-name">Character Name <span class="req-star">*</span></label>
+                                <input type="text" id="angelic-name" name="name" required placeholder="Enter your warrior's name">
+                            </div>
+
+                            <div class="beta-field-group">
+                                <label for="angelic-body">Body Type</label>
+                                <select id="angelic-body" name="bodyType">
+                                    <option value="Type A (Masculine)">Type A (Masculine)</option>
+                                    <option value="Type B (Feminine)">Type B (Feminine)</option>
+                                    <option value="Type C (Androgynous)">Type C (Androgynous)</option>
+                                    <option value="Type D (Heavy)">Type D (Heavy)</option>
+                                </select>
+                            </div>
+
+                            <div class="beta-field-group">
+                                <label for="angelic-cosmetics">Cosmetic Aura</label>
+                                <select id="angelic-cosmetics" name="cosmetics">
+                                    <option value="Radiant Halo">Radiant Halo</option>
+                                    <option value="Burning Eyes">Burning Eyes</option>
+                                    <option value="Void Markings">Void Markings</option>
+                                    <option value="Frost Breath">Frost Breath</option>
+                                    <option value="Storm Sparks">Storm Sparks</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Elemental House Selection -->
+                        <div class="angelic-right-col">
+                            <h3 class="angelic-section-title">2. Elemental House</h3>
+                            <input type="hidden" id="angelic-house-input" required>
+
+                            <div class="house-selection-grid">
+                                <button type="button" id="house-btn-Flame" class="house-btn" onclick="selectHouse('Flame')">🔥 FLAME</button>
+                                <button type="button" id="house-btn-Storm" class="house-btn" onclick="selectHouse('Storm')">⚡ STORM</button>
+                                <button type="button" id="house-btn-Tide" class="house-btn" onclick="selectHouse('Tide')">🌊 TIDE</button>
+                                <button type="button" id="house-btn-Terra" class="house-btn" onclick="selectHouse('Terra')">🪨 TERRA</button>
+                                <button type="button" id="house-btn-Gale" class="house-btn" onclick="selectHouse('Gale')">🌪️ GALE</button>
+                                <button type="button" id="house-btn-Radiance" class="house-btn" onclick="selectHouse('Radiance')">☀️ RADIANCE</button>
+                                <button type="button" id="house-btn-Shadow" class="house-btn" onclick="selectHouse('Shadow')">🌑 SHADOW</button>
+                            </div>
+
+                            <div id="house-info-box" class="house-info-box">
+                                <p style="color:#94a3b8; text-align:center; padding:20px 0;">Select an Elemental House to view details.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="beta-submit-row" style="margin-top:20px;">
+                        <button type="submit" id="angelic-submit-btn" class="btn-start-duel" style="font-size: 16px; padding: 12px; width: 100%;">👼 CREATE PALADIN / ENTER WORLD</button>
+                    </div>
+                </form>
+
+                <div id="angelic-summary" class="hidden angelic-summary-box">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
         <!-- 1. THE OUTIE SANCTUM (C&C BASE GRID & SYNTHESIS MATRIX)  -->
         <!-- ======================================================== -->
-        <section id="outie-sanctum-section" class="panel">
+        <section id="outie-sanctum-section" class="panel hidden">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>

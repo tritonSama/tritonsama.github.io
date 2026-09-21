@@ -1086,3 +1086,165 @@ body.theme-solar .leaderboard-table td {
 
 
 
+
+/* ========================================================================== */
+/* Angelic Warrior Styles                                                     */
+/* ========================================================================== */
+.angelic-form-container {
+    padding: 10px;
+    background: #050a14;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+body.theme-solar .angelic-form-container {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.angelic-grid-layout {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.angelic-left-col {
+    flex: 1;
+    min-width: 250px;
+}
+.angelic-right-col {
+    flex: 1.5;
+    min-width: 300px;
+}
+.angelic-section-title {
+    color: #38bdf8;
+    margin-top: 0;
+    font-size: 14px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+}
+body.theme-solar .angelic-section-title {
+    color: #0284c7;
+    border-color: #cbd5e1;
+}
+
+.house-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.house-btn {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 8px;
+    margin: 0;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+.house-btn:hover {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+.house-btn.active {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: #fcd34d;
+    box-shadow: 0 0 10px rgba(252, 211, 77, 0.4);
+}
+body.theme-solar .house-btn {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+body.theme-solar .house-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+body.theme-solar .house-btn.active {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #b45309;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.house-info-box {
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    padding: 12px;
+    min-height: 120px;
+}
+body.theme-solar .house-info-box {
+    background: #ffffff;
+    border-color: #94a3b8;
+}
+.abilities-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.ability-tag {
+    background: #334155;
+    color: #e2e8f0;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+body.theme-solar .ability-tag {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.angelic-summary-box {
+    background: #050a14;
+    border: 2px solid #f59e0b;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+}
+body.theme-solar .angelic-summary-box {
+    background: #fffbeb;
+    border-color: #d97706;
+}
+.angelic-success-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.angelic-stats-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.angelic-stat-card {
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+    min-width: 120px;
+}
+body.theme-solar .angelic-stat-card {
+    background: #ffffff;
+    border-color: #cbd5e1;
+}
+.angelic-stat-card .stat-label {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+.angelic-stat-card .stat-value {
+    font-weight: bold;
+    font-size: 14px;
+    color: #f8fafc;
+}
+body.theme-solar .angelic-stat-card .stat-value {
+    color: #0f172a;
+}
