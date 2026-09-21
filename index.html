@@ -58,20 +58,11 @@
         </section>
 
         <!-- Mode Tabs -->
-        <nav id="mode-tabs" class="mode-tabs-bar hidden">
-            <button id="tab-angelic" class="mode-tab-btn active" onclick="switchAppMode('ANGELIC')">👼 ANGELIC WARRIOR</button>
-            <button id="tab-outie" class="mode-tab-btn" onclick="switchAppMode('OUTIE')">🏛️ THE GREAT ARCHIVE</button>
-            <button id="tab-innie" class="mode-tab-btn" onclick="switchAppMode('INNIE')">🌀 DIVINE CHRONICLES (5e)</button>
-            <button id="tab-lobby" class="mode-tab-btn" onclick="switchAppMode('LOBBY')">🏟️ TRAINING LOBBY</button>
-            <button id="tab-combat" class="mode-tab-btn" onclick="switchAppMode('DUEL')">⚔️ WILLPOWER DUEL ARENA</button>
-            <button id="tab-archangel hierarchy" class="mode-tab-btn" onclick="switchAppMode('LEADERBOARD')">🏆 LEADERBOARD</button>
-            <button id="tab-beta" class="mode-tab-btn" onclick="switchAppMode('BETA')">📝 BETA SIGN-UP</button>
-        </nav>
 
         <!-- ======================================================== -->
         <!-- ANGELIC WARRIOR RPG PROTOTYPE                            -->
         <!-- ======================================================== -->
-        <section id="angelic-section" class="panel hidden">
+        <section id="angelic-section" class="panel">
             <div class="setup-header">
                 <h2>👼 ANGELIC WARRIOR: PALADIN INITIATION</h2>
                 <p>Become an angelic warrior, master an elemental House, forge your own Order, and rise from Initiate to legendary Paladin.</p>
@@ -146,7 +137,7 @@
         <!-- ======================================================== -->
         <!-- 1. THE THE GREAT ARCHIVE (C&C BASE GRID & SYNTHESIS MATRIX)  -->
         <!-- ======================================================== -->
-        <section id="archive-section" class="panel hidden">
+        <section id="archive-section" class="panel">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>
@@ -216,9 +207,184 @@
                 <p>Status: <span style="color: #4ade80;">Approved</span> | Your chronicles have been reviewed by the High Council. You are cleared for further Divine Chronicles.</p>
             </div>
         <!-- ======================================================== -->
+        <!-- THE MISSION BOARD (QUEST ARCHITECTURE)                   -->
+        <!-- ======================================================== -->
+        <section id="mission-board-section" class="panel">
+            <div class="setup-header">
+                <h2>📜 MISSION BOARD</h2>
+                <p>Select a Mission Manifest based on your Character Power Rating (CPR). Complete the Minimum Word Count (WC) to claim rewards.</p>
+            </div>
+
+            <div class="synthesis-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <!-- D-Rank Mission -->
+                <div class="synth-card" style="border: 1px solid #94a3b8;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span class="p-tag" style="background:#475569; color:#f8fafc;">D-Rank</span>
+                        <span style="font-size:11px; color:#94a3b8;">Req CPR: 100+</span>
+                    </div>
+                    <div class="synth-title" style="color: #cbd5e1; font-size: 16px;">Mortal Prayers</div>
+                    <div class="synth-desc" style="font-size:12px; margin:8px 0;">
+                        <strong>Objective:</strong> Assist the local parish in organizing their archives and clearing out minor pests.<br>
+                        <strong>Min WC:</strong> 1,000 WC<br>
+                        <strong>Hazards:</strong> None
+                    </div>
+                    <div style="font-size:12px; color:#4ade80; margin-bottom: 12px;">Rewards: 500 WCP / 200 Favor</div>
+                    <button type="button" class="btn-sm btn-phase" style="width:100%;">Sign Up (Start Mission)</button>
+                </div>
+
+                <!-- B-Rank Mission -->
+                <div class="synth-card" style="border: 1px solid #38bdf8;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span class="p-tag" style="background:#0ea5e9; color:#f0f9ff;">B-Rank</span>
+                        <span style="font-size:11px; color:#38bdf8;">Req CPR: 250+</span>
+                    </div>
+                    <div class="synth-title" style="color: #38bdf8; font-size: 16px;">Abyssal Breach</div>
+                    <div class="synth-desc" style="font-size:12px; margin:8px 0;">
+                        <strong>Objective:</strong> Purge the fractured seal in Sector 4 and eliminate the Lost Cherub.<br>
+                        <strong>Min WC:</strong> 3,500 WC<br>
+                        <strong>Hazards:</strong> Environmental Hazard Tier 1 (Desolation Aura: -10 Grace per 1,000 WC)
+                    </div>
+                    <div style="font-size:12px; color:#4ade80; margin-bottom: 12px;">Rewards: 2,500 WCP / 1,200 Favor</div>
+                    <button type="button" class="btn-sm btn-phase" style="width:100%; border-color:#38bdf8; color:#38bdf8;">Sign Up (Start Mission)</button>
+                </div>
+
+                <!-- S-Rank Mission -->
+                <div class="synth-card" style="border: 1px solid #f43f5e; box-shadow: 0 0 10px rgba(244,63,94,0.3);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span class="p-tag" style="background:#e11d48; color:#fff1f2;">S-Rank</span>
+                        <span style="font-size:11px; color:#f43f5e;">Req CPR: 500+ (Max Cap)</span>
+                    </div>
+                    <div class="synth-title" style="color: #f43f5e; font-size: 16px;">Cataclysm Event</div>
+                    <div class="synth-desc" style="font-size:12px; margin:8px 0;">
+                        <strong>Objective:</strong> Confront the awakening ancient entity threatening to unravel the celestial grid.<br>
+                        <strong>Min WC:</strong> 8,000 WC<br>
+                        <strong>Hazards:</strong> Permadeath Enabled / Wild Magic Surge
+                    </div>
+                    <div style="font-size:12px; color:#4ade80; margin-bottom: 12px;">Rewards: 8,000 WCP / 5,000 Favor / Relic Material</div>
+                    <button type="button" class="btn-sm btn-action" style="width:100%; background:linear-gradient(135deg, #be123c, #881337); border-color:#f43f5e;">Sign Up (Start Mission)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- ACTIVE BOSS RAID & ADMIN LEDGER (BOSS BLUEPRINT)         -->
+        <!-- ======================================================== -->
+        <section id="boss-raid-section" class="panel">
+            <div class="setup-header">
+                <h2>👑 ADMIN: ACTIVE BOSS RAID</h2>
+                <p>Process Boss Logic via the Master Ledger. Log player offense and deduct boss Conviction to update the actual boss damage taken.</p>
+            </div>
+
+            <div class="angelic-grid-layout" style="gap:20px;">
+                <!-- Boss Blueprint -->
+                <div class="angelic-left-col" style="border: 1px solid #c084fc; border-radius: 8px; padding: 16px; background: rgba(88, 28, 135, 0.2);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h3 class="angelic-section-title" style="margin:0; color:#d8b4fe;">BOSS BLUEPRINT: XAPHAN</h3>
+                        <span class="p-tag" style="background:#581c87; color:#f3e8ff;">S-RANK ENCOUNTER</span>
+                    </div>
+
+                    <div style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">[PHASE 1 STATS]</div>
+                    <div class="angel-combat-stats" style="margin-bottom:16px;">
+                        <span>❤️ Vitality: <strong id="boss-vitality" style="color:#ef4444;">1500 / 1500</strong></span>
+                        <span>⚡ Agility: <strong style="color:#38bdf8;">45</strong></span>
+                        <span>✨ Radiance: <strong style="color:#fbbf24;">60</strong></span>
+                        <span>🛡️ Conviction: <strong id="boss-conviction" style="color:#a78bfa;">50</strong></span>
+                    </div>
+
+                    <div style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">[BEHAVIOR PROTOCOL MATRIX]</div>
+                    <div class="intel-modal-effect-box" style="font-size:11px; color:#94a3b8; background:rgba(0,0,0,0.4); padding:10px; border-radius:4px;">
+                        <ul style="margin:0; padding-left:16px;">
+                            <li><strong>Condition A:</strong> If >3 players are in melee range ➔ Cast [Abyssal Cleave] (AoE physical damage).</li>
+                            <li><strong>Condition B:</strong> If an active player casts a Tier 3+ Light Miracle ➔ Trigger [Shadow 反]: Reflected 20% damage back to caster.</li>
+                            <li><strong>Condition C:</strong> When HP drops below 500 ➔ Force Transition to Phase 2 (Wipe thread buffs, reset GRC pool).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Admin Ledger Input -->
+                <div class="angelic-right-col" style="border: 1px solid #475569; border-radius: 8px; padding: 16px;">
+                    <h3 class="angelic-section-title" style="margin:0 0 16px 0;">MASTER LEDGER: TURN RESOLUTION</h3>
+
+                    <div class="beta-field-group">
+                        <label for="ledger-p1-dmg">Player 1 Offense (Raw Damage)</label>
+                        <input type="number" id="ledger-p1-dmg" value="0" min="0">
+                    </div>
+                    <div class="beta-field-group">
+                        <label for="ledger-p2-dmg">Player 2 Offense (Raw Damage)</label>
+                        <input type="number" id="ledger-p2-dmg" value="0" min="0">
+                    </div>
+                    <div class="beta-field-group">
+                        <label for="ledger-p3-dmg">Player 3 Offense (Raw Damage)</label>
+                        <input type="number" id="ledger-p3-dmg" value="0" min="0">
+                    </div>
+                    <div class="beta-field-group">
+                        <label for="ledger-p4-dmg">Player 4 Offense (Raw Damage)</label>
+                        <input type="number" id="ledger-p4-dmg" value="0" min="0">
+                    </div>
+
+                    <button type="button" class="btn-start-combat" style="width:100%; margin-top:10px; padding:10px; font-size:13px;" onclick="calculateBossDamage()">⚔️ CALCULATE & RESOLVE TURN</button>
+
+                    <div id="ledger-result" style="margin-top:16px; padding:12px; background:rgba(0,0,0,0.5); border-radius:4px; font-family:monospace; display:none;">
+                        <!-- Calculated output goes here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- THE EPITAPH ARCHIVE & STATUS REGISTRY                    -->
+        <!-- ======================================================== -->
+        <section id="epitaph-archive-section" class="panel">
+            <div class="setup-header">
+                <h2>⚰️ THE EPITAPH ARCHIVE & STATUS REGISTRY</h2>
+                <p>Database of historical character statuses. Records permanent injuries sustained from high-tier encounters or permanent death rules.</p>
+            </div>
+
+            <div class="archangel hierarchy-table-container">
+                <table class="archangel hierarchy-table">
+                    <thead>
+                        <tr>
+                            <th>PLAYER ID</th>
+                            <th>CHARACTER NAME</th>
+                            <th>STATUS FLAG</th>
+                            <th>MECHANICAL PENALTY</th>
+                            <th>RESOLUTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Permanent Injury Example -->
+                        <tr>
+                            <td style="color:#94a3b8;">PL-492</td>
+                            <td style="color:#cbd5e1; font-weight:bold;">Remiel</td>
+                            <td><span class="p-tag" style="background:#ca8a04; color:#fef08a;">[Maimed_Wing]</span></td>
+                            <td style="color:#ef4444;">-10 Agility</td>
+                            <td style="font-size:11px; color:#94a3b8;">Requires S-Rank Medical Miracle</td>
+                        </tr>
+                        <!-- Permadeath Example -->
+                        <tr>
+                            <td style="color:#94a3b8;">PL-105</td>
+                            <td style="color:#cbd5e1; font-weight:bold;">Samael_Fallen</td>
+                            <td><span class="p-tag" style="background:#475569; color:#f8fafc;">[DECEASED]</span></td>
+                            <td style="color:#ef4444;">Profile Locked. Sprdsht Revoked.</td>
+                            <td style="font-size:11px; color:#94a3b8;">Account freed for Lvl 1 Fledgling</td>
+                        </tr>
+                        <!-- Alive Example -->
+                        <tr>
+                            <td style="color:#94a3b8;">PL-883</td>
+                            <td style="color:#cbd5e1; font-weight:bold;">Xera</td>
+                            <td><span class="p-tag" style="background:#166534; color:#bbf7d0;">[HEALTHY]</span></td>
+                            <td style="color:#4ade80;">None</td>
+                            <td style="font-size:11px; color:#94a3b8;">Active in Sector 4</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
         <!-- 2. THE DIVINE CHRONICLES (5e TABLETOP INCURSION & D20 ROLLER)  -->
         <!-- ======================================================== -->
-        <section id="chronicles-section" class="panel hidden">
+        <section id="chronicles-section" class="panel">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>
@@ -298,7 +464,7 @@
         <!-- ======================================================== -->
         <!-- TRAINING AREA & P2P MULTIPLAYER LOBBY                    -->
         <!-- ======================================================== -->
-        <section id="training-lobby-section" class="panel hidden">
+        <section id="training-lobby-section" class="panel">
             <div class="setup-header">
                 <h2>🏟️ TACTICAL TRAINING AREA & MULTIPLAYER LOBBY</h2>
                 <p>Choose your match pathway: Host a new combat room, connect as Player 2 over WebRTC, spectate a live match, or launch offline practice.</p>
@@ -320,7 +486,7 @@
                             <input type="text" id="lobby-generated-code" readonly value="">
                             <button type="button" id="btn-copy-code" class="btn-sm btn-phase" onclick="MultiplayerManager.copyRoomCode()">📋 Copy Code</button>
                         </div>
-                        <button type="button" class="btn-start-combat" style="margin-top:6px;" onclick="switchAppMode('DUEL')">⚔️ Enter Deck Selector</button>
+                        <button type="button" class="btn-start-combat" style="margin-top:6px;" onclick="switchAppMode('DUEL'); document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });">⚔️ Enter Deck Selector</button>
                     </div>
                 </div>
 
@@ -349,7 +515,7 @@
                     <div class="lobby-card-badge" style="background:#1e293b; color:#94a3b8;">🛡️ LOCAL TRAINING</div>
                     <h3>4. Local Practice Arena</h3>
                     <p>Test archetypes, combos, and armor configurations locally on a single device without networking.</p>
-                    <button type="button" class="btn-sm btn-action" style="width:100%; margin-top:auto; padding:10px;" onclick="MultiplayerManager.role='LOCAL'; switchAppMode('DUEL')">🤖 Launch Local Practice</button>
+                    <button type="button" class="btn-sm btn-action" style="width:100%; margin-top:auto; padding:10px;" onclick="MultiplayerManager.role='LOCAL'; switchAppMode('DUEL'); document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });">🤖 Launch Local Practice</button>
                     <button type="button" id="btn-run-diagnostics" class="btn-sm btn-phase" style="width:100%; margin-top:6px; padding:7px; font-size:11px;" onclick="MultiplayerManager.runDiagnostics()">🧪 Run WebRTC Network Diagnostic Test</button>
                 </div>
             </div>
@@ -384,7 +550,7 @@
         <!-- ======================================================== -->
         <!-- PRE-DUEL LOADOUT & DECK SELECTION SCREEN                -->
         <!-- ======================================================== -->
-        <section id="pre-combat-setup-section" class="panel hidden">
+        <section id="pre-combat-setup-section" class="panel">
             <div class="setup-header">
                 <h2>⚡ OPERATIVE TACTICAL DECK SELECTION</h2>
                 <p>Configure archetypes and loadout profiles before entering the combat grid.</p>
@@ -443,7 +609,7 @@
         <!-- ======================================================== -->
         <!-- WILLPOWER DUEL ACTIVE COMBAT ARENA                           -->
         <!-- ======================================================== -->
-        <section id="combat-section" class="panel hidden">
+        <section id="combat-section" class="panel">
             <!-- Top Controls Row -->
             <div class="combat-top-bar">
                 <div class="deck-indicator-summary">
@@ -572,7 +738,7 @@
         <!-- ======================================================== -->
         <!-- BETA TESTER SIGN-UP SECTION                              -->
         <!-- ======================================================== -->
-        <section id="beta-signup-section" class="panel hidden">
+        <section id="beta-signup-section" class="panel">
             <div class="setup-header">
                 <h2>🛡️ PILGRIM PROTOCOL: CLOSED BETA REGISTRATION</h2>
                 <p>Register to become an official beta tester for upcoming MMO-Verse world builds, digital commerce nodes, and Solana asset integrations.</p>
@@ -630,7 +796,7 @@
         <!-- ======================================================== -->
         <!-- TOP PILGRIMS MATRIX LEADERBOARD                          -->
         <!-- ======================================================== -->
-        <section id="archangel hierarchy-section" class="panel hidden">
+        <section id="archangel hierarchy-section" class="panel">
             <div class="setup-header">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <div>
@@ -718,6 +884,7 @@
             var welcomeSec = document.getElementById('welcome-section');
             if (welcomeSec) welcomeSec.classList.add('hidden');
             switchAppMode('BETA');
+            document.getElementById('beta-signup-section').scrollIntoView({ behavior: 'smooth' });
             if (typeof logToTerminal === 'function') {
                 logToTerminal('📝 [BETA PORTAL] Navigated to Closed Beta Application Form.');
             }

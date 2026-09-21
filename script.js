@@ -1287,76 +1287,26 @@ const GameEngine = {
 function switchAppMode(mode) {
     currentAppMode = mode;
     const welcomeSec = document.getElementById('welcome-section');
-    const outieSec   = document.getElementById('archive-section');
-    const innieSec   = document.getElementById('chronicles-section');
-    const lobbySec   = document.getElementById('training-lobby-section');
-    const setupSec   = document.getElementById('pre-combat-setup-section');
-    const combatSec    = document.getElementById('combat-section');
-    const lbSec      = document.getElementById('archangel hierarchy-section');
-    const betaSec    = document.getElementById('beta-signup-section');
-    const angelicSec = document.getElementById('angelic-section');
     
-    const modeTabs   = document.getElementById('mode-tabs');
-    const tabOutie   = document.getElementById('tab-outie');
-    const tabInnie   = document.getElementById('tab-innie');
-    const tabLobby   = document.getElementById('tab-lobby');
-    const tabCombat    = document.getElementById('tab-combat');
-    const tabLb      = document.getElementById('tab-archangel hierarchy');
-    const tabBeta    = document.getElementById('tab-beta');
-    const tabAngelic = document.getElementById('tab-angelic');
-    
+    // Remove the welcome section once a user signs in
     if (welcomeSec) welcomeSec.classList.add('hidden');
-    if (modeTabs)   modeTabs.classList.remove('hidden');
-
-    if (tabOutie) tabOutie.classList.toggle('active', mode === "OUTIE");
-    if (tabInnie) tabInnie.classList.toggle('active', mode === "INNIE");
-    if (tabLobby) tabLobby.classList.toggle('active', mode === "LOBBY");
-    if (tabCombat)  tabCombat.classList.toggle('active', mode === "DUEL");
-    if (tabLb)    tabLb.classList.toggle('active', mode === "LEADERBOARD");
-    if (tabBeta)  tabBeta.classList.toggle('active', mode === "BETA" || mode === "SOLO");
-    if (tabAngelic) tabAngelic.classList.toggle('active', mode === "ANGELIC");
     
-    // Hide all sections first
-    if (outieSec) outieSec.classList.add('hidden');
-    if (innieSec) innieSec.classList.add('hidden');
-    if (lobbySec) lobbySec.classList.add('hidden');
-    if (setupSec) setupSec.classList.add('hidden');
-    if (combatSec)  combatSec.classList.add('hidden');
-    if (lbSec)    lbSec.classList.add('hidden');
-    if (betaSec)  betaSec.classList.add('hidden');
-    if (angelicSec) angelicSec.classList.add('hidden');
+    // In a unified scrolling layout, we don't hide sections.
+    // We can just scroll to the relevant section or trigger updates if needed.
 
-    if (mode === "ANGELIC") {
-        if (angelicSec) angelicSec.classList.remove('hidden');
-    } else if (mode === "OUTIE") {
-        if (outieSec) outieSec.classList.remove('hidden');
-        if (window.SeveranceManager && typeof window.SeveranceManager.updateThe Great ArchiveDisplay === 'function') {
-            window.SeveranceManager.updateThe Great ArchiveDisplay();
-        }
-    } else if (mode === "INNIE") {
-        if (innieSec) innieSec.classList.remove('hidden');
-        if (window.SeveranceManager && typeof window.SeveranceManager.renderChronicleGrid === 'function') {
-            window.SeveranceManager.renderChronicleGrid();
-            window.SeveranceManager.updateChronicleDisplay();
-        }
-    } else if (mode === "LOBBY") {
-        if (lobbySec) lobbySec.classList.remove('hidden');
-        if (window.LobbyFeedManager && typeof window.LobbyFeedManager.renderLobbyFeed === 'function') {
-            window.LobbyFeedManager.renderLobbyFeed();
-        }
-    } else if (mode === "DUEL") {
-        if (!CombatEngine.isCombatActive) {
-            CombatEngine.openSetupScreen();
-        } else {
-            if (combatSec) combatSec.classList.remove('hidden');
-        }
-    } else if (mode === "LEADERBOARD") {
-        if (lbSec) lbSec.classList.remove('hidden');
-        if (window.SeveranceManager && typeof window.SeveranceManager.fetchArchangel Hierarchy === 'function') {
-            window.SeveranceManager.fetchArchangel Hierarchy();
-        }
-    } else if (mode === "BETA" || mode === "SOLO") {
-        if (betaSec) betaSec.classList.remove('hidden');
+    // Always trigger any rendering required for specific modes when accessed
+    if (mode === "OUTIE" && window.SeveranceManager && typeof window.SeveranceManager.updateThe Great ArchiveDisplay === 'function') {
+        window.SeveranceManager.updateThe Great ArchiveDisplay();
+    }
+    if (mode === "INNIE" && window.SeveranceManager && typeof window.SeveranceManager.renderChronicleGrid === 'function') {
+        window.SeveranceManager.renderChronicleGrid();
+        window.SeveranceManager.updateChronicleDisplay();
+    }
+    if (mode === "LOBBY" && window.LobbyFeedManager && typeof window.LobbyFeedManager.renderLobbyFeed === 'function') {
+        window.LobbyFeedManager.renderLobbyFeed();
+    }
+    if (mode === "LEADERBOARD" && window.SeveranceManager && typeof window.SeveranceManager.fetchArchangel Hierarchy === 'function') {
+        window.SeveranceManager.fetchArchangel Hierarchy();
     }
 }
 
@@ -1365,10 +1315,8 @@ function enterStage1Demo() {
     const paladinName = (paladinNameInput && paladinNameInput.value.trim()) || "PILGRIM-ALPHA";
     
     const welcomeSec = document.getElementById('welcome-section');
-    const modeTabs = document.getElementById('mode-tabs');
     
     if (welcomeSec) welcomeSec.classList.add('hidden');
-    if (modeTabs) modeTabs.classList.remove('hidden');
     
     switchAppMode("ANGELIC");
     logToTerminal(`🚀 [STAGE 1 DEMO] Grid Link Initialized for Angel: ${paladin name}`);
@@ -1380,12 +1328,11 @@ function enterStage1Demo() {
 
 function enterBetaSignup() {
     const welcomeSec = document.getElementById('welcome-section');
-    const modeTabs = document.getElementById('mode-tabs');
     
     if (welcomeSec) welcomeSec.classList.add('hidden');
-    if (modeTabs) modeTabs.classList.remove('hidden');
     
     switchAppMode("BETA");
+    document.getElementById('beta-signup-section').scrollIntoView({ behavior: 'smooth' });
     logToTerminal(`📝 [BETA PORTAL] Navigated to Closed Beta Application Form.`);
 }
 
@@ -1489,6 +1436,47 @@ async function submitAngelicForm(event) {
         }
     }
 }
+
+function calculateBossDamage() {
+    const p1Dmg = parseInt(document.getElementById('ledger-p1-dmg').value) || 0;
+    const p2Dmg = parseInt(document.getElementById('ledger-p2-dmg').value) || 0;
+    const p3Dmg = parseInt(document.getElementById('ledger-p3-dmg').value) || 0;
+    const p4Dmg = parseInt(document.getElementById('ledger-p4-dmg').value) || 0;
+
+    const totalOffense = p1Dmg + p2Dmg + p3Dmg + p4Dmg;
+    const conviction = 50; // Hardcoded boss conviction for Xaphan
+    let actualDamage = totalOffense - conviction;
+    if (actualDamage < 0) actualDamage = 0;
+
+    const vitalityElement = document.getElementById('boss-vitality');
+    // Basic logic to reduce HP
+    let currentHpStr = vitalityElement.innerText.split(' / ')[0];
+    let currentHp = parseInt(currentHpStr) || 1500;
+
+    currentHp -= actualDamage;
+    if (currentHp < 0) currentHp = 0;
+
+    vitalityElement.innerText = currentHp + ' / 1500';
+
+    const resultDiv = document.getElementById('ledger-result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <div style="color:#94a3b8; font-size:11px;">Math Resolution:</div>
+        <div style="color:#ef4444; font-size:13px; font-weight:bold;">Total Player Offense: ${totalOffense}</div>
+        <div style="color:#a78bfa; font-size:13px; font-weight:bold;">Boss Conviction: -${conviction}</div>
+        <hr style="border-color:#334155; margin:8px 0;">
+        <div style="color:#4ade80; font-size:14px; font-weight:bold;">Actual Damage Taken: ${actualDamage}</div>
+        <div style="color:#cbd5e1; font-size:11px; margin-top:8px;">[SYSTEM POST REQUIRED]: Write narrative resolving damage absorbed and updated health pools. Determine boss counter-attack using Behavior Protocol Matrix.</div>
+    `;
+
+    // Reset inputs
+    document.getElementById('ledger-p1-dmg').value = 0;
+    document.getElementById('ledger-p2-dmg').value = 0;
+    document.getElementById('ledger-p3-dmg').value = 0;
+    document.getElementById('ledger-p4-dmg').value = 0;
+}
+
+window.calculateBossDamage = calculateBossDamage;
 
 async function submitBetaTesterForm(event) {
     if (event) event.preventDefault();

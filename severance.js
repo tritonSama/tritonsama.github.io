@@ -279,6 +279,7 @@
             this.initChronicleGrid();
             this.updateChronicleDisplay();
             switchAppMode('INNIE');
+            document.getElementById('chronicles-section').scrollIntoView({ behavior: 'smooth' });
 
             if (this.decayTimer) clearInterval(this.decayTimer);
             this.decayTimer = setInterval(() => this.tickDecay(), 3000);
@@ -319,6 +320,7 @@
             }
 
             switchAppMode('OUTIE');
+            document.getElementById('archive-section').scrollIntoView({ behavior: 'smooth' });
         },
 
         extractFromChronicle() {
@@ -337,6 +339,7 @@
             }
 
             switchAppMode('OUTIE');
+            document.getElementById('archive-section').scrollIntoView({ behavior: 'smooth' });
         },
 
         // --- D&D 5e Combat Dice Roller ---
