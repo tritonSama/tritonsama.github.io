@@ -1,7 +1,7 @@
 # Seraphim Unbound — Operation: Severed Grid
 **Live Static Deployment:** [tritonsama.github.io](https://tritonsama.github.io/) | **Local Dev:** `http://localhost:8000/`
 
-A serverless tactical web application blending **Command & Conquer** base operations, **D&D 5e-style d20 procedural incursions**, and **Yu-Gi-Oh LIFO Chain Link tactical mechanics**, hosted for free on **GitHub Pages** and backed by **Google Sheets** via **Google Apps Script**.
+A serverless tactical web application.
 
 ![Tech Stack](https://img.shields.io/badge/Tech_Stack-HTML5_%7C_CSS3_%7C_Vanilla_JS-0F172A?style=for-the-badge)
 ![Deployment](https://img.shields.io/badge/Hosting-GitHub_Pages-2EA44F?style=for-the-badge&logo=github)
