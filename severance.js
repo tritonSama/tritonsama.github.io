@@ -64,7 +64,7 @@
         gridNodes: [],
 
         // Config & Endpoints
-        apiEndpoint: localStorage.getItem('HB_API_ENDPOINT') || 'https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec',
+        apiEndpoint: localStorage.getItem('HB_API_ENDPOINT') || 'https://script.google.com/macros/s/AKfycbxXGqUUUm79iTv527MqoaPriRmbmwZXkZDBZW-MSq3EjBJ3uvXYUNQd1mVxrfaEORQ/exec',
         currentTheme: localStorage.getItem('HB_THEME') || 'dark',
 
         init() {
