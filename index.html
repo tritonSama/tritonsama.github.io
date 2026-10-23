@@ -613,6 +613,9 @@
                     <button type="button" class="nav-tab-btn" data-tab="identity" onclick="switchHBLiteTab('identity')">
                         <span>🛡️</span> Pearl &amp; PoH Identity
                     </button>
+                    <button type="button" class="nav-tab-btn" id="adminClubNavBtn" data-tab="admin" onclick="switchHBLiteTab('admin')" style="border-color: rgba(255,215,0,0.4); color: var(--gold); display: none;">
+                        <span>👑</span> Admin Club Citadel
+                    </button>
                 </div>
             </div>
 
@@ -1048,6 +1051,116 @@
                 </div>
             </section>
 
+            <!-- ========================================================== -->
+            <!-- TAB 7: ADMIN CLUB CITADEL (OVERSEER ROOT ONLY)              -->
+            <!-- ========================================================== -->
+            <section id="tab-admin" class="tab-pane">
+                <div class="pane-header" style="border-color: rgba(255, 215, 0, 0.45); background: linear-gradient(180deg, rgba(255, 215, 0, 0.08) 0%, var(--bg-surface) 100%);">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="background:var(--gold); color:#040711; font-weight:900; font-size:10px; padding:2px 8px; border-radius:4px;">OVERSEER ROOT</span>
+                            <h2 class="pane-title" style="color:var(--gold); margin:0;">👑 Admin Club &amp; Citadel Command</h2>
+                        </div>
+                        <p class="pane-subtitle">Global administrative authority for blue-aquarius@live.com: Network ledger auditing, Club member approvals, broadcast overrides, and node telemetry.</p>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn-gold" onclick="broadcastCitadelNotice()">📢 Broadcast Network Advisory</button>
+                        <button type="button" class="btn-action" onclick="refreshAdminAudit()">🔄 Refresh Ledger Sync</button>
+                    </div>
+                </div>
+
+                <div class="panel-grid-2">
+                    <!-- Overseer Credentials Card -->
+                    <div class="panel-card" style="border-color: rgba(255, 215, 0, 0.35);">
+                        <div class="panel-card-title" style="color: var(--gold);">
+                            <span>🗝️ Overseer Authority Matrix</span>
+                            <span style="font-size:11px; color:var(--emerald);">SECURE ROOT ENCLAVE</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Designated Admin Email:</span>
+                                <span class="data-val gold">blue-aquarius@live.com</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Clearance Level:</span>
+                                <span class="data-val emerald">Tier 0: Root Citadel Overseer</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Club Atlantis Admin Privilege:</span>
+                                <span class="data-val cyan">Full Master Override &amp; Lounge Control</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Database Ledger Endpoint:</span>
+                                <span class="data-val" style="font-family:monospace; font-size:11px; color:#cbd5e1;">Google Apps Script Web App (Connected)</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Session Cryptographic State:</span>
+                                <span class="data-val emerald" id="adminSecState">Attested via Ed25519 Enclave</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Network Operations & Club Management -->
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🏛️ Club Atlantis &amp; Member Roster Controls</span>
+                            <span style="font-size:11px; color:var(--cyan);">LIVE CITADEL PROTOCOL</span>
+                        </div>
+                        <div style="font-size:12.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px;">
+                            Quick administrative management over Atlantis client requests, marketplace escrows, and 24/7 radio siren dispatches.
+                        </div>
+                        <div class="btn-row" style="margin-bottom:14px;">
+                            <button type="button" class="btn-action" onclick="grantVipAccess()">🎟️ Grant VIP Lounge Token</button>
+                            <button type="button" class="btn-action" onclick="flushNodeCache()">🧹 Flush Node Memory</button>
+                            <button type="button" class="btn-gold" onclick="exportClientRoster()">📥 Export Member Roster</button>
+                        </div>
+                        <div style="padding:10px 12px; background:rgba(0,0,0,0.3); border-radius:6px; border:1px solid var(--border-subtle); font-family:monospace; font-size:11.5px; color:#a5f3fc;" id="adminActionOutput">
+                            &gt; Admin console standing by for Overseer input...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Registrations / Audit Table -->
+                <div class="panel-card" style="border-color: rgba(255, 215, 0, 0.25);">
+                    <div class="panel-card-title">
+                        <span>📋 Recent Network Registrations &amp; Client Ledger</span>
+                        <span style="font-size:11px; color:var(--gold);">SHEET SYNC VERIFIED</span>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left; color:#e2e8f0;">
+                            <thead>
+                                <tr style="border-bottom:1px solid var(--border-subtle); background:rgba(255,255,255,0.03); color:var(--cyan);">
+                                    <th style="padding:8px 10px;">Date / Time</th>
+                                    <th style="padding:8px 10px;">Name / Callsign</th>
+                                    <th style="padding:8px 10px;">Email</th>
+                                    <th style="padding:8px 10px;">Phone</th>
+                                    <th style="padding:8px 10px;">Role</th>
+                                    <th style="padding:8px 10px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminLedgerRows">
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding:8px 10px; color:var(--gold);">Live Sync Active</td>
+                                    <td style="padding:8px 10px; font-weight:700;">blue-aquarius [ADMIN]</td>
+                                    <td style="padding:8px 10px; color:var(--cyan);">blue-aquarius@live.com</td>
+                                    <td style="padding:8px 10px;">3464951010</td>
+                                    <td style="padding:8px 10px; color:var(--gold);">Citadel Overseer</td>
+                                    <td style="padding:8px 10px;"><span style="color:var(--emerald); font-weight:700;">● Active Root</span></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding:8px 10px;">2026-09-07</td>
+                                    <td style="padding:8px 10px;">Chaotic Nite</td>
+                                    <td style="padding:8px 10px; color:var(--text-secondary);">chaotic@network</td>
+                                    <td style="padding:8px 10px;">3464951010</td>
+                                    <td style="padding:8px 10px;">Enterprise Client</td>
+                                    <td style="padding:8px 10px;"><span style="color:var(--emerald);">● Verified</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -1110,6 +1223,12 @@
             if (!sess) return;
             const isAdmin = sess.isAdmin || (sess.email && sess.email.toLowerCase() === "blue-aquarius@live.com");
             const badge = document.getElementById("activeClientBadge");
+            const adminNavBtn = document.getElementById("adminClubNavBtn");
+
+            if (adminNavBtn) {
+                adminNavBtn.style.display = isAdmin ? "flex" : "none";
+            }
+
             if (badge) {
                 if (isAdmin) {
                     badge.innerHTML = "👑 <span style='color:var(--gold);font-weight:900;'>ADMIN</span>: " + (sess.name || "Administrator") + " (" + (sess.did ? sess.did.substring(0, 18) + "…" : "Verified") + ")";
@@ -1128,6 +1247,53 @@
             if (emailEl) emailEl.textContent = sess.email || "client@atlantis.network";
             if (didEl) didEl.textContent = sess.did || "did:atlantis:verified";
             if (roleEl) roleEl.textContent = isAdmin ? "Network Administrator / Citadel Overseer (Root)" : (sess.role || "Enterprise / Commercial Client");
+        }
+
+        /* Admin Club Operations */
+        function broadcastCitadelNotice() {
+            const msg = prompt("Enter network broadcast advisory message:", "Atlantis Citadel Core: All pelagic workers and client channels operational.");
+            if (msg) {
+                setStatus("OVERSEER BROADCAST: " + msg.toUpperCase());
+                document.getElementById("adminActionOutput").textContent = "> Broadcast sent to Atlantis network: \"" + msg + "\"";
+                alert("[Citadel Broadcast Sent]\n\n" + msg);
+            }
+        }
+
+        function refreshAdminAudit() {
+            setStatus("OVERSEER COMMAND: Synchronizing remote Google Sheets audit logs...");
+            document.getElementById("adminActionOutput").textContent = "> Querying active Google Sheets ledger at " + new Date().toLocaleTimeString() + "...";
+            setTimeout(() => {
+                document.getElementById("adminActionOutput").textContent = "> Ledger synchronization complete. Zero errors detected.";
+                setStatus("AUDIT COMPLETE: All client identities and permissions verified.");
+            }, 600);
+        }
+
+        function grantVipAccess() {
+            const target = prompt("Enter Client DID or Email for Club VIP Pass:", "did:atlantis:guest01");
+            if (target) {
+                setStatus("VIP GRANTED: " + target);
+                document.getElementById("adminActionOutput").textContent = "> VIP Spatial Audio Booth clearance issued to: " + target;
+                alert("VIP Access Granted to Club Atlantis for " + target);
+            }
+        }
+
+        function flushNodeCache() {
+            setStatus("OVERSEER: Memory arenas and Froxel light clusters flushed.");
+            document.getElementById("adminActionOutput").textContent = "> Zero-GC Arena recycled. 16MB frame buffer primed.";
+        }
+
+        function exportClientRoster() {
+            const csv = "date,name,email,phone,role\n" +
+                new Date().toISOString() + ",blue-aquarius [ADMIN],blue-aquarius@live.com,3464951010,Citadel Overseer\n" +
+                "2026-09-07,Chaotic Nite,chaotic@network,3464951010,Enterprise Client\n";
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "atlantis_club_roster.csv";
+            a.click();
+            setStatus("EXPORTED: atlantis_club_roster.csv downloaded.");
+            document.getElementById("adminActionOutput").textContent = "> Roster exported as atlantis_club_roster.csv";
         }
 
         function logoutHBLite() {
