@@ -5,235 +5,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Operation slipStream</title>
+    <title>HBLite | Atlantis &amp; Lemuria Ecosystem Overview</title>
+    <script src="js/gate.js"></script>
+    <script>requireSignup();</script>
     <style>
-        /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #000; /* Black background */
-            color: #00FFFF; /* Cyan text */
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: #040711;
+            color: #00E5FF;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
-            overflow: auto; /* Allow scrolling */
         }
 
         .container {
-            background-color: #111; /* Slightly dark container for contrast */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3); /* Light cyan shadow */
+            background-color: #0A1022;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 229, 255, 0.2);
             max-width: 800px;
             width: 100%;
-            border: 2px solid #00FFFF; /* Cyan border */
+            border: 1px solid rgba(0, 229, 255, 0.4);
             font-size: 14px;
-            max-height: 90vh; /* Restrict container height to 90% of viewport */
-            overflow-y: auto; /* Scroll vertically if content exceeds max-height */
         }
 
         h1 {
             font-size: 32px;
-            margin-bottom: 15px;
-            animation: glow 1.5s ease-in-out infinite alternate;
-        }
-
-        p {
-            font-size: 14px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            color: #FFFFFF;
         }
 
         h2 {
-            font-size: 22px;
+            font-size: 20px;
             margin-top: 20px;
             margin-bottom: 10px;
+            color: #FFD700;
         }
 
-        h3 {
-            font-size: 16px;
-            margin-top: 10px;
+        p, li {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #CBD5E1;
         }
 
         ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
-        }
-
-        li {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 5px;
-        }
-
-        /* Glowing text effect */
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 5px #00FFFF, 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
-            }
-
-            100% {
-                text-shadow: 0 0 10px #00FFFF, 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF;
-            }
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #00FFFF;
-            opacity: 0.7;
-        }
-
-        /* Form Styles */
-        .form-container {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #222;
-            border-radius: 8px;
-            border: 2px solid #00FFFF;
-        }
-
-        input[type="text"],
-        input[type="email"] {
-            padding: 10px;
-            margin: 10px 0;
-            width: 90%;
-            border: 2px solid #00FFFF;
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus {
-            outline: none;
-            border-color: #00CCFF;
-        }
-
-        button {
-            padding: 12px 20px;
-            background-color: #00FFFF;
-            border: none;
-            cursor: pointer;
-            color: #000;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        button:hover {
-            background-color: #00CCFF;
-        }
-
-        /* Members List Styling */
-        #membersList {
-            margin-top: 20px;
-            padding: 0;
             text-align: left;
         }
 
-        #membersList li {
-            background-color: #333;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 5px;
+        li {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: rgba(17, 26, 51, 0.7);
+            border-left: 3px solid #00E5FF;
+            border-radius: 4px;
         }
 
-        /* Responsive typography */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
-
-            h2 {
-                font-size: 16px;
-            }
-
-            h3 {
-                font-size: 14px;
-            }
-
-            p,
-            li {
-                font-size: 12px;
-            }
-
-            input[type="text"],
-            input[type="email"],
-            button {
-                width: 100%;
-            }
+        button {
+            padding: 10px 20px;
+            background-color: #00E5FF;
+            border: none;
+            cursor: pointer;
+            color: #040711;
+            font-weight: 800;
+            border-radius: 6px;
+            margin: 6px;
         }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 24px;
-            }
-
-            h2 {
-                font-size: 14px;
-            }
-
-            h3 {
-                font-size: 12px;
-            }
-
-            p,
-            li {
-                font-size: 10px;
-            }
+        .footer {
+            margin-top: 24px;
+            font-size: 12px;
+            color: #94A3B8;
         }
     </style>
-    <script src="js/gate.js"></script>
-    <script>requireSignup();</script>
 </head>
 
 <body>
     <div class="container">
-        <h1>Operation slipStream</h1>
-        <h2>Under Construction</h2>
+        <h1>HBLite</h1>
+        <p>The Universal Edge Client, Marketplace &amp; Command HUD Built on <strong>Atlantis</strong> and <strong>Lemuria</strong></p>
 
-        <a href="https://tritonsama.github.io/salacia/index.html">
-            <button> Salacia </button>
-        </a>
-        <a href="index.html">
-            <button> Home </button>
-        </a>
-        
-        <p>We're building something great for you!</p>
-        <p>Stay tuned, and check back soon for updates.</p>
+        <div>
+            <a href="index.html"><button>Launch HBLite Command Suite</button></a>
+            <a href="signup.html?switch=1"><button>Client Access Gateway</button></a>
+        </div>
 
         <div class="content">
-            <h2>Project Overview</h2>
-            <p><strong>Goal:</strong> Develop a decentralized <strong>guild-based platform</strong> where users (mages) can:</p>
+            <h2>Ecosystem Architecture</h2>
             <ul>
-                <li>Join guilds, take on tasks, and earn rewards (cryptocurrency or tokens) via <strong>Solana</strong>.</li>
-                <li>Integrate Solana blockchain for fast, low-cost payments, creating a <strong>task marketplace</strong> where jobs are posted and completed.</li>
-                <li>Implement a <strong>token economy</strong> (Solana-based tokens) for rewarding users and managing transactions.</li>
-            </ul>
-
-            <h2>Key Features</h2>
-            <ul>
-                <li><strong>User Management (Mage Class)</strong>: Registration, login, profile management, and roles (mage, guild leader, admin).</li>
-                <li><strong>Guild System</strong>: Users can join and create guilds, with guild leaders posting tasks and jobs for mages to complete.</li>
-                <li><strong>Task Marketplace</strong>: A marketplace where guilds post tasks/jobs and mages can apply for them.</li>
-                <li><strong>Solana Token Economy</strong>: Earn rewards in Solana-based tokens for completing tasks.</li>
-                <li><strong>Transaction System</strong>: Users will be able to view their earnings, track their transaction history, and make withdrawals.</li>
-                <li><strong>Admin Dashboard</strong>: Admins can manage users, guilds, tasks, and oversee the flow of tokens.</li>
-                <li><strong>Notifications</strong>: Real-time notifications for job assignments, task updates, and guild events.</li>
-                <li><strong>Security</strong>: User authentication, blockchain-based wallets, and secure transaction handling.</li>
+                <li><strong>Atlantis Protocol &amp; Tide Ledger:</strong> Decentralized identity (<code>did:atlantis:</code>), double-entry Tide Ledger accounting, and Coral Escrow settlement for tasks, club nodes, and commercial services.</li>
+                <li><strong>Lemuria Spatial Engine:</strong> Zero-GC 16MB frame allocators, 3D Gaussian Splatting virtual storefronts, 64-bit ECEF planetary geodesy, and 60Hz deterministic vehicle &amp; physics telemetry.</li>
+                <li><strong>HBLite Universal Interface:</strong> Modular 6-tab client uniting Geodesic Tactical Maps, 24/7 Siren Frequency Radio, Task Marketplace, 3D Virtual Storefronts, Vehicle Dynamics, and Pearl Enclave Proof-of-Health (PoH) identity.</li>
             </ul>
         </div>
 
         <div class="footer">
-            <p>&copy; 2026 Operation slipStream. All rights reserved.</p>
+            <p>&copy; 2026 HBLite — Built on the Atlantis &amp; Lemuria Network.</p>
         </div>
     </div>
 </body>
 
 </html>
-

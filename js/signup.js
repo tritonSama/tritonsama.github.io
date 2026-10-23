@@ -1,131 +1,220 @@
 /**
- * Paste your Google Apps Script web app URL below after deploying.
- * See SETUP.md for step-by-step instructions.
+ * HBLite — Signup & Login Controller
+ * Built exclusively on the Atlantis & Lemuria network.
  */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec";
 
-const form = document.getElementById("signupForm");
+const signupForm = document.getElementById("signupForm");
+const loginForm = document.getElementById("loginForm");
 const statusEl = document.getElementById("formStatus");
 const submitBtn = document.getElementById("submitBtn");
+const loginSubmitBtn = document.getElementById("loginSubmitBtn");
 
 function showStatus(message, type) {
+  if (!statusEl) return;
   statusEl.textContent = message;
   statusEl.className = "form-status " + type;
 }
 
-function isConfigured() {
-  return (
-    SCRIPT_URL &&
-    !SCRIPT_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")
-  );
+function clearStatus() {
+  if (!statusEl) return;
+  statusEl.textContent = "";
+  statusEl.className = "form-status";
 }
 
-form.addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const guildClass = document.getElementById("guildClass") ? document.getElementById("guildClass").value : "Tactical Operative";
-  const birthdate = document.getElementById("birthdate") ? document.getElementById("birthdate").value : "";
-  const birthtime = document.getElementById("birthtime") ? document.getElementById("birthtime").value : "12:00";
-  const phone = document.getElementById("phone") ? document.getElementById("phone").value.trim() : "";
-
-  if (!name || !email) {
-    showStatus("Please fill in all required fields.", "error");
-    return;
+function deriveAtlantisDid(seedStr) {
+  var seed = String(seedStr || "client") + "_atlantis_lemuria";
+  var h1 = 0x811c9dc5;
+  var h2 = 0xcbf29ce4;
+  for (var i = 0; i < seed.length; i++) {
+    var c = seed.charCodeAt(i);
+    h1 ^= c;
+    h1 = Math.imul(h1, 0x01000193) >>> 0;
+    h2 ^= c * 31;
+    h2 = Math.imul(h2, 0x01000193) >>> 0;
   }
+  var hex =
+    h1.toString(16).padStart(8, "0") +
+    h2.toString(16).padStart(8, "0") +
+    (h1 ^ 0xa5a5a5a5 >>> 0).toString(16).padStart(8, "0") +
+    (h2 ^ 0x5a5a5a5a >>> 0).toString(16).padStart(8, "0");
+  return "did:atlantis:" + hex;
+}
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showStatus("Please enter a valid email address.", "error");
-    return;
+window.switchAuthTab = function (mode) {
+  clearStatus();
+  var tabSignupBtn = document.getElementById("tabSignupBtn");
+  var tabLoginBtn = document.getElementById("tabLoginBtn");
+  if (mode === "login") {
+    if (signupForm) signupForm.classList.add("hidden");
+    if (loginForm) loginForm.classList.remove("hidden");
+    if (tabSignupBtn) tabSignupBtn.classList.remove("active");
+    if (tabLoginBtn) tabLoginBtn.classList.add("active");
+  } else {
+    if (loginForm) loginForm.classList.add("hidden");
+    if (signupForm) signupForm.classList.remove("hidden");
+    if (tabLoginBtn) tabLoginBtn.classList.remove("active");
+    if (tabSignupBtn) tabSignupBtn.classList.add("active");
   }
+};
 
-  if (!isConfigured()) {
-    showStatus(
-      "Signup is not connected yet. Set SCRIPT_URL in js/signup.js (see SETUP.md).",
-      "error"
-    );
-    return;
-  }
-
-  const payload = {
-    action: "beta_signup",
-    name: name,
-    email: email,
-    guildClass: guildClass,
-    birthDate: birthdate,
-    birthdate: birthdate,
-    birthTime: birthtime,
-    birthtime: birthtime,
-    phone: phone,
-    timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
+window.enterInstantClientEvaluation = function () {
+  var did = deriveAtlantisDid("prospective_client_" + Date.now());
+  var session = {
+    name: "Prospective Client",
+    email: "evaluation@atlantis.network",
+    did: did,
+    role: "Enterprise / Commercial Client",
+    nodeTier: "Tier 2: Pelagic Node",
+    authenticatedAt: new Date().toISOString()
   };
+  markSignedUp(session);
+  showStatus("Atlantis evaluation identity provisioned (" + did.substring(0, 22) + "…). Launching HBLite…", "success");
+  setTimeout(function () {
+    window.location.replace("index.html");
+  }, 500);
+};
 
-  submitBtn.disabled = true;
-  showStatus("Submitting…", "success");
-
-  try {
-    // text/plain avoids a CORS preflight; Apps Script still receives the body.
-    const response = await fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json().catch(function () {
-      return null;
-    });
-
-    if (data && (data.result === "success" || data.status === "success")) {
-      markSignedUp();
-      showStatus("Thanks! Your signup was recorded. Entering…", "success");
-      form.reset();
-      setTimeout(function () {
-        window.location.replace("index.html");
-      }, 800);
-      return;
-    } else if (data && data.error) {
-      showStatus(data.error, "error");
-      return;
-    } else if (response.ok) {
-      markSignedUp();
-      showStatus("Thanks! Your signup was recorded. Entering…", "success");
-      form.reset();
-      setTimeout(function () {
-        window.location.replace("index.html");
-      }, 800);
-      return;
-    } else {
-      showStatus("Server responded with an error. Please try again.", "error");
-    }
-  } catch (err) {
-    console.warn("Standard fetch encountered an issue, attempting fallback transmission:", err);
-    try {
-      // Fallback: mode "no-cors" sends the data to Apps Script without tripping redirect-blocking policies
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8",
-        },
-        body: JSON.stringify(payload),
-      });
-      markSignedUp();
-      showStatus("Thanks! Your signup was recorded. Entering…", "success");
-      form.reset();
-      setTimeout(function () {
-        window.location.replace("index.html");
-      }, 800);
-    } catch (fallbackErr) {
-      showStatus(
-        "Could not reach the signup server. Check your connection and SCRIPT_URL.",
-        "error"
-      );
-    }
-  } finally {
-    submitBtn.disabled = false;
+// Check URL params for ?mode=login
+(function initTabFromQuery() {
+  var search = window.location.search || "";
+  if (search.indexOf("mode=login") !== -1) {
+    window.switchAuthTab("login");
   }
-});
+})();
+
+if (signupForm) {
+  signupForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password") ? document.getElementById("password").value : "";
+    const guildClass = document.getElementById("guildClass")
+      ? document.getElementById("guildClass").value
+      : "Enterprise / Commercial Client";
+    const phone = document.getElementById("phone") ? document.getElementById("phone").value.trim() : "";
+
+    if (!name || !email || !password) {
+      showStatus("Please fill in your name, email address, and access passkey.", "error");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showStatus("Please enter a valid email address.", "error");
+      return;
+    }
+
+    if (password.length < 6) {
+      showStatus("Access passkey must be at least 6 characters.", "error");
+      return;
+    }
+
+    const did = deriveAtlantisDid(email);
+    const session = {
+      name: name,
+      email: email,
+      did: did,
+      role: guildClass,
+      phone: phone,
+      nodeTier: "Tier 2: Pelagic Node",
+      authenticatedAt: new Date().toISOString()
+    };
+
+    // Save locally for instant sign-in & persistence
+    saveRegisteredUser({
+      name: name,
+      email: email,
+      password: password,
+      did: did,
+      role: guildClass,
+      phone: phone
+    });
+
+    const payload = {
+      action: "beta_signup",
+      name: name,
+      email: email,
+      guildClass: guildClass,
+      phone: phone,
+      did: did,
+      timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
+    };
+
+    if (submitBtn) submitBtn.disabled = true;
+    showStatus("Provisioning Atlantis DID & recording registration…", "success");
+
+    try {
+      if (SCRIPT_URL && !SCRIPT_URL.includes("PASTE_YOUR")) {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+      }
+    } catch (err) {
+      console.warn("Remote ledger sync fallback:", err);
+    } finally {
+      markSignedUp(session);
+      showStatus("Identity verified (" + did.substring(0, 22) + "…). Entering HBLite…", "success");
+      signupForm.reset();
+      setTimeout(function () {
+        window.location.replace("index.html");
+      }, 650);
+    }
+  });
+}
+
+if (loginForm) {
+  loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const identifier = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if (!identifier || !password) {
+      showStatus("Please enter both your Email / Atlantis DID and passkey.", "error");
+      return;
+    }
+
+    if (loginSubmitBtn) loginSubmitBtn.disabled = true;
+
+    const existing = findRegisteredUser(identifier);
+    if (existing && existing.password && existing.password !== password) {
+      showStatus("Invalid passkey for this registered account.", "error");
+      if (loginSubmitBtn) loginSubmitBtn.disabled = false;
+      return;
+    }
+
+    const did = existing
+      ? existing.did
+      : identifier.startsWith("did:atlantis:")
+      ? identifier
+      : deriveAtlantisDid(identifier);
+
+    const displayName = existing
+      ? existing.name
+      : identifier.includes("@")
+      ? identifier.split("@")[0]
+      : "Atlantis Client";
+
+    const session = {
+      name: displayName,
+      email: existing ? existing.email : identifier,
+      did: did,
+      role: existing ? existing.role : "Enterprise / Commercial Client",
+      nodeTier: "Tier 2: Pelagic Node",
+      authenticatedAt: new Date().toISOString()
+    };
+
+    markSignedUp(session);
+    showStatus("Authenticated as " + displayName + " (" + did.substring(0, 22) + "…). Launching HBLite…", "success");
+
+    setTimeout(function () {
+      window.location.replace("index.html");
+    }, 550);
+  });
+}

@@ -1,898 +1,1420 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🕊️ HEAVENLYBOUND: Operation: Severed Grid Tactical Core (SEVERANCE v2.4)</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- PeerJS WebRTC P2P Signaling CDN -->
-    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <title>HBLite | Command &amp; Marketplace Suite — Atlantis &amp; Lemuria Network</title>
+    <script src="js/gate.js"></script>
+    <script>requireSignup();</script>
+    <style>
+        :root {
+            --bg-deep: #040711;
+            --bg-surface: #0A1022;
+            --bg-card: #111A33;
+            --bg-card-hover: #162242;
+            --cyan: #00E5FF;
+            --cyan-glow: rgba(0, 229, 255, 0.25);
+            --gold: #FFD700;
+            --emerald: #00FF9D;
+            --violet: #8B5CF6;
+            --crimson: #F43F5E;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --border-cyan: rgba(0, 229, 255, 0.32);
+            --border-subtle: rgba(148, 163, 184, 0.16);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(0, 229, 255, 0.09) 0%, transparent 40%),
+                radial-gradient(circle at 88% 85%, rgba(139, 92, 246, 0.1) 0%, transparent 45%);
+        }
+
+        /* Top Global Header Bar */
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 20px;
+            background: rgba(8, 13, 28, 0.94);
+            border-bottom: 1px solid var(--border-cyan);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 0.8px;
+            color: var(--cyan);
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .header-telemetry-pills {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .telem-pill {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: rgba(17, 26, 51, 0.9);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .telem-pill.poh {
+            border-color: rgba(255, 215, 0, 0.4);
+            color: var(--gold);
+        }
+
+        .telem-pill.shield {
+            border-color: rgba(0, 229, 255, 0.4);
+            color: var(--cyan);
+        }
+
+        .telem-pill.stamina {
+            border-color: rgba(0, 255, 157, 0.4);
+            color: var(--emerald);
+        }
+
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(0, 229, 255, 0.12);
+            border: 1px solid var(--cyan);
+            color: #FFFFFF;
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-outline-sm:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        /* Client Ecosystem Overview Banner */
+        .ecosystem-banner {
+            margin: 16px 20px 0 20px;
+            padding: 18px 22px;
+            background: linear-gradient(135deg, rgba(14, 24, 50, 0.92) 0%, rgba(20, 15, 45, 0.92) 100%);
+            border: 1px solid var(--border-cyan);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .ecosystem-banner-text {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .ecosystem-banner-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+        }
+
+        .ecosystem-banner-desc {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #CBD5E1;
+        }
+
+        .ecosystem-banner-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Main Workspace Layout */
+        .workspace-shell {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 20px;
+            padding: 16px 20px;
+            flex: 1;
+        }
+
+        /* Left Command Menu Sidebar */
+        .command-sidebar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: fit-content;
+            position: sticky;
+            top: 76px;
+        }
+
+        .sidebar-heading {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 8px 10px 8px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 10px;
+        }
+
+        .nav-tab-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: left;
+            padding: 11px 12px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .nav-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
+        }
+
+        .nav-tab-btn.active {
+            background: rgba(0, 229, 255, 0.14);
+            border-color: var(--cyan);
+            color: #FFFFFF;
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.18);
+        }
+
+        .sidebar-specs {
+            margin-top: 24px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            padding-left: 6px;
+        }
+
+        .sidebar-specs strong {
+            color: #E2E8F0;
+        }
+
+        /* Central Content Area */
+        .content-stage {
+            min-width: 0;
+        }
+
+        .tab-pane {
+            display: none;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .tab-pane.active {
+            display: flex;
+        }
+
+        .pane-header {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pane-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 4px;
+        }
+
+        .pane-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .card-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .card-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .panel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel-card-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        /* Data Rows */
+        .data-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            background: rgba(6, 10, 22, 0.6);
+            border-radius: 6px;
+            font-size: 12.5px;
+        }
+
+        .data-key {
+            color: var(--text-secondary);
+        }
+
+        .data-val {
+            font-weight: 700;
+            font-family: monospace;
+            color: #FFFFFF;
+        }
+
+        .data-val.cyan {
+            color: var(--cyan);
+        }
+
+        .data-val.emerald {
+            color: var(--emerald);
+        }
+
+        .data-val.gold {
+            color: var(--gold);
+        }
+
+        /* Buttons */
+        .btn-action {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(139, 92, 246, 0.25));
+            border: 1px solid var(--cyan);
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 12.5px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: var(--cyan);
+            color: #040711;
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        .btn-gold {
+            background: rgba(255, 215, 0, 0.14);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 12.5px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-gold:hover {
+            background: var(--gold);
+            color: #040711;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Interactive Planetary Canvas */
+        .globe-canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: radial-gradient(circle at center, #0B1938 0%, #040814 100%);
+            border: 1px solid var(--border-cyan);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #geodesicCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
+
+        .globe-hud-overlay {
+            position: absolute;
+            bottom: 10px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--cyan);
+            background: rgba(4, 7, 17, 0.75);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Daughter Host Roster Pills */
+        .host-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .host-pill {
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            background: rgba(6, 10, 22, 0.8);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .host-pill.active,
+        .host-pill:hover {
+            border-color: var(--cyan);
+            color: #FFFFFF;
+            background: rgba(0, 229, 255, 0.18);
+        }
+
+        /* Bottom Live Engine Telemetry Bar */
+        .bottom-status-bar {
+            background: rgba(6, 10, 22, 0.96);
+            border-top: 1px solid var(--border-subtle);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 11.5px;
+            font-family: monospace;
+        }
+
+        .status-msg {
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+        .engine-stats {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Mobile & Tablet Adjustments */
+        @media (max-width: 900px) {
+            .workspace-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .command-sidebar {
+                position: static;
+            }
+
+            .nav-tab-list {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+
+            .nav-tab-btn {
+                white-space: nowrap;
+                width: auto;
+            }
+
+            .sidebar-specs {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="terminal-container">
-        <!-- Tactical Header -->
-        <header class="tactical-header">
-            <div class="header-brand-block">
-                <h1>🕊️ HEAVENLYBOUND</h1>
-                <p>Operation: Severed Grid Tactical Core | Protocol: SEVERANCE v2.4</p>
+    <!-- 1. TOP GLOBAL BAR -->
+    <header class="top-header">
+        <div class="brand-cluster">
+            <div class="brand-logo">
+                <span>⏸</span> HBLITE
             </div>
-            <div class="header-controls-block">
-                <span id="auth-angel-badge" class="p-tag p1-tag" onclick="SeveranceManager.openConfigModal()">🔑 PILGRIM-ALPHA (AUTHENTICATED)</span>
-                <button type="button" id="btn-theme-toggle" class="btn-micro btn-phase" onclick="SeveranceManager.toggleTheme()">☀️ Solar Light</button>
-                <button type="button" class="btn-micro btn-action" onclick="SeveranceManager.openConfigModal()">⚙️ Config</button>
+            <span class="brand-sub">ATLANTIS &amp; LEMURIA NETWORK CLIENT</span>
+        </div>
+
+        <div class="header-telemetry-pills">
+            <div class="telem-pill poh">
+                <span>⚡ PoH Score:</span>
+                <span id="hdrPohScore">94.8 (Pelagic Worker)</span>
             </div>
-        </header>
-
-        <!-- ======================================================== -->
-        <!-- WELCOME TO STAGE 1 OF THE DEMO WELCOME SCREEN             -->
-        <!-- ======================================================== -->
-        <section id="welcome-section" class="panel welcome-panel">
-            <div class="welcome-badge">🚀 SEVERANCE v2.4: DUAL-CONSCIOUSNESS TACTICAL CORE</div>
-            <h2>WELCOME TO OPERATION: SEVERED GRID</h2>
-            <p class="welcome-subtitle">Manage celestial infrastructure in the <strong>Outie The Great Archive</strong>, dive into the <strong>Divine Chronicles</strong> for d20 tabletop chronicles, or battle in the <strong>Angel Willpower Celestial Combat</strong>.</p>
-            
-            <div class="welcome-features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🏛️</div>
-                    <div class="feature-title">Outie The Great Archive</div>
-                    <div class="feature-desc">Harvest Tithe Credits, synthesize passive modifiers, and bank unextracted Divine Favor.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌀</div>
-                    <div class="feature-title">Divine Chronicles (5e)</div>
-                    <div class="feature-desc">Tabletop hex grid chronicle, d20 + Mod fiend combat, and Synaptic Memory Decay extraction.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚔️</div>
-                    <div class="feature-title">Willpower Celestial Combat</div>
-                    <div class="feature-desc">Real-time WebRTC P2P multiplayer combats with elemental archetypes and Fog-of-War wire masking.</div>
-                </div>
+            <div class="telem-pill shield">
+                <span>🛡️ Shield:</span>
+                <span id="hdrShield">100%</span>
             </div>
-
-            <div class="welcome-input-row">
-                <input type="text" id="welcome-player-id" placeholder="Enter Angel Paladin Name (e.g. ALPHA-7)" value="PILGRIM-ALPHA">
-                <div class="welcome-cta-group">
-                    <button type="button" id="btn-welcome-enter" class="btn-welcome-enter" style="background:linear-gradient(135deg, #1e3a8a, #4338ca); width:100%;" onclick="enterStage1Demo()">🚀 COMMENCE ASCENSION PROTOCOL</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mode Tabs -->
-
-        <!-- ======================================================== -->
-        <!-- ANGELIC WARRIOR RPG PROTOTYPE                            -->
-        <!-- ======================================================== -->
-        <section id="angelic-section" class="panel">
-            <div class="setup-header">
-                <h2>👼 ANGELIC WARRIOR: PALADIN INITIATION</h2>
-                <p>Become an angelic warrior, master an elemental House, forge your own Order, and rise from Initiate to legendary Paladin.</p>
-            </div>
-
-            <div class="angelic-form-container">
-                <form id="angelicCreationForm" onsubmit="submitAngelicForm(event)">
-                    <div class="angelic-grid-layout">
-                        <!-- Left Column: Character Details -->
-                        <div class="angelic-left-col">
-                            <h3 class="angelic-section-title">1. Character Details</h3>
-
-                            <div class="beta-field-group">
-                                <label for="angelic-name">Character Name <span class="req-star">*</span></label>
-                                <input type="text" id="angelic-name" name="name" required placeholder="Enter your warrior's name">
-                            </div>
-
-                            <div class="beta-field-group">
-                                <label for="angelic-body">Body Type</label>
-                                <select id="angelic-body" name="bodyType">
-                                    <option value="Type A (Masculine)">Type A (Masculine)</option>
-                                    <option value="Type B (Feminine)">Type B (Feminine)</option>
-                                    <option value="Type C (Androgynous)">Type C (Androgynous)</option>
-                                    <option value="Type D (Heavy)">Type D (Heavy)</option>
-                                </select>
-                            </div>
-
-                            <div class="beta-field-group">
-                                <label for="angelic-cosmetics">Cosmetic Aura</label>
-                                <select id="angelic-cosmetics" name="cosmetics">
-                                    <option value="Radiant Halo">Radiant Halo</option>
-                                    <option value="Burning Eyes">Burning Eyes</option>
-                                    <option value="Void Markings">Void Markings</option>
-                                    <option value="Frost Breath">Frost Breath</option>
-                                    <option value="Storm Sparks">Storm Sparks</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Right Column: Elemental House Selection -->
-                        <div class="angelic-right-col">
-                            <h3 class="angelic-section-title">2. Elemental House</h3>
-                            <input type="hidden" id="angelic-house-input" required>
-
-                            <div class="house-selection-grid">
-                                <button type="button" id="house-btn-Flame" class="house-btn" onclick="selectHouse('Flame')">🔥 FLAME</button>
-                                <button type="button" id="house-btn-Storm" class="house-btn" onclick="selectHouse('Storm')">⚡ STORM</button>
-                                <button type="button" id="house-btn-Tide" class="house-btn" onclick="selectHouse('Tide')">🌊 TIDE</button>
-                                <button type="button" id="house-btn-Terra" class="house-btn" onclick="selectHouse('Terra')">🪨 TERRA</button>
-                                <button type="button" id="house-btn-Gale" class="house-btn" onclick="selectHouse('Gale')">🌪️ GALE</button>
-                                <button type="button" id="house-btn-Radiance" class="house-btn" onclick="selectHouse('Radiance')">☀️ RADIANCE</button>
-                                <button type="button" id="house-btn-Shadow" class="house-btn" onclick="selectHouse('Shadow')">🌑 SHADOW</button>
-                            </div>
-
-                            <div id="house-info-box" class="house-info-box">
-                                <p style="color:#94a3b8; text-align:center; padding:20px 0;">Select an Elemental House to view details.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="beta-submit-row" style="margin-top:20px;">
-                        <button type="submit" id="angelic-submit-btn" class="btn-start-combat" style="font-size: 16px; padding: 12px; width: 100%;">👼 CREATE PALADIN / ENTER WORLD</button>
-                    </div>
-                </form>
-
-                <div id="angelic-summary" class="hidden angelic-summary-box">
-                    <!-- Filled dynamically -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- 1. THE THE GREAT ARCHIVE (C&C BASE GRID & SYNTHESIS MATRIX)  -->
-        <!-- ======================================================== -->
-        <section id="archive-section" class="panel">
-            <div class="setup-header">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <div>
-                        <h2>🏛️ THE THE GREAT ARCHIVE (C&C BASE GRID)</h2>
-                        <p>Celestial Management & Synthesis Core • Protocol: SEVERANCE v2.4</p>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <button type="button" class="btn-start-combat" style="margin:0; padding:8px 16px;" onclick="SeveranceManager.startChronicle()">🌀 DIVE INTO DIVINE CHRONICLES</button>
-<div style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Log your written Word Count (WC) to harvest Favor.</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Balances Overview -->
-            <div class="the great archive-balances-grid">
-                <div class="balance-card">
-                    <div class="bal-label">🪙 CELESTIAL TITHE CREDITS</div>
-                    <div id="the great archive-tithes" class="bal-value">450 🪙</div>
-                    <button type="button" id="btn-harvest-tithes" class="btn-micro btn-action" style="margin-top:6px; width:100%;" onclick="SeveranceManager.harvestTithes()">🪙 HARVEST CELESTIAL TITHES</button>
-                </div>
-                <div class="balance-card">
-                    <div class="bal-label">💎 BANKED DIVINE FAVORS</div>
-                    <div id="the great archive-banked-favor" class="bal-value" style="color:#38bdf8;">180 💎</div>
-                    <button type="button" class="btn-micro btn-phase" style="margin-top:6px; width:100%;" onclick="SeveranceManager.bankExtraction()">💎 BANK EXTRACTION FAVORS</button>
-                </div>
-                <div class="balance-card">
-                    <div class="bal-label">⭐ PILGRIM TITHE RATING</div>
-                    <div id="the great archive-tithe-rating" class="bal-value" style="color:#fcee0a;">2,450 ⭐</div>
-                    <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Rank Tier: ARCHON VANGUARD</div>
-                </div>
-            </div>
-
-            <!-- Passive Modifier Synthesis Matrix -->
-            <div class="synthesis-matrix-container">
-                <h3 style="font-size:13px; color:#38bdf8; margin:0 0 10px 0; letter-spacing:0.5px;">⚡ PASSIVE MODIFIER SYNTHESIS MATRIX</h3>
-                <div class="synthesis-grid">
-                    <div class="synth-card">
-                        <div class="synth-icon">🛡️</div>
-                        <div class="synth-title">Divine Shielding</div>
-                        <div class="synth-desc">+25% Defense vs Chronicle Void Surges</div>
-                        <button type="button" id="mod-btn-aetherShield" class="btn-sm btn-action" onclick="SeveranceManager.synthesizeModifier('aetherShield', 100)">✅ ACTIVE</button>
-                    </div>
-                    <div class="synth-card">
-                        <div class="synth-icon">🔥</div>
-                        <div class="synth-title">Kinetic Overclock</div>
-                        <div class="synth-desc">+30% Strike Damage on d20 Weapon Radiances</div>
-                        <button type="button" id="mod-btn-kineticOverclock" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('kineticOverclock', 120)">⚡ SYNTHESIZE (120 🪙)</button>
-                    </div>
-                    <div class="synth-card">
-                        <div class="synth-icon">🧠</div>
-                        <div class="synth-title">Synaptic Anchor</div>
-                        <div class="synth-desc">-40% Synaptic Memory Decay Rate</div>
-                        <button type="button" id="mod-btn-synapticAnchor" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('synapticAnchor', 150)">⚡ SYNTHESIZE (150 🪙)</button>
-                    </div>
-                    <div class="synth-card">
-                        <div class="synth-icon">💎</div>
-                        <div class="synth-title">Favor Resonator</div>
-                        <div class="synth-desc">+2x Divine Favor Chronicle Harvest Yield</div>
-                        <button type="button" id="mod-btn-favorResonator" class="btn-sm btn-phase" onclick="SeveranceManager.synthesizeModifier('favorResonator', 200)">⚡ SYNTHESIZE (200 🪙)</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-            <div class="panel data-panel" style="margin-top:20px; border-color: gold;">
-                <h3 style="color: gold;">⚖️ High Council Status</h3>
-                <p>Status: <span style="color: #4ade80;">Approved</span> | Your chronicles have been reviewed by the High Council. You are cleared for further Divine Chronicles.</p>
-            </div>
-        <!-- ======================================================== -->
-        <!-- THE MISSION BOARD (QUEST ARCHITECTURE)                   -->
-        <!-- ======================================================== -->
-        <section id="mission-board-section" class="panel">
-            <div class="setup-header">
-                <h2>📜 MISSION BOARD</h2>
-                <p>Select a Mission Manifest based on your Character Power Rating (CPR). Complete the Minimum Word Count (WC) to claim rewards.</p>
-            </div>
-
-            <div class="synthesis-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-                <!-- D-Rank Mission -->
-                <div class="synth-card" style="border: 1px solid #94a3b8;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span class="p-tag" style="background:#475569; color:#f8fafc;">D-Rank</span>
-                        <span style="font-size:11px; color:#94a3b8;">Req CPR: 100+</span>
-                    </div>
-                    <div class="synth-title" style="color: #cbd5e1; font-size: 16px;">Mortal Prayers</div>
-                    <div class="synth-desc" style="font-size:12px; margin:8px 0;">
-                        <strong>Objective:</strong> Assist the local parish in organizing their archives and clearing out minor pests.<br>
-                        <strong>Min WC:</strong> 1,000 WC<br>
-                        <strong>Hazards:</strong> None
-                    </div>
-                    <div style="font-size:12px; color:#4ade80; margin-bottom: 12px;">Rewards: 500 WCP / 200 Favor</div>
-                    <button type="button" class="btn-sm btn-phase" style="width:100%;">Sign Up (Start Mission)</button>
-                </div>
-
-                <!-- B-Rank Mission -->
-                <div class="synth-card" style="border: 1px solid #38bdf8;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span class="p-tag" style="background:#0ea5e9; color:#f0f9ff;">B-Rank</span>
-                        <span style="font-size:11px; color:#38bdf8;">Req CPR: 250+</span>
-                    </div>
-                    <div class="synth-title" style="color: #38bdf8; font-size: 16px;">Abyssal Breach</div>
-                    <div class="synth-desc" style="font-size:12px; margin:8px 0;">
-                        <strong>Objective:</strong> Purge the fractured seal in Sector 4 and eliminate the Lost Cherub.<br>
-                        <strong>Min WC:</strong> 3,500 WC<br>
-                        <strong>Hazards:</strong> Environmental Hazard Tier 1 (Desolation Aura: -10 Grace per 1,000 WC)
-                    </div>
-                    <div style="font-size:12px; color:#4ade80; margin-bottom: 12px;">Rewards: 2,500 WCP / 1,200 Favor</div>
-                    <button type="button" class="btn-sm btn-phase" style="width:100%; border-color:#38bdf8; color:#38bdf8;">Sign Up (Start Mission)</button>
-                </div>
-
-                <!-- S-Rank Mission -->
-                <div class="synth-card" style="border: 1px solid #f43f5e; box-shadow: 0 0 10px rgba(244,63,94,0.3);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span class="p-tag" style="background:#e11d48; color:#fff1f2;">S-Rank</span>
-                        <span style="font-size:11px; color:#f43f5e;">Req CPR: 500+ (Max Cap)</span>
-                    </div>
-                    <div class="synth-title" style="color: #f43f5e; font-size: 16px;">Cataclysm Event</div>
-                    <div class="synth-desc" style="font-size:12px; margin:8px 0;">
-                        <strong>Objective:</strong> Confront the awakening ancient entity threatening to unravel the celestial grid.<br>
-                        <strong>Min WC:</strong> 8,000 WC<br>
-                        <strong>Hazards:</strong> Permadeath Enabled / Wild Magic Surge
-                    </div>
-                    <div style="font-size:12px; color:#4ade80; margin-bottom: 12px;">Rewards: 8,000 WCP / 5,000 Favor / Relic Material</div>
-                    <button type="button" class="btn-sm btn-action" style="width:100%; background:linear-gradient(135deg, #be123c, #881337); border-color:#f43f5e;">Sign Up (Start Mission)</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- ACTIVE BOSS RAID & ADMIN LEDGER (BOSS BLUEPRINT)         -->
-        <!-- ======================================================== -->
-        <section id="boss-raid-section" class="panel">
-            <div class="setup-header">
-                <h2>👑 ADMIN: ACTIVE BOSS RAID</h2>
-                <p>Process Boss Logic via the Master Ledger. Log player offense and deduct boss Conviction to update the actual boss damage taken.</p>
-            </div>
-
-            <div class="angelic-grid-layout" style="gap:20px;">
-                <!-- Boss Blueprint -->
-                <div class="angelic-left-col" style="border: 1px solid #c084fc; border-radius: 8px; padding: 16px; background: rgba(88, 28, 135, 0.2);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <h3 class="angelic-section-title" style="margin:0; color:#d8b4fe;">BOSS BLUEPRINT: XAPHAN</h3>
-                        <span class="p-tag" style="background:#581c87; color:#f3e8ff;">S-RANK ENCOUNTER</span>
-                    </div>
-
-                    <div style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">[PHASE 1 STATS]</div>
-                    <div class="angel-combat-stats" style="margin-bottom:16px;">
-                        <span>❤️ Vitality: <strong id="boss-vitality" style="color:#ef4444;">1500 / 1500</strong></span>
-                        <span>⚡ Agility: <strong style="color:#38bdf8;">45</strong></span>
-                        <span>✨ Radiance: <strong style="color:#fbbf24;">60</strong></span>
-                        <span>🛡️ Conviction: <strong id="boss-conviction" style="color:#a78bfa;">50</strong></span>
-                    </div>
-
-                    <div style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">[BEHAVIOR PROTOCOL MATRIX]</div>
-                    <div class="intel-modal-effect-box" style="font-size:11px; color:#94a3b8; background:rgba(0,0,0,0.4); padding:10px; border-radius:4px;">
-                        <ul style="margin:0; padding-left:16px;">
-                            <li><strong>Condition A:</strong> If >3 players are in melee range ➔ Cast [Abyssal Cleave] (AoE physical damage).</li>
-                            <li><strong>Condition B:</strong> If an active player casts a Tier 3+ Light Miracle ➔ Trigger [Shadow 反]: Reflected 20% damage back to caster.</li>
-                            <li><strong>Condition C:</strong> When HP drops below 500 ➔ Force Transition to Phase 2 (Wipe thread buffs, reset GRC pool).</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Admin Ledger Input -->
-                <div class="angelic-right-col" style="border: 1px solid #475569; border-radius: 8px; padding: 16px;">
-                    <h3 class="angelic-section-title" style="margin:0 0 16px 0;">MASTER LEDGER: TURN RESOLUTION</h3>
-
-                    <div class="beta-field-group">
-                        <label for="ledger-p1-dmg">Player 1 Offense (Raw Damage)</label>
-                        <input type="number" id="ledger-p1-dmg" value="0" min="0">
-                    </div>
-                    <div class="beta-field-group">
-                        <label for="ledger-p2-dmg">Player 2 Offense (Raw Damage)</label>
-                        <input type="number" id="ledger-p2-dmg" value="0" min="0">
-                    </div>
-                    <div class="beta-field-group">
-                        <label for="ledger-p3-dmg">Player 3 Offense (Raw Damage)</label>
-                        <input type="number" id="ledger-p3-dmg" value="0" min="0">
-                    </div>
-                    <div class="beta-field-group">
-                        <label for="ledger-p4-dmg">Player 4 Offense (Raw Damage)</label>
-                        <input type="number" id="ledger-p4-dmg" value="0" min="0">
-                    </div>
-
-                    <button type="button" class="btn-start-combat" style="width:100%; margin-top:10px; padding:10px; font-size:13px;" onclick="calculateBossDamage()">⚔️ CALCULATE & RESOLVE TURN</button>
-
-                    <div id="ledger-result" style="margin-top:16px; padding:12px; background:rgba(0,0,0,0.5); border-radius:4px; font-family:monospace; display:none;">
-                        <!-- Calculated output goes here -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- THE EPITAPH ARCHIVE & STATUS REGISTRY                    -->
-        <!-- ======================================================== -->
-        <section id="epitaph-archive-section" class="panel">
-            <div class="setup-header">
-                <h2>⚰️ THE EPITAPH ARCHIVE & STATUS REGISTRY</h2>
-                <p>Database of historical character statuses. Records permanent injuries sustained from high-tier encounters or permanent death rules.</p>
-            </div>
-
-            <div class="archangel hierarchy-table-container">
-                <table class="archangel hierarchy-table">
-                    <thead>
-                        <tr>
-                            <th>PLAYER ID</th>
-                            <th>CHARACTER NAME</th>
-                            <th>STATUS FLAG</th>
-                            <th>MECHANICAL PENALTY</th>
-                            <th>RESOLUTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Permanent Injury Example -->
-                        <tr>
-                            <td style="color:#94a3b8;">PL-492</td>
-                            <td style="color:#cbd5e1; font-weight:bold;">Remiel</td>
-                            <td><span class="p-tag" style="background:#ca8a04; color:#fef08a;">[Maimed_Wing]</span></td>
-                            <td style="color:#ef4444;">-10 Agility</td>
-                            <td style="font-size:11px; color:#94a3b8;">Requires S-Rank Medical Miracle</td>
-                        </tr>
-                        <!-- Permadeath Example -->
-                        <tr>
-                            <td style="color:#94a3b8;">PL-105</td>
-                            <td style="color:#cbd5e1; font-weight:bold;">Samael_Fallen</td>
-                            <td><span class="p-tag" style="background:#475569; color:#f8fafc;">[DECEASED]</span></td>
-                            <td style="color:#ef4444;">Profile Locked. Sprdsht Revoked.</td>
-                            <td style="font-size:11px; color:#94a3b8;">Account freed for Lvl 1 Fledgling</td>
-                        </tr>
-                        <!-- Alive Example -->
-                        <tr>
-                            <td style="color:#94a3b8;">PL-883</td>
-                            <td style="color:#cbd5e1; font-weight:bold;">Xera</td>
-                            <td><span class="p-tag" style="background:#166534; color:#bbf7d0;">[HEALTHY]</span></td>
-                            <td style="color:#4ade80;">None</td>
-                            <td style="font-size:11px; color:#94a3b8;">Active in Sector 4</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- 2. THE DIVINE CHRONICLES (5e TABLETOP INCURSION & D20 ROLLER)  -->
-        <!-- ======================================================== -->
-        <section id="chronicles-section" class="panel">
-            <div class="setup-header">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <div>
-                        <h2>🌀 THE DIVINE CHRONICLES (5e TACTICAL INCURSION)</h2>
-                        <p>Tabletop Hex Chronicle • d20 Combat Engine • Synaptic Memory Decay Active</p>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <button type="button" class="btn-start-combat" style="margin:0; padding:8px 16px; background:linear-gradient(135deg, #10b981, #059669);" onclick="SeveranceManager.extractFromChronicle()">⚡ EXTRACT & ESCAPE TO SANCTUM</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Environmental Synaptic Memory Decay Meter -->
-            <div class="decay-meter-container">
-                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
-                    <span style="color:#ef4444; font-weight:bold;">⚠️ SYNAPTIC MEMORY DECAY: <span id="chronicle-decay-text">0%</span></span>
-                    <span style="color:#38bdf8; font-weight:bold;">UNBANKED FAVORS AT RISK: <span id="chronicle-bag-favor">0 💎</span></span>
-                </div>
-                <div class="decay-progress-bar-bg">
-                    <div id="chronicle-decay-bar" class="decay-progress" style="width:0%;"></div>
-                </div>
-                <div style="font-size:10px; color:#94a3b8; margin-top:3px;">Warning: If decay reaches 100%, total Amnesia Wipe occurs and unbanked favor are lost!</div>
-            </div>
-
-            <div class="chronicle-layout-grid">
-                <!-- 3D / Tabletop Hex Chronicle Arena -->
-                <div class="chronicle-grid-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <span style="font-size:12px; font-weight:bold; color:#cbd5e1;">🗺️ TACTICAL HEX MATRIX (SECTOR 0-6)</span>
-                        <span style="font-size:11px; color:#38bdf8;">Click node or use controls to move</span>
-                    </div>
-                    <div id="chronicle-hex-grid" class="hex-grid-container"></div>
-                    <div class="hex-move-controls">
-                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(-1, 0)">⬆️ North</button>
-                        <div style="display:flex; gap:6px;">
-                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(0, -1)">⬅️ West</button>
-                            <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(0, 1)">➡️ East</button>
-                        </div>
-                        <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.moveChronicle(1, 0)">⬇️ South</button>
-                    </div>
-                </div>
-
-                <!-- D&D 5e Combat Dice Roller & Fiend Encounter -->
-                <div class="chronicle-combat-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:12px; font-weight:bold; color:#f87171;">⚔️ FIEND BREACH ENCOUNTER</span>
-                        <span class="p-tag" style="background:#450a0a; color:#fca5a5; border:1px solid #dc2626;">THREAT: HOSTILE</span>
-                    </div>
-
-                    <div class="fiend-stat-block">
-                        <div id="fiend-name" style="font-weight:bold; font-size:13px; color:#f8fafc;">👾 Void-Corruptor Archon</div>
-                        <div style="font-size:11px; color:#94a3b8;">Willpower Class (AC): <strong>13</strong> | Bounty: <strong>30 💎</strong></div>
-                        <div style="display:flex; justify-content:space-between; font-size:10px; margin-top:6px;">
-                            <span>FIEND INTEGRITY</span>
-                            <span id="fiend-hp">40 / 40 HP</span>
-                        </div>
-                        <div class="decay-progress-bar-bg" style="height:6px; margin-top:2px;">
-                            <div id="fiend-hp-bar" class="decay-progress" style="width:100%; background:#ef4444;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Dice Roller Box -->
-                    <div id="dice-result-display" class="dice-roller-box normal">
-                        <div style="font-size:24px;">🎲 d20</div>
-                        <div style="font-size:11px; color:#94a3b8;">Select miracle action below to roll D&D 5e combat check vs Fiend AC (13)</div>
-                    </div>
-
-                    <div class="dice-actions-row">
-                        <button type="button" class="btn-sm btn-start-combat" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('RADIANCE')">⚔️ Weapon Strike (d20 + DEX)</button>
-                        <button type="button" class="btn-sm btn-phase" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('BREACH')">🧠 Cyber-Breach (d20 + INT)</button>
-                        <button type="button" class="btn-sm btn-phase" style="margin:0; width:100%;" onclick="SeveranceManager.rollD20('SAVE')">🛡️ Kinetic Shield (d20 + CON)</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- TRAINING AREA & P2P MULTIPLAYER LOBBY                    -->
-        <!-- ======================================================== -->
-        <section id="training-lobby-section" class="panel">
-            <div class="setup-header">
-                <h2>🏟️ TACTICAL TRAINING AREA & MULTIPLAYER LOBBY</h2>
-                <p>Choose your match pathway: Host a new combat room, connect as Player 2 over WebRTC, spectate a live match, or launch offline practice.</p>
-            </div>
-
-            <div id="lobby-status-msg" class="lobby-status-box hidden"></div>
-
-            <div class="lobby-grid">
-                <!-- Option 1: Create / Host -->
-                <div class="lobby-card host-card">
-                    <div class="lobby-card-badge">🔱 HOST (PLAYER 1)</div>
-                    <h3>1. Create New Match</h3>
-                    <p>Initialize a WebRTC combat room as Player 1. Runs the authoritative combat engine and broadcasts state to connecting peers.</p>
-                    <button type="button" class="btn-start-combat" onclick="MultiplayerManager.hostMatch()">🎮 Create Match & Generate Room ID</button>
-                    
-                    <div id="lobby-room-code-display" class="room-code-display hidden">
-                        <label for="lobby-generated-code">Your Room ID (Share with Opponent / Spectator):</label>
-                        <div class="code-copy-row">
-                            <input type="text" id="lobby-generated-code" readonly value="">
-                            <button type="button" id="btn-copy-code" class="btn-sm btn-phase" onclick="MultiplayerManager.copyRoomCode()">📋 Copy Code</button>
-                        </div>
-                        <button type="button" class="btn-start-combat" style="margin-top:6px;" onclick="switchAppMode('DUEL'); document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });">⚔️ Enter Deck Selector</button>
-                    </div>
-                </div>
-
-                <!-- Option 2: Join as Player 2 -->
-                <div class="lobby-card join-card">
-                    <div class="lobby-card-badge" style="background:#581c87; color:#d8b4fe;">🔥 CLIENT (PLAYER 2)</div>
-                    <h3>2. Join as Second Player</h3>
-                    <p>Paste a Room ID generated by the Host to link directly via WebRTC DataChannels as Player 2.</p>
-                    <label for="lobby-join-code">Enter Host Room ID:</label>
-                    <input type="text" id="lobby-join-code" placeholder="e.g. HB-4821">
-                    <button type="button" class="btn-start-combat" onclick="MultiplayerManager.joinMatch(document.getElementById('lobby-join-code').value)">⚔️ Connect & Join as Player 2</button>
-                </div>
-
-                <!-- Option 3: Spectate -->
-                <div class="lobby-card spectate-card">
-                    <div class="lobby-card-badge" style="background:#334155; color:#cbd5e1;">👁️ SPECTATOR</div>
-                    <h3>3. Watch Live Match</h3>
-                    <p>Observe a live match in real-time read-only mode without occupying a player slot.</p>
-                    <label for="lobby-spectate-code">Enter Match Room ID:</label>
-                    <input type="text" id="lobby-spectate-code" placeholder="e.g. HB-4821">
-                    <button type="button" class="btn-sm btn-phase" style="width:100%; margin-top:6px; padding:10px;" onclick="MultiplayerManager.spectateMatch(document.getElementById('lobby-spectate-code').value)">📺 Join as Spectator</button>
-                </div>
-
-                <!-- Option 4: Local Solo / Hotseat -->
-                <div class="lobby-card local-card">
-                    <div class="lobby-card-badge" style="background:#1e293b; color:#94a3b8;">🛡️ LOCAL TRAINING</div>
-                    <h3>4. Local Practice Arena</h3>
-                    <p>Test archetypes, combos, and armor configurations locally on a single device without networking.</p>
-                    <button type="button" class="btn-sm btn-action" style="width:100%; margin-top:auto; padding:10px;" onclick="MultiplayerManager.role='LOCAL'; switchAppMode('DUEL'); document.getElementById('pre-combat-setup-section').scrollIntoView({ behavior: 'smooth' });">🤖 Launch Local Practice</button>
-                    <button type="button" id="btn-run-diagnostics" class="btn-sm btn-phase" style="width:100%; margin-top:6px; padding:7px; font-size:11px;" onclick="MultiplayerManager.runDiagnostics()">🧪 Run WebRTC Network Diagnostic Test</button>
-                </div>
-            </div>
-
-            <!-- ======================================================== -->
-            <!-- REAL-TIME OPEN MATCHES LOBBY FEED                        -->
-            <!-- ======================================================== -->
-            <div class="lobby-feed-container">
-                <div class="lobby-feed-header">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:16px;">🌐</span>
-                        <h3 style="margin:0; font-size:14px; color:#f8fafc; letter-spacing:0.5px;">LIVE PUBLIC MATCHES (REAL-TIME LOBBY FEED)</h3>
-                        <span id="lobby-rooms-count-badge" class="p-tag p1-tag">0 OPEN GAMES</span>
-                    </div>
-                    <div class="lobby-feed-controls">
-                        <button type="button" class="btn-micro btn-phase" onclick="MultiplayerManager.fetchOpenRooms(true)">🔄 Refresh Feed</button>
-                        <button type="button" class="btn-micro btn-action" onclick="MultiplayerManager.hostMatch()">➕ Host Public Match</button>
-                    </div>
-                </div>
-                <p style="font-size:11px; color:#94a3b8; margin:4px 0 10px 0;">Live feed of open combats awaiting Player 2. Click <strong>"⚔️ 1-Click Join"</strong> to connect instantly. Strict 2-player capacity is atomically enforced.</p>
-                
-                <div id="lobby-rooms-list" class="lobby-rooms-grid">
-                    <div class="lobby-feed-empty">
-                        <div style="font-size:22px; margin-bottom:4px;">📡</div>
-                        <div style="font-weight:bold; color:#cbd5e1;">Scanning live tactical frequencies...</div>
-                        <div style="font-size:11px; color:#64748b; margin-top:3px;">No open public matches waiting right now. Click "Create Match" above to host the first room!</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- PRE-DUEL LOADOUT & DECK SELECTION SCREEN                -->
-        <!-- ======================================================== -->
-        <section id="pre-combat-setup-section" class="panel">
-            <div class="setup-header">
-                <h2>⚡ OPERATIVE TACTICAL DECK SELECTION</h2>
-                <p>Configure archetypes and loadout profiles before entering the combat grid.</p>
-                <div id="setup-match-status" class="setup-status-banner">🌐 MATCH MODE: LOCAL PRACTICE</div>
-            </div>
-
-            <div class="pre-combat-grid">
-                <!-- P1 Configuration Card -->
-                <div class="setup-player-card p1-setup-border">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <div class="setup-card-title">🔱 OPERATIVE 1 (ALPHA)</div>
-                        <span id="setup-p1-role-badge" class="p-tag p1-tag">PLAYER 1</span>
-                    </div>
-                    <label for="setup-p1-deck">Select Combat Archetype:</label>
-                    <select id="setup-p1-deck" onchange="CombatEngine.changeDeck('P1', this.value)">
-                        <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
-                        <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
-                        <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
-                        <option value="TERRA_MAGNET">🪨 Terra-Magnet Bastion (EARTH Excavate / Resonance)</option>
-                        <option value="DEFAULT">⚡ Tactical Default Hybrid</option>
-                    </select>
-
-                    <div id="setup-p1-desc" class="archetype-description-box">
-                        <strong style="color:#38bdf8;">Abyssal Tide Corps</strong><br>
-                        <span>Deep-grid pressure-alloy armor. Strips enemy tactical assets and executes rapid search combos.</span>
-                    </div>
-                </div>
-
-                <!-- P2 Configuration Card -->
-                <div class="setup-player-card p2-setup-border">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <div class="setup-card-title">🔥 OPERATIVE 2 (OMEGA)</div>
-                        <span id="setup-p2-role-badge" class="p-tag p2-tag">PLAYER 2</span>
-                    </div>
-                    <label for="setup-p2-deck">Select Combat Archetype:</label>
-                    <select id="setup-p2-deck" onchange="CombatEngine.changeDeck('P2', this.value)">
-                        <option value="INFERNAL_FORGE">🔥 Infernal Forge Corps (FIRE Burn / Attrition)</option>
-                        <option value="ABYSSAL_TIDE">🔱 Abyssal Tide Corps (WATER Combo / Disruption)</option>
-                        <option value="ZEPHYR_AVIAN">🌪️ Zephyr Sky-Reign Aviary (WIND Chain-Equip / Control)</option>
-                        <option value="TERRA_MAGNET">🪨 Terra-Magnet Bastion (EARTH Excavate / Resonance)</option>
-                        <option value="DEFAULT">⚡ Tactical Default Hybrid</option>
-                    </select>
-
-                    <div id="setup-p2-desc" class="archetype-description-box">
-                        <strong style="color:#f87171;">Infernal Forge Corps</strong><br>
-                        <span>Volcanic-core reactor plating. Emits passive End Phase burn damage and reflects kinetic strikes.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="setup-action-row">
-                <button type="button" id="btn-start-combat-action" class="btn-start-combat" onclick="CombatEngine.startConfiguredMatch()">⚔️ INITIALIZE DUEL & ENGAGE COMBAT</button>
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- WILLPOWER DUEL ACTIVE COMBAT ARENA                           -->
-        <!-- ======================================================== -->
-        <section id="combat-section" class="panel">
-            <!-- Top Controls Row -->
-            <div class="combat-top-bar">
-                <div class="deck-indicator-summary">
-                    <span id="p1-summary-badge" class="p-tag p1-tag">P1: ABYSSAL TIDE</span>
-                    <span style="color:#64748b; font-size:11px;">VS</span>
-                    <span id="p2-summary-badge" class="p-tag p2-tag">P2: INFERNAL FORGE</span>
-                </div>
-                <button class="btn-sm btn-reconfigure" onclick="CombatEngine.openSetupScreen()">⚙️ Change Decks / Setup</button>
-            </div>
-
-            <!-- Turn Banner & Phase Bar -->
-            <div class="combat-arena-header">
-                <div id="turn-indicator" class="turn-status-banner">👉 INITIALIZING...</div>
-                <div id="phase-bar" class="phase-bar-container"></div>
-                <div class="phase-action-buttons">
-                    <button class="btn-sm btn-phase" onclick="CombatEngine.startBattlePhase()">⚔️ Battle Phase</button>
-                    <button class="btn-sm btn-phase" onclick="CombatEngine.startMainPhase2()">🏛️ Main Phase 2</button>
-                    <button class="btn-sm btn-phase" onclick="CombatEngine.startEndPhase()">🚪 End Turn</button>
-                    <button class="btn-sm btn-warn"  onclick="CombatEngine.passReaction(CombatEngine.reactionPlayer)">⏭️ Pass Reaction</button>
-                    <button class="btn-sm btn-phase" onclick="CombatEngine.declareStrike()">⚔️ Declare Strike</button>
-                    <button class="btn-sm btn-reset" onclick="CombatEngine.initMatch()">🔁 Restart Match</button>
-                </div>
-            </div>
-
-            <!-- Chain Link Stack -->
-            <div class="chain-arena-box">
-                <div style="font-size:11px; font-weight:bold; color:#f43f5e; margin-bottom:4px;">⚡ Active LIFO Chain Link Stack:</div>
-                <div id="combat-chain-stack" class="chain-stack-flex">
-                    <span style="color:#64748b; font-size:11px;">[No Active Chain Links]</span>
-                </div>
-            </div>
-
-            <!-- Dual Angel Command Panels -->
-            <div class="combat-split-layout">
-
-                <!-- P1: OPERATIVE ALPHA -->
-                <div class="player-deck-card p1-card">
-                    <div class="player-header">
-                        <span id="p1-deck-badge" class="p-tag p1-tag">P1: ALPHA (ABYSSAL TIDE)</span>
-                        <div class="p-stats">
-                            <span>❤️ <strong id="p1-lp"     style="color:#4ade80;">4000</strong> LP</span>
-                            <span>⚡ <strong id="p1-energy" style="color:#38bdf8;">100</strong></span>
-                        </div>
-                    </div>
-                    <div class="angel-combat-stats">
-                        <span>⚔️ ATK: <strong id="p1-atk" style="color:#ef4444;">500</strong></span>
-                        <span>🛡️ DEF: <strong id="p1-def" style="color:#38bdf8;">500</strong></span>
-                        <span>🧥 Gear: <strong id="p1-pieces" style="color:#fbbf24;">0/5</strong></span>
-                    </div>
-
-                    <!-- Willpower Loadout -->
-                    <div class="field-zone-label">🧥 Angel Willpower Loadout:</div>
-                    <div id="p1-armor" class="armor-loadout-grid"></div>
-
-                    <!-- Spell/Trap Zone -->
-                    <div class="field-zone-label">🎴 Active Spells & Traps:</div>
-                    <div id="p1-spells" class="spell-trap-zone"></div>
-
-                    <!-- Hand -->
-                    <div class="field-zone-label">🖐️ Hand Cards (<span id="p1-deck-count" style="color:#94a3b8;">Deck: 0</span>):</div>
-                    <div id="p1-hand" class="hand-cards-grid"></div>
-                </div>
-
-                <!-- P2: OPERATIVE OMEGA -->
-                <div class="player-deck-card p2-card">
-                    <div class="player-header">
-                        <span id="p2-deck-badge" class="p-tag p2-tag">P2: OMEGA (INFERNAL FORGE)</span>
-                        <div class="p-stats">
-                            <span>❤️ <strong id="p2-lp"     style="color:#4ade80;">4000</strong> LP</span>
-                            <span>⚡ <strong id="p2-energy" style="color:#c084fc;">100</strong></span>
-                        </div>
-                    </div>
-                    <div class="angel-combat-stats">
-                        <span>⚔️ ATK: <strong id="p2-atk" style="color:#ef4444;">500</strong></span>
-                        <span>🛡️ DEF: <strong id="p2-def" style="color:#38bdf8;">500</strong></span>
-                        <span>🧥 Gear: <strong id="p2-pieces" style="color:#fbbf24;">0/5</strong></span>
-                    </div>
-
-                    <!-- Willpower Loadout -->
-                    <div class="field-zone-label">🧥 Angel Willpower Loadout:</div>
-                    <div id="p2-armor" class="armor-loadout-grid"></div>
-
-                    <!-- Spell/Trap Zone -->
-                    <div class="field-zone-label">🎴 Active Spells & Traps:</div>
-                    <div id="p2-spells" class="spell-trap-zone"></div>
-
-                    <!-- Hand -->
-                    <div class="field-zone-label">🖐️ Hand Cards (<span id="p2-deck-count" style="color:#94a3b8;">Deck: 0</span>):</div>
-                    <div id="p2-hand" class="hand-cards-grid"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ======================================================== -->
-        <!-- ABILITY & WILLPOWER INTEL INSPECTOR MODAL                    -->
-        <!-- ======================================================== -->
-        <div id="intel-inspector-modal" class="intel-modal-overlay hidden" onclick="if(event.target===this)CombatEngine.closeCardInspector()">
-            <div class="intel-modal-box">
-                <div class="intel-modal-header">
-                    <span id="intel-modal-tag" class="p-tag p1-tag">🧥 WILLPOWER INTEL</span>
-                    <button type="button" class="intel-modal-close" onclick="CombatEngine.closeCardInspector()">✖</button>
-                </div>
-                <h3 id="intel-modal-title">Card Name</h3>
-                <div id="intel-modal-subtitle" class="intel-modal-subtitle">Slot / Type</div>
-                
-                <div id="intel-modal-stats-row" class="intel-modal-stats-row">
-                    <span>⚔️ ATK: <strong id="intel-stat-atk" style="color:#ef4444;">+0</strong></span>
-                    <span>🛡️ DEF: <strong id="intel-stat-def" style="color:#38bdf8;">+0</strong></span>
-                    <span>⚡ Cost: <strong id="intel-stat-cost" style="color:#fbbf24;">0 Grace</strong></span>
-                </div>
-
-                <div class="intel-modal-body">
-                    <div style="font-size:11px; font-weight:bold; color:#cbd5e1; margin-bottom:4px;">📜 Effect / Passive Ability:</div>
-                    <div id="intel-modal-effect" class="intel-modal-effect-box">
-                        Ability telemetry text.
-                    </div>
-                </div>
-
-                <div class="intel-modal-footer">
-                    <button type="button" class="btn-sm btn-phase" style="width:100%;" onclick="CombatEngine.closeCardInspector()">Close Intel</button>
-                </div>
+            <div class="telem-pill stamina">
+                <span>🔋 Stamina:</span>
+                <span id="hdrStamina">92%</span>
             </div>
         </div>
 
-        <!-- ======================================================== -->
-        <!-- BETA TESTER SIGN-UP SECTION                              -->
-        <!-- ======================================================== -->
-        <section id="beta-signup-section" class="panel">
-            <div class="setup-header">
-                <h2>🛡️ PILGRIM PROTOCOL: CLOSED BETA REGISTRATION</h2>
-                <p>Register to become an official beta tester for upcoming MMO-Verse world builds, digital commerce nodes, and Solana asset integrations.</p>
+        <div class="user-controls">
+            <span id="activeClientBadge" class="user-badge">🔑 Client Connected</span>
+            <a href="signup.html?switch=1" class="btn-outline-sm">Switch Account</a>
+            <button type="button" class="btn-outline-sm" onclick="logoutHBLite()">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- 2. TOP-LEVEL ECOSYSTEM OVERVIEW FOR CLIENTS -->
+    <section class="ecosystem-banner">
+        <div class="ecosystem-banner-text">
+            <div class="ecosystem-banner-title">Atlantis &amp; Lemuria Unified Network Ecosystem</div>
+            <p class="ecosystem-banner-desc">
+                <strong>HBLite</strong> is the universal edge client, marketplace, and responsive command HUD connecting real-world enterprises, social clubs, and autonomous nodes. Powered by <strong>Atlantis</strong> (Pearl Enclave DIDs, double-entry Tide Ledger, and Coral Escrow settlement) and <strong>Lemuria</strong> (Zero-GC 3D Gaussian Splatting storefronts, 64-bit planetary geodesy, and 60Hz deterministic simulation).
+            </p>
+        </div>
+        <div class="ecosystem-banner-actions">
+            <button type="button" class="btn-action" onclick="switchHBLiteTab('marketplace')">🛒 Explore Coral Marketplace</button>
+            <button type="button" class="btn-gold" onclick="switchHBLiteTab('storefront')">🏪 Inspect 3D Storefront</button>
+        </div>
+    </section>
+
+    <!-- 3. MAIN WORKSPACE SHELL -->
+    <div class="workspace-shell">
+        <!-- ADAPTIVE COMMAND SIDEBAR -->
+        <aside class="command-sidebar">
+            <div>
+                <div class="sidebar-heading">HBLite Command Menu</div>
+                <div class="nav-tab-list" role="tablist">
+                    <button type="button" class="nav-tab-btn active" data-tab="map" onclick="switchHBLiteTab('map')">
+                        <span>🗺️</span> Geodesic Tactical Map
+                    </button>
+                    <button type="button" class="nav-tab-btn" data-tab="radio" onclick="switchHBLiteTab('radio')">
+                        <span>📻</span> Theater 24/7 Radio
+                    </button>
+                    <button type="button" class="nav-tab-btn" data-tab="marketplace" onclick="switchHBLiteTab('marketplace')">
+                        <span>🛒</span> Task Marketplace
+                    </button>
+                    <button type="button" class="nav-tab-btn" data-tab="storefront" onclick="switchHBLiteTab('storefront')">
+                        <span>🏪</span> 3D Virtual Storefront
+                    </button>
+                    <button type="button" class="nav-tab-btn" data-tab="vehicle" onclick="switchHBLiteTab('vehicle')">
+                        <span>🚗</span> Vehicle Dynamics
+                    </button>
+                    <button type="button" class="nav-tab-btn" data-tab="identity" onclick="switchHBLiteTab('identity')">
+                        <span>🛡️</span> Pearl &amp; PoH Identity
+                    </button>
+                </div>
             </div>
 
-            <div class="beta-form-container">
-                <form id="betaSignupForm" onsubmit="submitBetaTesterForm(event)">
-                    <div class="beta-form-grid">
-                        <div class="beta-field-group">
-                            <label for="beta-name">Angel / Full Name <span class="req-star">*</span></label>
-                            <input type="text" id="beta-name" name="name" required placeholder="Your full name or angel handle">
+            <div class="sidebar-specs">
+                <div><strong>Core Engine:</strong> Lemuria V2</div>
+                <div><strong>Geodesy:</strong> 64-bit ECEF</div>
+                <div><strong>Acoustics:</strong> Sabine RT60 (1.09s)</div>
+                <div><strong>Escrow:</strong> Atlantis Tide Ledger</div>
+                <div><strong>Identity:</strong> Pearl Enclave Ed25519</div>
+            </div>
+        </aside>
+
+        <!-- CENTRAL CONTENT STAGE -->
+        <main class="content-stage">
+
+            <!-- ========================================================== -->
+            <!-- TAB 1: GEODESIC TACTICAL MAP                               -->
+            <!-- ========================================================== -->
+            <section id="tab-map" class="tab-pane active">
+                <div class="pane-header">
+                    <div>
+                        <h2 class="pane-title">🗺️ Lemuria Planetary Geodesy &amp; Sector Guidance</h2>
+                        <p class="pane-subtitle">Authoritative 64-bit Earth-Centered, Earth-Fixed (ECEF) terrain coordinates with Turn-by-Turn route splines.</p>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn-action" onclick="lockWaypoint('Atlantis Citadel Hub', 35.6601, 139.7290, 35.0)">📍 Lock: Atlantis Citadel</button>
+                        <button type="button" class="btn-action" onclick="lockWaypoint('Lemuria Skunkworks Garage', 35.6586, 139.7454, 42.0)">📍 Lock: Lemuria Garage</button>
+                        <button type="button" class="btn-gold" onclick="geoLockClientNode()">🛰️ Geo-Lock My Home Node</button>
+                    </div>
+                </div>
+
+                <div class="card-grid-2">
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🌍 Interactive Planetary ECEF Viewport</span>
+                            <span style="font-size:11px; color:var(--emerald);">LOD 15 STREAMING</span>
+                        </div>
+                        <div class="globe-canvas-wrap">
+                            <canvas id="geodesicCanvas" width="520" height="300"></canvas>
+                            <div class="globe-hud-overlay">
+                                <span id="globeTargetLabel">LOCUS: ATLANTIS SECTOR ALPHA</span>
+                                <span id="globeEcefLabel">ECEF: (-3954842, 3354936, 3700264) m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🧭 Active Geodesic Telemetry</span>
+                            <span style="font-size:11px; color:var(--cyan);">WGS-84 / ECEF</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Latitude / Longitude:</span>
+                                <span class="data-val cyan" id="mapLatLon">35.658600° N, 139.745400° E</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Altitude (MSL):</span>
+                                <span class="data-val" id="mapAlt">42.0 m</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">64-bit ECEF Vector:</span>
+                                <span class="data-val emerald" id="mapEcef">(-3954842, 3354936, 3700264) m</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Active Waypoint Distance:</span>
+                                <span class="data-val gold" id="mapRouteDist">1.49 km (Catmull-Rom Spline Active)</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Location Disclosure Policy:</span>
+                                <span class="data-val emerald">ZK-Geo Sector Enclave Protected</span>
+                            </div>
                         </div>
 
-                        <div class="beta-field-group">
-                            <label for="beta-email">Email Address <span class="req-star">*</span></label>
-                            <input type="email" id="beta-email" name="email" required placeholder="you@example.com">
+                        <div style="margin-top:6px;">
+                            <div style="font-size:12px; font-weight:800; color:var(--gold); margin-bottom:8px; text-transform:uppercase;">
+                                Active Sector Contracts &amp; Bounties
+                            </div>
+                            <div class="data-table">
+                                <div class="data-row">
+                                    <span>• [Logistics] Autonomous Rover Dispatch to Sector 04</span>
+                                    <span class="data-val cyan">450 CYAN</span>
+                                </div>
+                                <div class="data-row">
+                                    <span>• [Acoustics] Sabine RT60 Calibration at Club Totem #02</span>
+                                    <span class="data-val emerald">120 CREDITS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- TAB 2: THEATER 24/7 RADIO                                  -->
+            <!-- ========================================================== -->
+            <section id="tab-radio" class="tab-pane">
+                <div class="pane-header">
+                    <div>
+                        <h2 class="pane-title">📻 Siren Frequency 24/7 Broadcast — The Seven Daughters</h2>
+                        <p class="pane-subtitle">Low-latency spatial audio stream decoded through the Lemuria Sabine RT60 acoustic reverberation engine.</p>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" id="radioPlayBtn" class="btn-action" onclick="toggleRadioPlayback()">⏸ PAUSE STREAM</button>
+                        <button type="button" class="btn-gold" onclick="sendCoralTip()">🎵 Send 0.1 CYAN Coral Tip</button>
+                    </div>
+                </div>
+
+                <div class="card-grid-2">
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🎙️ Active On-Air Broadcaster</span>
+                            <span id="radioFreqBadge" style="font-size:11px; color:var(--gold);">432 Hz HARMONIC</span>
+                        </div>
+                        <div style="background:rgba(6,10,22,0.8); border:1px solid var(--border-cyan); border-radius:8px; padding:14px;">
+                            <div style="font-size:18px; font-weight:800; color:#FFF; margin-bottom:4px;" id="radioHostTitle">
+                                Daughter #1: Maia — The Dawn Siren
+                            </div>
+                            <div style="font-size:12.5px; color:var(--cyan); font-weight:700; margin-bottom:8px;" id="radioGenreTitle">
+                                Deep Oceanic Ambient / Horizon Chill • 04:00 - 08:00
+                            </div>
+                            <div style="font-size:13px; font-style:italic; color:#E2E8F0; margin-bottom:8px;" id="radioCatchphrase">
+                                "Breathing with the tides. Maia on the early horizon."
+                            </div>
+                            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;" id="radioBio">
+                                Awakens the archipelago with resonant 432Hz sine waves and calm oceanic swells across the Atlantis network.
+                            </div>
                         </div>
 
-                        <div class="beta-field-group">
-                            <label for="beta-guild-class">Guild Class / Archetype <span class="req-star">*</span></label>
-                            <select id="beta-guild-class" name="guildClass" required>
-                                <option value="Abyssal Vanguard (WATER)">🔱 Abyssal Vanguard (WATER Combo / Disruption)</option>
-                                <option value="Infernal Juggernaut (FIRE)">🔥 Infernal Juggernaut (FIRE Burn / Attrition)</option>
-                                <option value="Zephyr Scout (WIND)">🌪️ Zephyr Scout (WIND Chain-Equip / Control)</option>
-                                <option value="Terra Bastion (EARTH)">🪨 Terra Bastion (EARTH Excavate / Resonance)</option>
-                                <option value="Divine Cyber-Mage">⚡ Divine Cyber-Mage (Grid Special Ops)</option>
-                                <option value="Seraphim Mystic">🔮 Seraphim Mystic (Celestial Protocol)</option>
+                        <div>
+                            <div style="font-size:11.5px; font-weight:700; color:var(--text-secondary); margin-bottom:8px; text-transform:uppercase;">
+                                Switch Broadcaster Shift (The Seven Daughters):
+                            </div>
+                            <div class="host-grid" id="daughterHostButtons"></div>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🔊 Sabine RT60 Spatial Acoustic Telemetry</span>
+                            <span style="font-size:11px; color:var(--emerald);">48kHz STEREO PCM</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Acoustic Profile:</span>
+                                <span class="data-val cyan">Atlantis Lounge Chamber (V = 4,800 m³)</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Sabine RT60 Decay Time:</span>
+                                <span class="data-val emerald">1.09 seconds</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Spatial Emitter Vector:</span>
+                                <span class="data-val">Vec3(0.0, 2.5, -5.0)</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Coral State Channel Tips Sent:</span>
+                                <span class="data-val gold" id="radioTipCount">0 Tips (0.0 CYAN)</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:auto; padding-top:10px;">
+                            <label for="radioVolSlider">Master Acoustic Gain</label>
+                            <input type="range" id="radioVolSlider" min="0" max="100" value="85" style="width:100%; accent-color:var(--cyan);" oninput="updateRadioVolume(this.value)">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- TAB 3: ATLANTIS TASK MARKETPLACE & CORAL ESCROW            -->
+            <!-- ========================================================== -->
+            <section id="tab-marketplace" class="tab-pane">
+                <div class="pane-header">
+                    <div>
+                        <h2 class="pane-title">🛒 Atlantis Task Marketplace &amp; Coral Escrow</h2>
+                        <p class="pane-subtitle">Decentralized tasks, service bounties, and 3D hardware upgrades settled via double-entry Tide Ledger.</p>
+                    </div>
+                    <button type="button" class="btn-gold" onclick="openPostTaskModal()">➕ Post New Client Task / Bounty</button>
+                </div>
+
+                <!-- Dynamic Post Task Form (Collapsible) -->
+                <div id="postTaskCard" class="panel-card" style="display:none; border-color:var(--gold);">
+                    <div class="panel-card-title" style="color:var(--gold);">
+                        <span>📝 Publish New Atlantis Task Envelope (TASK_CREATED)</span>
+                        <button type="button" class="btn-outline-sm" onclick="closePostTaskModal()">✕ Close</button>
+                    </div>
+                    <div class="card-grid-3">
+                        <div>
+                            <label for="newTaskTitle">Task or Service Title</label>
+                            <input type="text" id="newTaskTitle" placeholder="e.g. 3D Gaussian Splat Venue Scan">
+                        </div>
+                        <div>
+                            <label for="newTaskPrice">Escrow Bounty Amount</label>
+                            <input type="text" id="newTaskPrice" placeholder="e.g. 350">
+                        </div>
+                        <div>
+                            <label for="newTaskAsset">Settlement Asset</label>
+                            <select id="newTaskAsset">
+                                <option value="CYAN">CYAN (Network Utility)</option>
+                                <option value="CREDITS">ATLANTIS CREDITS</option>
+                                <option value="PEARL">PEARL</option>
                             </select>
                         </div>
-
-                        <div class="beta-field-group">
-                            <label for="beta-birthdate">Birth Date <span class="req-star">*</span></label>
-                            <input type="date" id="beta-birthdate" name="birthDate" required>
-                        </div>
-
-                        <div class="beta-field-group">
-                            <label for="beta-birthtime">Birth Time (Zodiac Alignment) <span class="req-star">*</span></label>
-                            <input type="time" id="beta-birthtime" name="birthTime" value="12:00" required>
-                        </div>
-
-                        <div class="beta-field-group">
-                            <label for="beta-phone">Phone Number</label>
-                            <input type="tel" id="beta-phone" name="phone" placeholder="(555) 000-0000">
-                        </div>
                     </div>
-
-                    <div class="beta-submit-row">
-                        <button type="submit" id="beta-submit-btn" class="btn-start-combat">🚀 TRANSMIT BETA APPLICATION TO GOOGLE SHEETS</button>
+                    <div style="margin-top:8px;">
+                        <label for="newTaskDesc">Scope &amp; Verification Requirements</label>
+                        <input type="text" id="newTaskDesc" placeholder="Describe deliverables, location sector, and minimum PoH score...">
                     </div>
-                </form>
-                <div id="beta-form-status" class="form-status-msg"></div>
-            </div>
-        </section>
+                    <div class="btn-row" style="margin-top:8px;">
+                        <button type="button" class="btn-gold" onclick="publishCustomTask()">⚡ Lock Coral Escrow &amp; Broadcast Task</button>
+                    </div>
+                </div>
 
-        <!-- ======================================================== -->
-        <!-- TOP PILGRIMS MATRIX LEADERBOARD                          -->
-        <!-- ======================================================== -->
-        <section id="archangel hierarchy-section" class="panel">
-            <div class="setup-header">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div class="card-grid-2" id="marketplaceCatalogGrid">
+                    <!-- Populated dynamically by HBLite controller -->
+                </div>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- TAB 4: 3D VIRTUAL STOREFRONT & AI GATE                     -->
+            <!-- ========================================================== -->
+            <section id="tab-storefront" class="tab-pane">
+                <div class="pane-header">
                     <div>
-                        <h2>🏆 TOP PILGRIMS LEADERBOARD (SEVERED MATRIX)</h2>
-                        <p>Live rankings querying deployed Google Sheets database in real time.</p>
+                        <h2 class="pane-title">🏪 3D Gaussian Splat Storefront &amp; Proximity AI Gate</h2>
+                        <p class="pane-subtitle">Walk-up proximity trigger (&lt; 2.0m) automatically connects visiting clients to on-duty staff or the Home Node AI Gate.</p>
                     </div>
-                    <button type="button" class="btn-micro btn-phase" onclick="SeveranceManager.fetchLeaderboard()">🔄 Refresh Matrix</button>
-                </div>
-            </div>
-
-            <div class="archangel hierarchy-table-container">
-                <table class="archangel hierarchy-table">
-                    <thead>
-                        <tr>
-                            <th>RANK</th>
-                            <th>OPERATIVE ID</th>
-                            <th>NAME / CALLSIGN</th>
-                            <th>BANKED FAVORS</th>
-                            <th>TITHE RATING</th>
-                        </tr>
-                    </thead>
-                    <tbody id="archangel hierarchy-table-body">
-                        <!-- Populated by SeveranceManager.fetchLeaderboard() -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- System Configuration Modal -->
-        <div id="system-config-modal" class="intel-modal-overlay hidden">
-            <div class="intel-modal-box" style="max-width:520px;">
-                <div class="intel-modal-header">
-                    <h3>⚙️ SEVERED GRID SYSTEM CONFIGURATION</h3>
-                    <button type="button" class="intel-modal-close" onclick="SeveranceManager.closeConfigModal()">✕</button>
-                </div>
-                <p style="font-size:11px; color:#94a3b8; margin:0 0 12px 0;">Configure your deployed Google Apps Script database endpoint and Angel credentials.</p>
-
-                <div class="beta-field-group">
-                    <label for="config-api-endpoint">Google Apps Script Web App URL (HeavenlyBound_GameDB):</label>
-                    <input type="url" id="config-api-endpoint" placeholder="https://script.google.com/macros/s/.../exec" value="https://script.google.com/macros/s/AKfycbxM9lthJCoadHZ6WvT37GTXBRcoE_3UOzZtC8kr7EcY6IhSs4lA_SvyzafXvGuIX7Lj/exec">
+                    <div class="btn-row">
+                        <button type="button" class="btn-action" onclick="setStoreDistance(1.2)">🚶 Approach Counter (1.2m)</button>
+                        <button type="button" class="btn-outline-sm" onclick="setStoreDistance(3.6)">🚶 Step Back (3.6m)</button>
+                    </div>
                 </div>
 
-                <div class="beta-field-group" style="margin-top:10px;">
-                    <label for="config-angel-id">Angel ID / Paladin Name:</label>
-                    <input type="text" id="config-angel-id" value="PILGRIM-ALPHA">
+                <div class="card-grid-2">
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🏛️ Atlantis Performance &amp; Spatial Hub</span>
+                            <span id="storeProximityBadge" style="font-size:11px; color:var(--emerald);">IN RANGE (&lt; 2.0m)</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Customer Distance to Totem Counter:</span>
+                                <span class="data-val cyan" id="storeDistVal">1.20 meters</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Active Counter Representative:</span>
+                                <span class="data-val emerald" id="storeRepVal">Live Staff: Commander Akira (did:atlantis:staff01)</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Rendering Pipeline:</span>
+                                <span class="data-val">4-Pass LSD Radix Sorted 3D Gaussian Splats</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Shareable Client Deep-Link:</span>
+                                <span class="data-val gold" id="storeShareUrl">atlantis://store/citadel-hub?stall=1&amp;mode=3d</span>
+                            </div>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn-gold" onclick="copyStoreDeepLink()">📋 Copy Shareable Client Deep-Link</button>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>📦 3D Splat Shelf Inventory &amp; Service Totems</span>
+                            <span style="font-size:11px; color:var(--cyan);">INSTANT ESCROW</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <div>
+                                    <div style="font-weight:700; color:#FFF;">Home Node Fortress Setup &amp; Geo-Lock</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">Full Pearl Enclave DID &amp; HZB Culling deployment</div>
+                                </div>
+                                <button type="button" class="btn-action" onclick="bookStoreTotem('Home Node Fortress Setup', '350 CREDITS')">Book (350 CR)</button>
+                            </div>
+                            <div class="data-row">
+                                <div>
+                                    <div style="font-weight:700; color:#FFF;">Orbital Ion Uplink Capacitor Core</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">3D Gaussian Splat Asset • SKU-ION-CORE-02</div>
+                                </div>
+                                <button type="button" class="btn-action" onclick="bookStoreTotem('Orbital Ion Capacitor Core', '850 CREDITS')">Order (850 CR)</button>
+                            </div>
+                            <div class="data-row">
+                                <div>
+                                    <div style="font-weight:700; color:#FFF;">Siren Frequency 1-Hour Broadcast Slot</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">Live spatial audio slot across the Atlantis mesh</div>
+                                </div>
+                                <button type="button" class="btn-action" onclick="bookStoreTotem('Siren 1-Hour Broadcast Slot', '75 PEARL')">Book (75 PEARL)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- TAB 5: VEHICLE DYNAMICS & TELEMETRY                        -->
+            <!-- ========================================================== -->
+            <section id="tab-vehicle" class="tab-pane">
+                <div class="pane-header">
+                    <div>
+                        <h2 class="pane-title">🚗 Lemuria 60Hz Vehicle Dynamics &amp; Diagnostics</h2>
+                        <p class="pane-subtitle">Real-time Pacejka Magic Formula 4-wheel tire slip simulation and courier fleet telemetry.</p>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn-action" onclick="adjustVehicleSpeed(15)">⚡ Accelerate (+15 km/h)</button>
+                        <button type="button" class="btn-outline-sm" onclick="adjustVehicleSpeed(-15)">🛑 Brake (-15 km/h)</button>
+                        <button type="button" class="btn-outline-sm" onclick="steerVehicle(-4)">⬅️ Steer Left</button>
+                        <button type="button" class="btn-outline-sm" onclick="steerVehicle(0)">⬆️ Center</button>
+                        <button type="button" class="btn-outline-sm" onclick="steerVehicle(4)">➡️ Steer Right</button>
+                    </div>
                 </div>
 
-                <div class="beta-field-group" style="margin-top:10px;">
-                    <label for="config-oauth-id">GitHub OAuth Client ID (Optional):</label>
-                    <input type="text" id="config-oauth-id" placeholder="Ov23li..." value="">
+                <div class="card-grid-2">
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🏎️ Powertrain &amp; Pacejka Telemetry</span>
+                            <span style="font-size:11px; color:var(--cyan);">60HZ DETERMINISTIC</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Vehicle Velocity:</span>
+                                <span class="data-val cyan" id="vehSpeed">84.5 km/h</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Motor / Engine RPM:</span>
+                                <span class="data-val gold" id="vehRpm">4,200 RPM (Gear 3)</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Steering Angle:</span>
+                                <span class="data-val" id="vehSteer">-2.4°</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Chassis Mass / Yaw Inertia:</span>
+                                <span class="data-val">1,450 kg / 2,400 kg·m²</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Pacejka Magic Formula Coefficients:</span>
+                                <span class="data-val emerald">B = 10.0, C = 1.90, D = 1.00, E = 0.97</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🛰️ Autonomous Fleet &amp; Courier Status</span>
+                            <span style="font-size:11px; color:var(--emerald);">ACTIVE TELEMETRY</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Kinematic Character Controller:</span>
+                                <span class="data-val">Capsule Sweep CCD Active</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">FlatBVH Spatial Index:</span>
+                                <span class="data-val cyan">32-Byte Cache-Aligned SAH Nodes</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Active Courier Unit:</span>
+                                <span class="data-val">Pelagic Rover #07 (En Route)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- TAB 6: PEARL ENCLAVE & POH IDENTITY                        -->
+            <!-- ========================================================== -->
+            <section id="tab-identity" class="tab-pane">
+                <div class="pane-header">
+                    <div>
+                        <h2 class="pane-title">🛡️ Pearl Enclave Identity &amp; Proof-of-Health (PoH)</h2>
+                        <p class="pane-subtitle">Sovereign Ed25519 DID credentials and hardware Bioluminescence Proof-of-Health governance.</p>
+                    </div>
+                    <button type="button" class="btn-gold" onclick="attestPohCanary()">⚡ Attest Hardware PoH Canary</button>
                 </div>
 
-                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
-                    <button type="button" class="btn-sm btn-phase" onclick="SeveranceManager.closeConfigModal()">Cancel</button>
-                    <button type="button" class="btn-sm btn-action" onclick="SeveranceManager.saveConfig()">💾 Save Configuration</button>
-                </div>
-            </div>
-        </div>
+                <div class="card-grid-2">
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>🔐 Authenticated Client Profile</span>
+                            <span style="font-size:11px; color:var(--emerald);">PEARL ENCLAVE VERIFIED</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Client Name / Organization:</span>
+                                <span class="data-val" id="idClientName">Prospective Client</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Registered Email:</span>
+                                <span class="data-val" id="idClientEmail">client@atlantis.network</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Sovereign Atlantis DID:</span>
+                                <span class="data-val cyan" id="idClientDid">did:atlantis:7f8e9a0b...</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Network Role / Sector:</span>
+                                <span class="data-val gold" id="idClientRole">Enterprise / Commercial Client</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Club Graduation Certificate:</span>
+                                <span class="data-val emerald">Graduated Home Node Member</span>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Shared Combat Log -->
-        <div class="terminal-box">
-            <div style="font-size:11px; color:#22c55e; font-weight:bold; margin-bottom:6px; text-transform:uppercase;">📡 Tactical Communications Log</div>
-            <div id="terminal-log">
-                <div>[SYSTEM] HeavenlyBound operational. Awaiting angel deployment.</div>
-            </div>
-        </div>
+                    <div class="panel-card">
+                        <div class="panel-card-title">
+                            <span>📊 Bioluminescence Hardware Telemetry</span>
+                            <span style="font-size:11px; color:var(--cyan);">TIER 2: PELAGIC WORKER</span>
+                        </div>
+                        <div class="data-table">
+                            <div class="data-row">
+                                <span class="data-key">Validated PoH Score:</span>
+                                <span class="data-val emerald" id="idPohScore">94.8 / 100.0</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Frame Allocator Memory:</span>
+                                <span class="data-val cyan">16MB Double-Buffered Zero-GC Arena</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Clustered Forward+ Shading:</span>
+                                <span class="data-val">16 × 9 × 24 = 3,456 Froxels</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-key">Hardware Runtime Metrics:</span>
+                                <span class="data-val" id="idHwMetrics">60.0 FPS • 12,288 MB VRAM Free • 16ms RTT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
-    <!-- Inline Fallback Handlers for Guaranteed Button Execution -->
+    <!-- 4. BOTTOM LIVE TELEMETRY STATUS BAR -->
+    <footer class="bottom-status-bar">
+        <div>
+            <span>LEMURIA &amp; ATLANTIS TELEMETRY: </span>
+            <span class="status-msg" id="bottomStatusMsg">HBLITE INITIALIZED • ALL ATLANTIS &amp; LEMURIA PILLARS MOUNTED</span>
+        </div>
+        <div class="engine-stats" id="bottomEngineStats">
+            Zero-GC Arena: 2.4 KB | 60Hz Physics | Sabine RT60: 1.09s
+        </div>
+    </footer>
+
+    <!-- HBLite Interactive Runtime Script -->
     <script>
-        function enterStage1Demo() {
-            var welcomeSec = document.getElementById('welcome-section');
-            if (welcomeSec) welcomeSec.classList.add('hidden');
-            // Force user to character creation first
-            switchAppMode('ANGELIC');
-            if (typeof logToTerminal === 'function') {
-                var paladinNameEl = document.getElementById('welcome-player-id');
-                var cs = (paladinNameEl && paladinNameEl.value) || 'PILGRIM-ALPHA';
-                logToTerminal('🚀 [ASCENSION PROTOCOL] Initialization Started for: ' + cs);
-                logToTerminal('👼 Welcome to the First Radiance Era. Please create your Angelic profile.');
+        const SEVEN_DAUGHTERS = [
+            { idx: 1, name: "Maia", title: "The Dawn Siren", freq: 432, hours: "04:00 - 08:00", genre: "Deep Oceanic Ambient / Horizon Chill", phrase: "Breathing with the tides. Maia on the early horizon.", bio: "Awakens the archipelago with resonant 432Hz sine waves and calm oceanic swells across the Atlantis network." },
+            { idx: 2, name: "Alcyone", title: "The High-Seas Pulse", freq: 528, hours: "08:00 - 12:00", genre: "High-Speed Breakbeats & Courier Drive", phrase: "Max throttle, no brake fade. Alcyone pushing your RPM to the redline.", bio: "High-octane storm navigator fueling courier highway dashes and rapid sector logistics." },
+            { idx: 3, name: "Asterope", title: "The Frontline Anchor", freq: 639, hours: "12:00 - 16:00", genre: "Tactical Deep House & Sector Dispatches", phrase: "Radar sweep clean, beat locked in. Asterope holding the central frequency.", bio: "Mixes rhythmic 4-on-the-floor grooves with live Atlantis marketplace dispatches and weather telemetry." },
+            { idx: 4, name: "Celaeno", title: "The Storm Chaser", freq: 741, hours: "16:00 - 20:00", genre: "Glitch / Industrial Bass / Breakcore", phrase: "Vortex perimeter collapsing in three... two... drop the bass.", bio: "Broadcasts from orbital perimeters with high-energy sub-bass and real-time node telemetry alerts." },
+            { idx: 5, name: "Electra", title: "The Neon Siren", freq: 852, hours: "20:00 - 00:00", genre: "Vocal Trance / Club Atlantis", phrase: "Glowing bioluminescent under the neon strobes. Electra spinning live.", bio: "Resident DJ of Club Atlantis; runs the live listener Coral tipping state channels and virtual lounges." },
+            { idx: 6, name: "Taygete", title: "The Abyssal Echo", freq: 963, hours: "00:00 - 02:00", genre: "Darkwave / Minimal Techno / Abyssal Drone", phrase: "Descending below the photic zone. Taygete guiding you through deep water.", bio: "Transmits from deep ocean trenches, weaving analog modular synths and pelagic network lore." },
+            { idx: 7, name: "Merope", title: "The Starlight Harbor", freq: 396, hours: "02:00 - 04:00", genre: "Lo-Fi Beats / Starlight Safe Harbor", phrase: "Dock your vehicle, power down the thrusters. Merope has the night watch.", bio: "Welcomes night couriers and node operators back to their Home Nodes with warm acoustic keys." }
+        ];
+
+        const INITIAL_MARKETPLACE = [
+            { id: "mkt-1", title: "3D Gaussian Splat Storefront Capture & Rigging", desc: "Full on-site photogrammetry & 4-pass radix-sorted Gaussian Splat totem creation for your physical venue.", price: 450, asset: "CREDITS", splat: true, vendor: "Lemuria Arena Studio" },
+            { id: "mkt-2", title: "Pelagic Worker Dedicated GPU Compute Allocation", desc: "24-hour Hierarchical Z-Buffer (HZB) occlusion culling & AI Gate inference node lease.", price: 120, asset: "CYAN", splat: false, vendor: "Atlantis Abyssal Pool" },
+            { id: "mkt-3", title: "Club Atlantis VIP Pass & Spatial Audio Booth", desc: "Unlocks diegetic 3D club lounge access, custom Siren Frequency acoustic routing, and priority event ticketing.", price: 80, asset: "CYAN", splat: true, vendor: "Club Atlantis Home Node" },
+            { id: "mkt-4", title: "Autonomous Courier Fleet Route Optimization", desc: "64-bit ECEF Catmull-Rom spline logistics planning and turn-by-turn dispatch for local delivery fleets.", price: 290, asset: "CREDITS", splat: true, vendor: "Pelagic Skunkworks" }
+        ];
+
+        let catalogItems = [...INITIAL_MARKETPLACE];
+        let activeDaughterIdx = 0;
+        let isRadioPlaying = true;
+        let tipCounter = 0;
+        let vehSpeed = 84.5;
+        let vehRpm = 4200;
+        let vehSteer = -2.4;
+        let globeAngle = 0;
+
+        function setStatus(msg) {
+            const el = document.getElementById("bottomStatusMsg");
+            if (el) el.textContent = msg;
+        }
+
+        function switchHBLiteTab(tabId) {
+            document.querySelectorAll(".tab-pane").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".nav-tab-btn").forEach(btn => {
+                btn.classList.toggle("active", btn.getAttribute("data-tab") === tabId);
+            });
+            const target = document.getElementById("tab-" + tabId);
+            if (target) target.classList.add("active");
+            setStatus("ACTIVE MODULE: " + tabId.toUpperCase() + " // LEMURIA V2 & ATLANTIS READY");
+        }
+
+        function loadClientSessionUI() {
+            const sess = getActiveSession();
+            if (!sess) return;
+            const badge = document.getElementById("activeClientBadge");
+            if (badge) badge.textContent = "🔑 " + (sess.name || "Client") + " (" + (sess.did ? sess.did.substring(0, 18) + "…" : "Verified") + ")";
+            const nameEl = document.getElementById("idClientName");
+            const emailEl = document.getElementById("idClientEmail");
+            const didEl = document.getElementById("idClientDid");
+            const roleEl = document.getElementById("idClientRole");
+            if (nameEl) nameEl.textContent = sess.name || "Prospective Client";
+            if (emailEl) emailEl.textContent = sess.email || "client@atlantis.network";
+            if (didEl) didEl.textContent = sess.did || "did:atlantis:verified";
+            if (roleEl) roleEl.textContent = sess.role || "Enterprise / Commercial Client";
+        }
+
+        function logoutHBLite() {
+            clearSession();
+            window.location.replace("signup.html?mode=login");
+        }
+
+        /* Map & Geodesy */
+        function latLonAltToEcef(latDeg, lonDeg, altM) {
+            const a = 6378137.0;
+            const f = 1.0 / 298.257223563;
+            const e2 = f * (2.0 - f);
+            const lat = latDeg * Math.PI / 180.0;
+            const lon = lonDeg * Math.PI / 180.0;
+            const sinLat = Math.sin(lat);
+            const cosLat = Math.cos(lat);
+            const sinLon = Math.sin(lon);
+            const cosLon = Math.cos(lon);
+            const N = a / Math.sqrt(1.0 - e2 * sinLat * sinLat);
+            const x = (N + altM) * cosLat * cosLon;
+            const y = (N + altM) * cosLat * sinLon;
+            const z = (N * (1.0 - e2) + altM) * sinLat;
+            return [Math.round(x), Math.round(y), Math.round(z)];
+        }
+
+        function lockWaypoint(label, lat, lon, alt) {
+            const ecef = latLonAltToEcef(lat, lon, alt);
+            document.getElementById("mapLatLon").textContent = lat.toFixed(6) + "° N, " + lon.toFixed(6) + "° E";
+            document.getElementById("mapAlt").textContent = alt.toFixed(1) + " m";
+            const ecefStr = "(" + ecef[0] + ", " + ecef[1] + ", " + ecef[2] + ") m";
+            document.getElementById("mapEcef").textContent = ecefStr;
+            document.getElementById("globeTargetLabel").textContent = "LOCUS: " + label.toUpperCase();
+            document.getElementById("globeEcefLabel").textContent = "ECEF: " + ecefStr;
+            setStatus("WAYPOINT LOCKED: " + label + " • ECEF " + ecefStr);
+        }
+
+        function geoLockClientNode() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        lockWaypoint("Client Home Node", pos.coords.latitude, pos.coords.longitude, pos.coords.altitude || 35.0);
+                    },
+                    () => {
+                        lockWaypoint("Atlantis Default Citadel", 35.6762, 139.6503, 45.0);
+                    },
+                    { timeout: 5000 }
+                );
+            } else {
+                lockWaypoint("Atlantis Default Citadel", 35.6762, 139.6503, 45.0);
             }
         }
 
-        function enterBetaSignup() {
-            var welcomeSec = document.getElementById('welcome-section');
-            if (welcomeSec) welcomeSec.classList.add('hidden');
-            switchAppMode('BETA');
-            document.getElementById('beta-signup-section').scrollIntoView({ behavior: 'smooth' });
-            if (typeof logToTerminal === 'function') {
-                logToTerminal('📝 [BETA PORTAL] Navigated to Closed Beta Application Form.');
+        /* Interactive Planetary Globe Canvas */
+        function initGeodesicGlobe() {
+            const canvas = document.getElementById("geodesicCanvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+
+            function renderGlobe() {
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.clearRect(0, 0, w, h);
+
+                const cx = w / 2;
+                const cy = h / 2;
+                const r = Math.min(w, h) * 0.38;
+
+                // Outer Atmospheric Halo
+                const grad = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.25);
+                grad.addColorStop(0, "rgba(0, 229, 255, 0.15)");
+                grad.addColorStop(1, "rgba(0, 229, 255, 0)");
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r * 1.25, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Globe Sphere
+                ctx.strokeStyle = "rgba(0, 229, 255, 0.65)";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Latitude rings
+                ctx.strokeStyle = "rgba(0, 229, 255, 0.2)";
+                ctx.lineWidth = 1;
+                [-0.6, -0.3, 0, 0.3, 0.6].forEach(latFactor => {
+                    const ry = r * Math.cos(Math.asin(latFactor));
+                    const yOff = cy + r * latFactor;
+                    ctx.beginPath();
+                    ctx.ellipse(cx, yOff, ry, ry * 0.18, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                });
+
+                // Rotating Longitude Meridians
+                for (let i = 0; i < 6; i++) {
+                    const a = globeAngle + (i * Math.PI) / 6;
+                    const rx = Math.abs(Math.sin(a)) * r;
+                    ctx.beginPath();
+                    ctx.ellipse(cx, cy, rx, r, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Glowing Sector Node Beacons
+                const nodes = [
+                    { a: globeAngle + 0.4, lat: -0.25, color: "#00FF9D", label: "ATLANTIS-HUB" },
+                    { a: globeAngle + 1.5, lat: 0.15, color: "#FFD700", label: "LEMURIA-CORE" },
+                    { a: globeAngle + 2.6, lat: -0.1, color: "#00E5FF", label: "PELAGIC-NODE" }
+                ];
+                nodes.forEach(n => {
+                    const nx = cx + Math.sin(n.a) * r * 0.75;
+                    const ny = cy + n.lat * r;
+                    if (Math.cos(n.a) > -0.2) {
+                        ctx.fillStyle = n.color;
+                        ctx.beginPath();
+                        ctx.arc(nx, ny, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.font = "10px monospace";
+                        ctx.fillText(n.label, nx + 7, ny + 3);
+                    }
+                });
+
+                globeAngle += 0.004;
+                requestAnimationFrame(renderGlobe);
+            }
+            renderGlobe();
+        }
+
+        /* Theater 24/7 Radio */
+        function renderDaughterButtons() {
+            const container = document.getElementById("daughterHostButtons");
+            if (!container) return;
+            container.innerHTML = SEVEN_DAUGHTERS.map((d, i) => `
+                <button type="button" class="host-pill ${i === activeDaughterIdx ? 'active' : ''}" onclick="selectDaughterHost(${i})">
+                    #${d.idx} ${d.name} (${d.freq}Hz)
+                </button>
+            `).join("");
+        }
+
+        function selectDaughterHost(idx) {
+            activeDaughterIdx = idx;
+            const d = SEVEN_DAUGHTERS[idx];
+            document.getElementById("radioHostTitle").textContent = `Daughter #${d.idx}: ${d.name} — ${d.title}`;
+            document.getElementById("radioGenreTitle").textContent = `${d.genre} • ${d.hours}`;
+            document.getElementById("radioCatchphrase").textContent = `"${d.phrase}"`;
+            document.getElementById("radioBio").textContent = d.bio;
+            document.getElementById("radioFreqBadge").textContent = `${d.freq} Hz HARMONIC`;
+            renderDaughterButtons();
+            setStatus(`RADIO TUNED: Daughter #${d.idx} ${d.name} (${d.freq} Hz Siren Frequency)`);
+        }
+
+        function toggleRadioPlayback() {
+            isRadioPlaying = !isRadioPlaying;
+            const btn = document.getElementById("radioPlayBtn");
+            if (btn) btn.textContent = isRadioPlaying ? "⏸ PAUSE STREAM" : "▶ PLAY STREAM";
+            setStatus(isRadioPlaying ? "SIREN FREQUENCY STREAM RESUMED (48kHz Sabine RT60)" : "SIREN FREQUENCY STREAM PAUSED");
+        }
+
+        function updateRadioVolume(val) {
+            setStatus(`MASTER ACOUSTIC GAIN SET TO ${val}%`);
+        }
+
+        function sendCoralTip() {
+            tipCounter++;
+            const total = (tipCounter * 0.1).toFixed(1);
+            document.getElementById("radioTipCount").textContent = `${tipCounter} Tips (${total} CYAN)`;
+            const d = SEVEN_DAUGHTERS[activeDaughterIdx];
+            setStatus(`CORAL STATE CHANNEL TIP SENT: 0.1 CYAN to Daughter #${d.idx} ${d.name}`);
+        }
+
+        /* Marketplace */
+        function renderMarketplaceCatalog() {
+            const grid = document.getElementById("marketplaceCatalogGrid");
+            if (!grid) return;
+            grid.innerHTML = catalogItems.map(item => `
+                <div class="panel-card">
+                    <div class="panel-card-title">
+                        <span>${item.title}</span>
+                        <span style="color:var(--gold); font-family:monospace;">${item.price} ${item.asset}</span>
+                    </div>
+                    <p style="font-size:12.5px; color:var(--text-secondary); line-height:1.5; flex:1;">
+                        ${item.desc}
+                    </p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--cyan);">
+                        <span>${item.splat ? '✨ [3D Gaussian Splat]' : '🖧 [Compute / Service]'}</span>
+                        <span>Node: ${item.vendor}</span>
+                    </div>
+                    <button type="button" class="btn-action" onclick="lockCoralEscrow('${item.title.replace(/'/g, "\\'")}', ${item.price}, '${item.asset}')">
+                        ⚡ Instant Coral Escrow Settlement
+                    </button>
+                </div>
+            `).join("");
+        }
+
+        function lockCoralEscrow(title, price, asset) {
+            setStatus(`CORAL ESCROW LOCKED: ${title} (${price} ${asset}) verified on Tide Ledger!`);
+            alert(`[Atlantis Coral Escrow Locked]\n\nContract: ${title}\nAmount: ${price} ${asset}\nLedger: Double-Entry Tide Ledger Verified\n\nFunds are held in Coral Escrow until Proof-of-Health (PoH) delivery verification.`);
+        }
+
+        function openPostTaskModal() {
+            document.getElementById("postTaskCard").style.display = "flex";
+        }
+
+        function closePostTaskModal() {
+            document.getElementById("postTaskCard").style.display = "none";
+        }
+
+        function publishCustomTask() {
+            const title = document.getElementById("newTaskTitle").value.trim();
+            const price = parseFloat(document.getElementById("newTaskPrice").value) || 100;
+            const asset = document.getElementById("newTaskAsset").value;
+            const desc = document.getElementById("newTaskDesc").value.trim() || "Client task published via HBLite.";
+            if (!title) {
+                alert("Please enter a task title.");
+                return;
+            }
+            const sess = getActiveSession();
+            catalogItems.unshift({
+                id: "mkt-" + Date.now(),
+                title: title,
+                desc: desc,
+                price: price,
+                asset: asset,
+                splat: true,
+                vendor: (sess && sess.name) ? sess.name : "Client Home Node"
+            });
+            renderMarketplaceCatalog();
+            closePostTaskModal();
+            document.getElementById("newTaskTitle").value = "";
+            document.getElementById("newTaskPrice").value = "";
+            document.getElementById("newTaskDesc").value = "";
+            setStatus(`TASK_CREATED ENVELOPE BROADCASTED: "${title}" (${price} ${asset})`);
+        }
+
+        /* 3D Virtual Storefront */
+        function setStoreDistance(dist) {
+            document.getElementById("storeDistVal").textContent = dist.toFixed(2) + " meters";
+            const badge = document.getElementById("storeProximityBadge");
+            const rep = document.getElementById("storeRepVal");
+            if (dist <= 2.0) {
+                badge.textContent = "IN RANGE (< 2.0m) • AI GATE ACTIVE";
+                badge.style.color = "var(--emerald)";
+                rep.textContent = "Live Staff: Commander Akira (did:atlantis:staff01)";
+                rep.style.color = "var(--emerald)";
+                setStatus(`STOREFRONT COUNTER TRIGGERED (${dist.toFixed(1)}m): Connected to live representative.`);
+            } else {
+                badge.textContent = "OUT OF RANGE (> 2.0m)";
+                badge.style.color = "var(--gold)";
+                rep.textContent = "Standby (Walk within 2.0m of counter totem to connect)";
+                rep.style.color = "var(--text-secondary)";
+                setStatus(`STEPPED BACK (${dist.toFixed(1)}m): Counter session placed on standby.`);
             }
         }
 
-            </script>
-    <script src="script.js?v=2.9.6"></script>
-    <script src="multiplayer.js?v=2.9.6"></script>
-    <script src="severance.js?v=2.9.6"></script>
+        function copyStoreDeepLink() {
+            const url = window.location.origin + window.location.pathname + "?store=atlantis-citadel-hub&stall=1&mode=3d";
+            navigator.clipboard?.writeText(url);
+            setStatus("COPIED 3D STOREFRONT CLIENT DEEP-LINK TO CLIPBOARD");
+            alert("Copied Shareable 3D Storefront Link:\n\n" + url);
+        }
+
+        function bookStoreTotem(name, priceStr) {
+            setStatus(`BOOKED 3D TOTEM PACKAGE: ${name} (${priceStr})`);
+            alert(`[Atlantis 3D Storefront Order]\n\nItem / Totem: ${name}\nEscrow: ${priceStr}\nSigned via Pearl Enclave DID.`);
+        }
+
+        /* Vehicle Dynamics */
+        function adjustVehicleSpeed(delta) {
+            vehSpeed = Math.max(0, Math.min(240, vehSpeed + delta));
+            vehRpm = Math.round(850 + (vehSpeed / 240) * 6600);
+            const gear = Math.max(1, Math.min(6, Math.floor(vehSpeed / 38) + 1));
+            document.getElementById("vehSpeed").textContent = vehSpeed.toFixed(1) + " km/h";
+            document.getElementById("vehRpm").textContent = vehRpm.toLocaleString() + " RPM (Gear " + gear + ")";
+            setStatus(`PACEJKA VEHICLE TELEMETRY: ${vehSpeed.toFixed(1)} km/h • ${vehRpm} RPM`);
+        }
+
+        function steerVehicle(deg) {
+            vehSteer = deg === 0 ? 0 : Math.max(-32, Math.min(32, vehSteer + deg));
+            document.getElementById("vehSteer").textContent = vehSteer.toFixed(1) + "°";
+            setStatus(`STEERING ANGLE UPDATED: ${vehSteer.toFixed(1)}°`);
+        }
+
+        /* Pearl & PoH Identity */
+        function attestPohCanary() {
+            const score = (93.5 + Math.random() * 5.5).toFixed(1);
+            document.getElementById("idPohScore").textContent = score + " / 100.0 (Validated)";
+            document.getElementById("hdrPohScore").textContent = score + " (Pelagic Worker)";
+            setStatus(`BIOLUMINESCENCE POH CANARY ATTESTED: Score ${score} / 100.0`);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadClientSessionUI();
+            renderDaughterButtons();
+            renderMarketplaceCatalog();
+            initGeodesicGlobe();
+        });
+    </script>
 </body>
+
 </html>
