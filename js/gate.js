@@ -10,10 +10,20 @@ function getActiveSession() {
   try {
     var raw = localStorage.getItem(HBLITE_SESSION_KEY);
     if (!raw) return null;
-    return JSON.parse(raw);
+    var sess = JSON.parse(raw);
+    if (sess && sess.email && sess.email.toLowerCase() === "blue-aquarius@live.com") {
+      sess.isAdmin = true;
+      sess.role = "Network Administrator / Citadel Overseer";
+    }
+    return sess;
   } catch (e) {
     return null;
   }
+}
+
+function isAdminSession() {
+  var sess = getActiveSession();
+  return !!(sess && (sess.isAdmin || (sess.email && sess.email.toLowerCase() === "blue-aquarius@live.com")));
 }
 
 function hasSignedUp() {

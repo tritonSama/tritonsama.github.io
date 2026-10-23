@@ -1108,16 +1108,26 @@
         function loadClientSessionUI() {
             const sess = getActiveSession();
             if (!sess) return;
+            const isAdmin = sess.isAdmin || (sess.email && sess.email.toLowerCase() === "blue-aquarius@live.com");
             const badge = document.getElementById("activeClientBadge");
-            if (badge) badge.textContent = "🔑 " + (sess.name || "Client") + " (" + (sess.did ? sess.did.substring(0, 18) + "…" : "Verified") + ")";
+            if (badge) {
+                if (isAdmin) {
+                    badge.innerHTML = "👑 <span style='color:var(--gold);font-weight:900;'>ADMIN</span>: " + (sess.name || "Administrator") + " (" + (sess.did ? sess.did.substring(0, 18) + "…" : "Verified") + ")";
+                    badge.style.borderColor = "var(--gold)";
+                    badge.style.background = "rgba(255, 215, 0, 0.15)";
+                    badge.style.color = "var(--gold)";
+                } else {
+                    badge.textContent = "🔑 " + (sess.name || "Client") + " (" + (sess.did ? sess.did.substring(0, 18) + "…" : "Verified") + ")";
+                }
+            }
             const nameEl = document.getElementById("idClientName");
             const emailEl = document.getElementById("idClientEmail");
             const didEl = document.getElementById("idClientDid");
             const roleEl = document.getElementById("idClientRole");
-            if (nameEl) nameEl.textContent = sess.name || "Prospective Client";
+            if (nameEl) nameEl.textContent = (sess.name || "Prospective Client") + (isAdmin ? " [Network Administrator]" : "");
             if (emailEl) emailEl.textContent = sess.email || "client@atlantis.network";
             if (didEl) didEl.textContent = sess.did || "did:atlantis:verified";
-            if (roleEl) roleEl.textContent = sess.role || "Enterprise / Commercial Client";
+            if (roleEl) roleEl.textContent = isAdmin ? "Network Administrator / Citadel Overseer (Root)" : (sess.role || "Enterprise / Commercial Client");
         }
 
         function logoutHBLite() {

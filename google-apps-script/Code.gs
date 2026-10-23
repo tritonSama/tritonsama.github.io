@@ -443,28 +443,41 @@ function doPost(e) {
         headers = defaultHeaders;
       }
 
+      // Handle blue-aquarius@live.com admin designation
+      var userEmail = String(payload.email || "").trim();
+      var isAdmin = userEmail.toLowerCase() === "blue-aquarius@live.com";
+      var userRole = isAdmin
+        ? "Network Administrator / Citadel Overseer"
+        : (payload.guildClass || payload.role || payload.class || payload.archetype || "Enterprise / Commercial Client");
+
       // Dynamic header mapping: place each field in the exact matching column
       var rowData = [];
       for (var col = 0; col < headers.length; col++) {
         var colName = String(headers[col] || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-        if (colName.indexOf("birth") !== -1 && (colName.indexOf("time") !== -1 || colName.indexOf("tob") !== -1)) {
+        if (col === 0 && (colName === "ss" || colName === "" || colName.indexOf("time") !== -1 || colName.indexOf("date") !== -1)) {
+          // Column 1 is always the timestamp regardless of whether the header was renamed to "SS" or blank
+          rowData.push(ts);
+        } else if (colName.indexOf("birth") !== -1 && (colName.indexOf("time") !== -1 || colName.indexOf("tob") !== -1)) {
           // birthTime column
           rowData.push(payload.birthTime || payload.birthtime || "12:00");
         } else if (colName.indexOf("birth") !== -1 || colName.indexOf("dob") !== -1) {
           // birthDate column
           rowData.push(payload.birthDate || payload.birthdate || "");
-        } else if (colName.indexOf("guild") !== -1 || colName === "class" || colName === "archetype") {
-          // guildClass column
-          rowData.push(payload.guildClass || payload.class || payload.archetype || "Tactical Operative");
+        } else if (colName.indexOf("guild") !== -1 || colName === "class" || colName === "archetype" || colName.indexOf("role") !== -1) {
+          // guildClass / role column
+          rowData.push(userRole);
         } else if (colName.indexOf("phone") !== -1 || colName.indexOf("tel") !== -1 || colName.indexOf("mobile") !== -1) {
           // phone column
           rowData.push(payload.phone || payload.phoneNumber || "");
         } else if (colName.indexOf("mail") !== -1) {
           // email column
-          rowData.push(payload.email || "");
+          rowData.push(userEmail);
         } else if (colName.indexOf("name") !== -1 || colName.indexOf("operative") !== -1 || colName.indexOf("callsign") !== -1) {
           // name column
-          rowData.push(payload.name || payload.fullName || payload.callsign || "Operative");
+          rowData.push((payload.name || payload.fullName || payload.callsign || "Operative") + (isAdmin ? " [ADMIN]" : ""));
+        } else if (colName.indexOf("did") !== -1) {
+          // did column
+          rowData.push(payload.did || "");
         } else if (colName.indexOf("time") !== -1 || colName.indexOf("date") !== -1) {
           // timestamp column
           rowData.push(ts);
@@ -479,7 +492,8 @@ function doPost(e) {
       return jsonResponse({
         result: "success",
         status: "success",
-        message: "Beta tester registration recorded successfully.",
+        message: "Registration recorded successfully.",
+        isAdmin: isAdmin,
         timestamp: ts
       });
     }

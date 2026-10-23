@@ -110,14 +110,20 @@ if (signupForm) {
       return;
     }
 
+    const isAdminUser = email.toLowerCase() === "blue-aquarius@live.com";
+    const assignedRole = isAdminUser
+      ? "Network Administrator / Citadel Overseer"
+      : guildClass;
+
     const did = deriveAtlantisDid(email);
     const session = {
       name: name,
       email: email,
       did: did,
-      role: guildClass,
+      role: assignedRole,
       phone: phone,
-      nodeTier: "Tier 2: Pelagic Node",
+      isAdmin: isAdminUser,
+      nodeTier: isAdminUser ? "Tier 0: Root Citadel Overseer" : "Tier 2: Pelagic Node",
       authenticatedAt: new Date().toISOString()
     };
 
@@ -127,15 +133,17 @@ if (signupForm) {
       email: email,
       password: password,
       did: did,
-      role: guildClass,
-      phone: phone
+      role: assignedRole,
+      phone: phone,
+      isAdmin: isAdminUser
     });
 
     const payload = {
       action: "beta_signup",
       name: name,
       email: email,
-      guildClass: guildClass,
+      guildClass: assignedRole,
+      role: assignedRole,
       phone: phone,
       did: did,
       timestamp: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
@@ -146,14 +154,31 @@ if (signupForm) {
 
     try {
       if (SCRIPT_URL && !SCRIPT_URL.includes("PASTE_YOUR")) {
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
+        // Multi-strategy sync: URL params fallback and no-cors POST
+        const queryParams = new URLSearchParams({
+          action: "beta_signup",
+          name: name,
+          email: email,
+          guildClass: assignedRole,
+          phone: phone,
+          did: did
+        }).toString();
+
+        await Promise.race([
+          fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+          }),
+          // Secondary fallback attempt via GET query parameters
+          fetch(SCRIPT_URL + "?" + queryParams, {
+            method: "GET",
+            mode: "no-cors"
+          }).catch(() => {})
+        ]);
       }
     } catch (err) {
       console.warn("Remote ledger sync fallback:", err);
@@ -201,12 +226,19 @@ if (loginForm) {
       ? identifier.split("@")[0]
       : "Atlantis Client";
 
+    const userEmail = existing ? existing.email : identifier;
+    const isAdminUser = (userEmail || "").toLowerCase() === "blue-aquarius@live.com";
+    const assignedRole = isAdminUser
+      ? "Network Administrator / Citadel Overseer"
+      : (existing ? existing.role : "Enterprise / Commercial Client");
+
     const session = {
       name: displayName,
-      email: existing ? existing.email : identifier,
+      email: userEmail,
       did: did,
-      role: existing ? existing.role : "Enterprise / Commercial Client",
-      nodeTier: "Tier 2: Pelagic Node",
+      role: assignedRole,
+      isAdmin: isAdminUser,
+      nodeTier: isAdminUser ? "Tier 0: Root Citadel Overseer" : "Tier 2: Pelagic Node",
       authenticatedAt: new Date().toISOString()
     };
 
