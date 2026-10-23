@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXGqUUUm79iTv527MqoaPriRmbmwZXkZDBZW-MSq3EjBJ3uvXYUNQd1mVxrfaEORQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjYl2Fla2_HztY_b_toWIhYjRUmycQqklt_FHUDl-kjtyIE-PfR8hJenl95AHmLLPv/exec";
 
 // Global State
 let aetherFavor = 100;

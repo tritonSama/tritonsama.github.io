@@ -2,7 +2,7 @@
  * HBLite — Signup & Login Controller
  * Built exclusively on the Atlantis & Lemuria network.
  */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXGqUUUm79iTv527MqoaPriRmbmwZXkZDBZW-MSq3EjBJ3uvXYUNQd1mVxrfaEORQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjYl2Fla2_HztY_b_toWIhYjRUmycQqklt_FHUDl-kjtyIE-PfR8hJenl95AHmLLPv/exec";
 
 const signupForm = document.getElementById("signupForm");
 const loginForm = document.getElementById("loginForm");
